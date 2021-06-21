@@ -15,6 +15,7 @@ interface FarmCardActionsProps {
   tokenName?: string
   pid?: number
   depositFeeBP?: number
+  usdStaked: BigNumber
 }
 
 const IconButtonWrapper = styled.div`
@@ -23,13 +24,18 @@ const IconButtonWrapper = styled.div`
     width: 20px;
   }
 `
-
-const StakeAction: React.FC<FarmCardActionsProps> = ({ stakedBalance, tokenBalance, tokenName, pid, depositFeeBP}) => {
+const Label = styled.div`
+  color: ${({ theme }) => theme.colors.textSubtle};
+  font-size: 12px;
+  align:left
+`
+const StakeAction: React.FC<FarmCardActionsProps> = ({ stakedBalance, tokenBalance, tokenName, pid, depositFeeBP, usdStaked}) => {
   const TranslateString = useI18n()
   const { onStake } = useStake(pid)
   const { onUnstake } = useUnstake(pid)
 
   const rawStakedBalance = getBalanceNumber(stakedBalance)
+  const displayUSD = getBalanceNumber(usdStaked).toLocaleString();
   let displayBalance = rawStakedBalance.toLocaleString()
   if(pid === 7 || pid === 5){
     // USDT or USDC
@@ -39,6 +45,8 @@ const StakeAction: React.FC<FarmCardActionsProps> = ({ stakedBalance, tokenBalan
     // WBTC
     displayBalance = new BigNumber(rawStakedBalance).multipliedBy(10000000000).toString();
   }
+
+
   const [onPresentDeposit] = useModal(<DepositModal max={tokenBalance} onConfirm={onStake} tokenName={tokenName} depositFeeBP={depositFeeBP} />)
   const [onPresentWithdraw] = useModal(
     <WithdrawModal max={stakedBalance} onConfirm={onUnstake} tokenName={tokenName} />,
@@ -57,11 +65,13 @@ const StakeAction: React.FC<FarmCardActionsProps> = ({ stakedBalance, tokenBalan
         </IconButton>
       </IconButtonWrapper>
     )
+    
   }
-
+  
   return (
     <Flex justifyContent="space-between" alignItems="center">
-      <Heading color={rawStakedBalance === 0 ? 'textDisabled' : 'text'}>{displayBalance}</Heading>
+
+      <Heading color={rawStakedBalance === 0 ? 'textDisabled' : 'text'}>{displayBalance}      {pid === 3 && usdStaked.gt(0)?<Label>~${(displayUSD)} USD</Label>:null}</Heading>
       {renderStakingButtons()}
     </Flex>
   )

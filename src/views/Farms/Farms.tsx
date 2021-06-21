@@ -71,9 +71,10 @@ const Farms: React.FC<FarmsProps> = (farmsProps) => {
         if (farm.quoteTokenSymbol === QuoteToken.CAKE) {
           totalValue = totalValue.times(cakePrice);
         }
-        // if(farm.pid === 3){
-        //   alert(totalValue);
-        // }
+        if (farm.quoteTokenSymbol === QuoteToken.WETH) {
+          totalValue = totalValue.times(wethPrice);
+        }
+
 
         if(totalValue.comparedTo(0) > 0){
           apy = apy.div(totalValue);
@@ -91,11 +92,12 @@ const Farms: React.FC<FarmsProps> = (farmsProps) => {
           cakePrice={cakePrice}
           ethereum={ethereum}
           account={account}
+          wethPrice={wethPrice}
           // btcPrice={btcPrice}
         />
       ))
     },
-    [bnbPrice, account, cakePrice, ethereum],
+    [bnbPrice, account, cakePrice, ethereum, wethPrice],
   )
 
   return (

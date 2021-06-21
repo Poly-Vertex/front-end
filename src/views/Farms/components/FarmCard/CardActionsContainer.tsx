@@ -3,9 +3,10 @@ import BigNumber from 'bignumber.js'
 import styled from 'styled-components'
 import { provider } from 'web3-core'
 import { getContract } from 'utils/erc20'
-import { Button, Flex, Text } from '@pancakeswap-libs/uikit'
+import { Button, Flex, Text} from '@pancakeswap-libs/uikit'
 import { Farm } from 'state/types'
-import { useFarmFromPid, useFarmFromSymbol, useFarmUser, usePriceCakeBusd } from 'state/hooks'
+import { QuoteToken } from 'config/constants/types'
+import { useFarmFromPid, useFarmFromSymbol, useFarmUser, usePriceBnbBusd, usePriceCakeBusd } from 'state/hooks'
 import useI18n from 'hooks/useI18n'
 import UnlockButton from 'components/UnlockButton'
 import { useApprove } from 'hooks/useApprove'
@@ -25,6 +26,8 @@ interface FarmCardActionsProps {
   account?: string
 }
 
+
+
 const CardActions: React.FC<FarmCardActionsProps> = ({ farm, ethereum, account }) => {
   const TranslateString = useI18n()
   const [requestedApproval, setRequestedApproval] = useState(false)
@@ -35,7 +38,7 @@ const CardActions: React.FC<FarmCardActionsProps> = ({ farm, ethereum, account }
   const lpName = farm.lpSymbol.toUpperCase()
   const isApproved = account && allowance && allowance.isGreaterThan(0)
   const cakePrice = usePriceCakeBusd();
-  
+  const bnbPrice = usePriceBnbBusd();
   const lpContract = useMemo(() => {
     if(isTokenOnly){
       return getContract(ethereum as provider, tokenAddress);
@@ -54,11 +57,22 @@ const CardActions: React.FC<FarmCardActionsProps> = ({ farm, ethereum, account }
       console.error(e)
     }
   }, [onApprove])
+  
+  let usdStaked = stakedBalance;
+  if (farm.quoteTokenSymbol === QuoteToken.BNB) {
+    usdStaked = usdStaked.times(bnbPrice);
+  }
+  if (farm.quoteTokenSymbol === QuoteToken.CAKE) {
+    usdStaked = usdStaked.times(cakePrice);
+  }
+  
+
+
 
   const renderApprovalOrStakeButton = () => {
     return isApproved ? (
-      <StakeAction stakedBalance={stakedBalance} tokenBalance={tokenBalance} tokenName={lpName} pid={pid} depositFeeBP={depositFeeBP} />
-    ) : (
+      <StakeAction stakedBalance={stakedBalance} tokenBalance={tokenBalance} tokenName={lpName} pid={pid} depositFeeBP={depositFeeBP} usdStaked={usdStaked} />
+      ) : (
       <Button mt="8px" fullWidth disabled={requestedApproval} onClick={handleApprove}>
         {TranslateString(999, 'Approve Contract')}
       </Button>
@@ -84,8 +98,10 @@ const CardActions: React.FC<FarmCardActionsProps> = ({ farm, ethereum, account }
         <Text bold textTransform="uppercase" color="textSubtle" fontSize="12px">
           {TranslateString(999, 'Staked')}
         </Text>
+
       </Flex>
       {!account ? <UnlockButton mt="8px" fullWidth /> : renderApprovalOrStakeButton()}
+     
     </Action>
   )
 }

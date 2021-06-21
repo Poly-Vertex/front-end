@@ -187,23 +187,23 @@ const farms: FarmConfig[] = [
     quoteTokenSymbol: QuoteToken.BUSD,
     quoteTokenAdresses: contracts.busd,
   },
-  // {
-  //   pid: 11, // **** TODO: TEST BEFORE PUSHING TO LIVE
-  //   risk: 2,
-  //   isTokenOnly: true,
-  //   lpSymbol: 'WETH',
-  //   lpAddresses: {
-  //     80001: '',
-  //     137: '0x853ee4b2a13f8a742d64c8f088be7ba2131f670d', // ETH-USDC LP
-  //   },
-  //   tokenSymbol: 'WETH',
-  //   tokenAddresses: {
-  //     80001: '',
-  //     137: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
-  //   },
-  //   quoteTokenSymbol: QuoteToken.BUSD, //  **** TODO: TEST BEFORE PUSHING TO LIVE
-  //   quoteTokenAdresses: contracts.busd,
-  // },
+  {
+    pid: 11, // **** TODO: TEST BEFORE PUSHING TO LIVE
+    risk: 2,
+    isTokenOnly: true,
+    lpSymbol: 'WETH',
+    lpAddresses: {
+      80001: '',
+      137: '0x853ee4b2a13f8a742d64c8f088be7ba2131f670d', // ETH-USDC LP
+    },
+    tokenSymbol: 'WETH',
+    tokenAddresses: {
+      80001: '',
+      137: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
+    },
+    quoteTokenSymbol: QuoteToken.WETH, //  **** TODO: TEST BEFORE PUSHING TO LIVE
+    quoteTokenAdresses: contracts.weth,
+  },
   // // {
   // //   pid: ,
   // //   risk: 2,
