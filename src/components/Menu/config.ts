@@ -102,15 +102,20 @@ const config: MenuEntry[] = [
     href: 'https://firebasestorage.googleapis.com/v0/b/gitbook-28427.appspot.com/o/assets%2F-Mc-jl5DYI-LH6-dKRZr%2F-McFCjEL2AQ7OgxzFmM-%2F-McFCmkAn3IklXOWoO6w%2FTechRateCheck.pdf?alt=media&token=c6cdfd17-5f00-4459-ba50-14929f14062e',
   },
   // {
-  //   label: 'Review by RugDoc',
-  //   icon: 'AuditIcon',
-  //   href: 'https://rugdoc.io/project/polyvertex/ ',
-  // },
-  // {
-  //   label: 'Audit by CertiK',
-  //   icon: 'AuditIcon',
-  //   href: 'https://certik.org/projects/goose-finance',
-  // },
+    //   label: 'Review by RugDoc',
+    //   icon: 'AuditIcon',
+    //   href: 'https://rugdoc.io/project/polyvertex/ ',
+    // },
+    // {
+      //   label: 'Audit by CertiK',
+      //   icon: 'AuditIcon',
+      //   href: 'https://certik.org/projects/goose-finance',
+      // },
+      {
+        icon: 'CommunityIcon',
+        label: 'Support PolyVertex',
+        href: 'https://docs.polyvertex.finance/support-vertex',
+      },
 ]
 
 export default config
