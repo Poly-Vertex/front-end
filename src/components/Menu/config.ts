@@ -98,8 +98,8 @@ const config: MenuEntry[] = [
   // },
   {
     icon: 'AuditIcon',
-    label: 'Check by TechRate',
-    href: 'https://firebasestorage.googleapis.com/v0/b/gitbook-28427.appspot.com/o/assets%2F-Mc-jl5DYI-LH6-dKRZr%2F-McFCjEL2AQ7OgxzFmM-%2F-McFCmkAn3IklXOWoO6w%2FTechRateCheck.pdf?alt=media&token=c6cdfd17-5f00-4459-ba50-14929f14062e',
+    label: 'Audit by TechRate',
+    href: 'https://firebasestorage.googleapis.com/v0/b/gitbook-28427.appspot.com/o/assets%2F-Mc-jl5DYI-LH6-dKRZr%2F-Md2goNLxITyaBAz5tRe%2F-Md2gsFbOsXE8kiPJqh6%2FPolyVertex%20Full%20Smart%20Contract%20Security%20Audit.pdf?alt=media&token=c37acf22-e32d-4b28-b403-5f4b07d4e28f',
   },
   // {
     //   label: 'Review by RugDoc',
