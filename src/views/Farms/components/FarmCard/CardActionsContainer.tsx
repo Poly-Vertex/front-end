@@ -23,12 +23,13 @@ export interface FarmWithStakedValue extends Farm {
 interface FarmCardActionsProps {
   farm: FarmWithStakedValue
   ethereum?: provider
-  account?: string
+  account?: string,
+  totalValue?: BigNumber
 }
 
 
 
-const CardActions: React.FC<FarmCardActionsProps> = ({ farm, ethereum, account }) => {
+const CardActions: React.FC<FarmCardActionsProps> = ({ farm, ethereum, account, totalValue }) => {
   const TranslateString = useI18n()
   const [requestedApproval, setRequestedApproval] = useState(false)
   const { pid, lpAddresses, tokenAddresses, isTokenOnly, depositFeeBP } = useFarmFromPid(farm.pid)
@@ -59,13 +60,20 @@ const CardActions: React.FC<FarmCardActionsProps> = ({ farm, ethereum, account }
   }, [onApprove])
   
   let usdStaked = stakedBalance;
-  if (farm.quoteTokenSymbol === QuoteToken.BNB) {
-    usdStaked = usdStaked.times(bnbPrice);
-  }
-  if (farm.quoteTokenSymbol === QuoteToken.CAKE) {
-    usdStaked = usdStaked.times(cakePrice);
-  }
   
+   if(isTokenOnly){
+    if (farm.quoteTokenSymbol === QuoteToken.BNB) {
+      usdStaked = usdStaked.times(bnbPrice);
+    }
+    if (farm.quoteTokenSymbol === QuoteToken.CAKE) {
+      usdStaked = usdStaked.times(cakePrice);
+    }
+  }
+  else if(totalValue){
+     const lpTokenValue = new BigNumber(totalValue).div(farm.lpStakedTotal);
+     
+     usdStaked = usdStaked.times(lpTokenValue);
+   }  
 
 
 

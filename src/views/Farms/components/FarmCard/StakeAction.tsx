@@ -71,7 +71,7 @@ const StakeAction: React.FC<FarmCardActionsProps> = ({ stakedBalance, tokenBalan
   return (
     <Flex justifyContent="space-between" alignItems="center">
 
-      <Heading color={rawStakedBalance === 0 ? 'textDisabled' : 'text'}>{displayBalance}      {pid === 3 && usdStaked.gt(0)?<Label>~${(displayUSD)} USD</Label>:null}</Heading>
+      <Heading color={rawStakedBalance === 0 ? 'textDisabled' : 'text'}>{displayBalance}      {usdStaked.gt(0)?<Label>~${(displayUSD)} USD</Label>:null}</Heading>
       {renderStakingButtons()}
     </Flex>
   )
