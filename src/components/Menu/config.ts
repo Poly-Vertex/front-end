@@ -99,7 +99,7 @@ const config: MenuEntry[] = [
   {
     icon: 'AuditIcon',
     label: 'Audit by TechRate',
-    href: 'https://firebasestorage.googleapis.com/v0/b/gitbook-28427.appspot.com/o/assets%2F-Mc-jl5DYI-LH6-dKRZr%2F-Md2goNLxITyaBAz5tRe%2F-Md2gsFbOsXE8kiPJqh6%2FPolyVertex%20Full%20Smart%20Contract%20Security%20Audit.pdf?alt=media&token=c37acf22-e32d-4b28-b403-5f4b07d4e28f',
+    href: 'https://github.com/TechRate/Smart-Contract-Audits/blob/main/PolyVertex%20Full%20Smart%20Contract%20Security%20Audit.pdf',
   },
   // {
     //   label: 'Review by RugDoc',
