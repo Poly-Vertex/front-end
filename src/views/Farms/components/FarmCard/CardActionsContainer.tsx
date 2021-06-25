@@ -60,22 +60,10 @@ const CardActions: React.FC<FarmCardActionsProps> = ({ farm, ethereum, account, 
   }, [onApprove])
   
   let usdStaked = stakedBalance;
-  
-   if(isTokenOnly){
-    if (farm.quoteTokenSymbol === QuoteToken.BNB) {
-      usdStaked = usdStaked.times(bnbPrice);
-    }
-    if (farm.quoteTokenSymbol === QuoteToken.CAKE) {
-      usdStaked = usdStaked.times(cakePrice);
-    }
-  }
-  else if(totalValue){
-     const lpTokenValue = new BigNumber(totalValue).div(farm.lpStakedTotal);
-     
-     usdStaked = usdStaked.times(lpTokenValue);
-   }  
-
-
+   
+  if(totalValue){
+    usdStaked = usdStaked.times(new BigNumber(totalValue).div(farm.lpStakedTotal));
+  }  
 
   const renderApprovalOrStakeButton = () => {
     return isApproved ? (
