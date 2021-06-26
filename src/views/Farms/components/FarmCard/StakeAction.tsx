@@ -35,15 +35,17 @@ const StakeAction: React.FC<FarmCardActionsProps> = ({ stakedBalance, tokenBalan
   const { onUnstake } = useUnstake(pid)
 
   const rawStakedBalance = getBalanceNumber(stakedBalance)
-  const displayUSD = getBalanceNumber(usdStaked).toLocaleString();
+  let displayUSD = getBalanceNumber(usdStaked).toLocaleString();
   let displayBalance = rawStakedBalance.toLocaleString()
   if(pid === 7 || pid === 5){
     // USDT or USDC
     displayBalance = new BigNumber(rawStakedBalance).multipliedBy(10**12).toString();
+    displayUSD = getBalanceNumber(usdStaked, 6).toLocaleString();
   }
   if(pid === 9){
     // WBTC
     displayBalance = new BigNumber(rawStakedBalance).multipliedBy(10000000000).toString();
+    displayUSD = getBalanceNumber(usdStaked, 8).toLocaleString();
   }
 
 

@@ -65,6 +65,9 @@ const CardActions: React.FC<FarmCardActionsProps> = ({ farm, ethereum, account, 
     usdStaked = usdStaked.times(new BigNumber(totalValue).div(farm.lpStakedTotal));
   }  
 
+  if(farm.pid === 10)
+    usdStaked = usdStaked.times(new BigNumber(10).pow(10));
+
   const renderApprovalOrStakeButton = () => {
     return isApproved ? (
       <StakeAction stakedBalance={stakedBalance} tokenBalance={tokenBalance} tokenName={lpName} pid={pid} depositFeeBP={depositFeeBP} usdStaked={usdStaked} />

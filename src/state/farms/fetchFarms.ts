@@ -66,18 +66,15 @@ const fetchFarms = async () => {
 
       if(farmConfig.isTokenOnly){
         tokenAmount = new BigNumber(lpTokenBalanceMC).div(new BigNumber(10).pow(tokenDecimals));
+        
         if(farmConfig.tokenSymbol === QuoteToken.BUSD && farmConfig.quoteTokenSymbol === QuoteToken.BUSD){
           tokenPriceVsQuote = new BigNumber(1);          
         }else{
-          tokenPriceVsQuote = new BigNumber(quoteTokenBlanceLP).div(new BigNumber(tokenBalanceLP));
+          tokenPriceVsQuote = new BigNumber(quoteTokenBlanceLP).div(new BigNumber(10).pow(quoteTokenDecimals)).div(new BigNumber(tokenBalanceLP).div(new BigNumber(10).pow(tokenDecimals)));
         }
 
         lpTotalInQuoteToken = tokenAmount.times(tokenPriceVsQuote);
         
-        if(farmConfig.tokenSymbol === 'WBTC'){
-          lpTotalInQuoteToken = lpTotalInQuoteToken.multipliedBy("100");
-        }
-
         lpStakedTotal = tokenAmount;
       }else{
         // Ratio in % a LP tokens that are in staking, vs the total number in circulation
@@ -85,27 +82,22 @@ const fetchFarms = async () => {
 
         // Total value in staking in quote token value
         lpTotalInQuoteToken = new BigNumber(quoteTokenBlanceLP)
-          .div(new BigNumber(10).pow(18))
+          .div(new BigNumber(10).pow(quoteTokenDecimals))
           .times(new BigNumber(2))
           .times(lpTokenRatio)
 
         // Amount of token in the LP that are considered staking (i.e amount of token * lp ratio)
-        tokenAmount = new BigNumber(tokenBalanceLP).div(new BigNumber(10).pow(tokenDecimals)).times(lpTokenRatio)
+        tokenAmount = new BigNumber(tokenBalanceLP)
+          .div(new BigNumber(10).pow(tokenDecimals))
+          .times(lpTokenRatio)
         
         const quoteTokenAmount = new BigNumber(quoteTokenBlanceLP)
           .div(new BigNumber(10).pow(quoteTokenDecimals))
           .times(lpTokenRatio)
 
-          if(farmConfig.quoteTokenSymbol === QuoteToken.BUSD || farmConfig.quoteTokenSymbol === QuoteToken.USDT){
-            lpTotalInQuoteToken = lpTotalInQuoteToken.multipliedBy("1000000000000");
-            } 
-        
-        if(tokenAmount.comparedTo(0) > 0){
-          tokenPriceVsQuote = quoteTokenAmount.div(tokenAmount);
-        }else{
-          tokenPriceVsQuote = new BigNumber(quoteTokenBlanceLP).div(new BigNumber(tokenBalanceLP));
-        }
-
+          if(tokenAmount.comparedTo(0) > 0){
+            tokenPriceVsQuote = quoteTokenAmount.div(tokenAmount);
+          }
         lpStakedTotal = new BigNumber(lpTokenBalanceMC).div(new BigNumber(10).pow(tokenDecimals))        
       }
 
@@ -125,6 +117,7 @@ const fetchFarms = async () => {
         },
       ])
 
+      
       const allocPoint = new BigNumber(info.allocPoint._hex)
       const poolWeight = allocPoint.div(new BigNumber(totalAllocPoint))
 
