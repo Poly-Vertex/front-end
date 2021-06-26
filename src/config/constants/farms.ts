@@ -47,8 +47,8 @@ const farms: FarmConfig[] = [
       80001: '',
       137: contracts.cake[137], // vert
     },
-    quoteTokenSymbol: QuoteToken.CAKE,
-    quoteTokenAdresses: contracts.cake,
+    quoteTokenSymbol: QuoteToken.WETH,
+    quoteTokenAdresses: contracts.weth,
   },
   {
     pid: 2,
