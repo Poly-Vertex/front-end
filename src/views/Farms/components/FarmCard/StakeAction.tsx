@@ -66,11 +66,12 @@ const StakeAction: React.FC<FarmCardActionsProps> = ({
     correctedStakeBalance = new BigNumber(rawStakedBalance).multipliedBy(10000000000).toNumber()
     displayUSD = getBalanceNumber(usdStaked, 8).toLocaleString()
   }
-
+  
+  correctedStakeBalance = parseFloat(correctedStakeBalance.toPrecision(4));
   const displayBalance =
-  correctedStakeBalance < 0.001 && correctedStakeBalance>0 
+  correctedStakeBalance < 1e-5 && correctedStakeBalance>0 
     ? correctedStakeBalance.toExponential(2).split('e')[0].toLocaleString()
-    : correctedStakeBalance.toLocaleString()
+    : correctedStakeBalance.toLocaleString(undefined, {maximumFractionDigits: correctedStakeBalance>0.001?4:9})
 
 
   const [onPresentDeposit] = useModal(
@@ -100,7 +101,7 @@ const StakeAction: React.FC<FarmCardActionsProps> = ({
       <Heading color={correctedStakeBalance === 0 ? 'textDisabled' : 'text'}>
         <SciNumber>
           {displayBalance} 
-          {correctedStakeBalance < 0.001 && correctedStakeBalance>0 ? (
+          {correctedStakeBalance < 1e-5  && correctedStakeBalance>0 ? (
             <Label>{'  '}e{correctedStakeBalance.toExponential(2).split('e')[1].toLocaleString()}</Label>
           ) : (
             null
