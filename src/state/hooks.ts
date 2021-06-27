@@ -3,7 +3,7 @@ import { useEffect, useMemo } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import useRefresh from 'hooks/useRefresh'
 import { fetchFarmsPublicDataAsync, fetchPoolsPublicDataAsync, fetchPoolsUserDataAsync } from './actions'
-import { State, Farm, Pool } from './types'
+import { State, Farm, Pool, Vault } from './types'
 import { QuoteToken } from '../config/constants/types'
 
 const ZERO = new BigNumber(0)
@@ -66,6 +66,26 @@ export const usePoolFromPid = (sousId): Pool => {
   return pool
 }
 
+// Vaults 
+
+export const useVaults = (account): Vault[] => {
+  const { fastRefresh } = useRefresh()
+  const dispatch = useDispatch()
+  useEffect(() => {
+    if (account) {
+      dispatch(fetchPoolsUserDataAsync(account))
+    }
+  }, [account, dispatch, fastRefresh])
+
+  const vaults = useSelector((state: State) => state.vaults.data)
+  return vaults
+}
+
+export const useVaultsFromPid = (pid): Vault => {
+  const vault = useSelector((state: State) => state.vaults.data.find((p) => p.pid === pid))
+  return vault
+}
+
 // Prices
 
 export const usePriceBnbBusd = (): BigNumber => {
@@ -98,6 +118,7 @@ export const useTotalValue = (): BigNumber => {
   const ethPrice = usePriceWethBusd();
   const btcPrice = usePriceWethBusd();
   let value = new BigNumber(0);
+  // TODO add vaults
   for (let i = 0; i < farms.length; i++) {
     const farm = farms[i]
     if (farm.lpTotalInQuoteToken) {

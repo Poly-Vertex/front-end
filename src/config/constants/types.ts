@@ -79,6 +79,27 @@ export interface PoolConfig {
   tokenDecimals: number
 }
 
+export interface VaultConfig {
+  pid: number
+  lpSymbol: string
+  lpAddresses: Address
+  tokenSymbol: string
+  tokenAddresses: Address
+  quoteTokenSymbol: QuoteToken
+  quoteTokenAdresses: Address
+  multiplier?: string
+  isTokenOnly?: boolean
+  isCommunity?: boolean
+  isFinished?: boolean
+  risk: number
+  dual?: {
+    rewardPerBlock: number
+    earnLabel: string
+    endBlock: number
+  }
+  endBlock: number
+}
+
 export type Nft = {
   name: string
   description: string

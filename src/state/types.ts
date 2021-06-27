@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js'
-import { FarmConfig, PoolConfig } from 'config/constants/types'
+import { FarmConfig, PoolConfig, VaultConfig } from 'config/constants/types'
 
 export interface Farm extends FarmConfig {
   tokenAmount?: BigNumber
@@ -29,6 +29,23 @@ export interface Pool extends PoolConfig {
     pendingReward: BigNumber
   }
 }
+export interface Vault extends VaultConfig {
+  tokenAmount?: BigNumber
+  lpTotalInQuoteToken?: BigNumber
+  tokenPriceVsQuote?: BigNumber
+  poolWeight?: number
+  depositFeeBP?: number
+  eggPerBlock?: number
+    userData?: {
+    allowance: BigNumber
+    tokenBalance: BigNumber
+    stakedBalance: BigNumber
+    earnings: BigNumber
+  },
+  lpStakedTotal?: BigNumber
+  endBlock: number
+  isFinished?: boolean
+}
 
 // Slices states
 
@@ -39,10 +56,14 @@ export interface FarmsState {
 export interface PoolsState {
   data: Pool[]
 }
+export interface VaultsState {
+  data: Vault[]
+}
 
 // Global state
 
 export interface State {
   farms: FarmsState
   pools: PoolsState
+  vaults: VaultsState
 }
