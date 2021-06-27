@@ -5,17 +5,20 @@ import { Button, Flex, Heading, IconButton, AddIcon, MinusIcon, useModal } from 
 import useI18n from 'hooks/useI18n'
 import useStake from 'hooks/useStake'
 import useUnstake from 'hooks/useUnstake'
-import { getBalanceNumber } from 'utils/formatBalance'
+import { getBalanceNumber, getCorrectedNumber } from 'utils/formatBalance'
 import DepositModal from '../DepositModal'
 import WithdrawModal from '../WithdrawModal'
 
 interface FarmCardActionsProps {
+  isTokenOnly?: boolean
   stakedBalance?: BigNumber
   tokenBalance?: BigNumber
+  tokenDecimals?: number
   tokenName?: string
   pid?: number
   depositFeeBP?: number
-  usdStaked: BigNumber
+  usdStaked: BigNumber,
+  quoteTokenDecimals: number
 }
 
 const IconButtonWrapper = styled.div`
@@ -39,46 +42,31 @@ const SciNumber = styled.div`
   white-space: pre;
 `
 const StakeAction: React.FC<FarmCardActionsProps> = ({
+  isTokenOnly,
   stakedBalance,
   tokenBalance,
+  tokenDecimals,
   tokenName,
   pid,
   depositFeeBP,
   usdStaked,
+  quoteTokenDecimals
 }) => {
   const TranslateString = useI18n()
   const { onStake } = useStake(pid)
   const { onUnstake } = useUnstake(pid)
 
-  const rawStakedBalance = getBalanceNumber(stakedBalance)
-  let displayUSD = getBalanceNumber(usdStaked).toLocaleString()
+  const rawStakedBalance = getBalanceNumber(stakedBalance, tokenDecimals);
+  const correctedStakeBalance = parseFloat(rawStakedBalance.toPrecision(4));
+  const displayBalance = getCorrectedNumber(correctedStakeBalance);
 
-
-  let correctedStakeBalance = rawStakedBalance;
-
-  if (pid === 7 || pid === 5) {
-    // USDT or USDC
-    correctedStakeBalance = new BigNumber(rawStakedBalance).multipliedBy(10 ** 12).toNumber()
-    displayUSD = getBalanceNumber(usdStaked, 6).toLocaleString()
-  }
-  if (pid === 9) {
-    // WBTC
-    correctedStakeBalance = new BigNumber(rawStakedBalance).multipliedBy(10000000000).toNumber()
-    displayUSD = getBalanceNumber(usdStaked, 8).toLocaleString()
-  }
-  
-  correctedStakeBalance = parseFloat(correctedStakeBalance.toPrecision(4));
-  const displayBalance =
-  correctedStakeBalance < 1e-5 && correctedStakeBalance>0 
-    ? correctedStakeBalance.toExponential(2).split('e')[0].toLocaleString()
-    : correctedStakeBalance.toLocaleString(undefined, {maximumFractionDigits: correctedStakeBalance>0.001?4:9})
-
+  const displayUSD = getCorrectedNumber(getBalanceNumber(usdStaked, isTokenOnly ? tokenDecimals : quoteTokenDecimals));
 
   const [onPresentDeposit] = useModal(
-    <DepositModal max={tokenBalance} onConfirm={onStake} tokenName={tokenName} depositFeeBP={depositFeeBP} />,
+    <DepositModal isTokenOnly={isTokenOnly} max={tokenBalance} onConfirm={onStake} tokenName={tokenName} tokenDecimals={tokenDecimals} depositFeeBP={depositFeeBP} />,
   )
   const [onPresentWithdraw] = useModal(
-    <WithdrawModal max={stakedBalance} onConfirm={onUnstake} tokenName={tokenName} />,
+    <WithdrawModal isTokenOnly={isTokenOnly}  max={stakedBalance} onConfirm={onUnstake} tokenName={tokenName} tokenDecimals={tokenDecimals}/>,
   )
 
   const renderStakingButtons = () => {
