@@ -98,7 +98,7 @@ const fetchFarms = async () => {
           if(tokenAmount.comparedTo(0) > 0){
             tokenPriceVsQuote = quoteTokenAmount.div(tokenAmount);
           }
-        lpStakedTotal = new BigNumber(lpTokenBalanceMC).div(new BigNumber(10).pow(18))        
+        lpStakedTotal = new BigNumber(lpTokenBalanceMC).div(new BigNumber(10).pow(quoteTokenDecimals))        
       }
 
       const [info, totalAllocPoint, eggPerBlock] = await multicall(masterchefABI, [

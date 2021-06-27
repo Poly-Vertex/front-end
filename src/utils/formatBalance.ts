@@ -14,5 +14,5 @@ export const getCorrectedNumber = (balance: number) => {
   
   return  balance < 1e-5 && balance > 0 
     ? balance.toExponential(2).split('e')[0].toLocaleString()
-    : balance.toLocaleString(undefined, {maximumFractionDigits:  balance > 0.1 ? 2 : (digits)})
+    : balance.toLocaleString(undefined, {maximumFractionDigits:  balance > 1 ? 2 : (digits)})
 }

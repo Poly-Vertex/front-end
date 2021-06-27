@@ -31,6 +31,7 @@ const Label = styled.div`
   color: ${({ theme }) => theme.colors.textSubtle};
   font-size: 12px;
   align: left;
+  display: inline;
 `
 
 const SciNumber = styled.div`
@@ -60,7 +61,10 @@ const StakeAction: React.FC<FarmCardActionsProps> = ({
   const correctedStakeBalance = parseFloat(rawStakedBalance.toPrecision(4));
   const displayBalance = getCorrectedNumber(correctedStakeBalance);
 
-  const displayUSD = getCorrectedNumber(getBalanceNumber(usdStaked, isTokenOnly ? tokenDecimals : quoteTokenDecimals));
+  const rawDisplayUsd = getBalanceNumber(usdStaked, isTokenOnly ? tokenDecimals : quoteTokenDecimals)
+  // const correctedDisplayUsd = parseFloat(rawDisplayUsd.toPrecision(4));
+  const correctedDisplayUsd = rawDisplayUsd;
+  const displayUSD = getCorrectedNumber(correctedDisplayUsd);
 
   const [onPresentDeposit] = useModal(
     <DepositModal isTokenOnly={isTokenOnly} max={tokenBalance} onConfirm={onStake} tokenName={tokenName} tokenDecimals={tokenDecimals} depositFeeBP={depositFeeBP} />,
@@ -95,7 +99,16 @@ const StakeAction: React.FC<FarmCardActionsProps> = ({
             null
           )}{' '}
         </SciNumber>{' '}
-        {usdStaked.gt(0) ? <Label>~${displayUSD} USD</Label> : null}
+        <SciNumber>
+          {usdStaked.gt(0) ? <Label>~$
+          {displayUSD} 
+          {correctedDisplayUsd < 1e-5  && correctedDisplayUsd>0 ? (
+            <Label>{'  '}e{correctedDisplayUsd.toExponential(2).split('e')[1].toLocaleString()}</Label>
+          ) : (
+            null
+          )}
+          {' '} USD</Label> : null}
+        </SciNumber>
       </Heading>
       {renderStakingButtons()}
     </Flex>
