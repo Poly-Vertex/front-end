@@ -16,21 +16,6 @@ const TokenInput: React.FC<TokenInputProps> = ({ max, symbol, onChange, onSelect
   const TranslateString = useI18n()
   const useValue = value
   const useMax = max
-  // if(useValue && (symbol === 'USDT' || symbol === 'USDC')){
-  //   // USDT or USDC
-  //   useValue = new BigNumber("1000000000000").multipliedBy(value).toString();
-  // }
-
-  // if(useMax && (symbol === 'USDT' || symbol === 'USDC')){
-  //   useMax = new BigNumber("1000000000000").multipliedBy(max).toString();
-  // }
-  // if(useValue && symbol === 'WBTC'){
-  //   useValue = new BigNumber("10000000000").multipliedBy(value).toString();
-  // }
-
-  // if(useMax && symbol === 'WBTC'){
-  //   useMax = new BigNumber("10000000000").multipliedBy(max).toString();
-  // }
 
   return (
     <StyledTokenInput>
@@ -60,26 +45,6 @@ const TokenInput: React.FC<TokenInputProps> = ({ max, symbol, onChange, onSelect
           {symbol}
         </StyledMaxText>
       ) : null}
-       {symbol === 'USDT' || symbol === 'USDC' ? (
-          <div>
-            <br />
-            <p>
-            *Note that these number displays are off by 12 decimals
-            </p>
-            Use <a href="https://vfat.tools/polygon/polyvertex/">www.vfat.tools</a> to
-            confirm the amount
-          </div>
-        ) : null}
-       {symbol === 'WBTC'?(
-          <div>
-            <br />
-            <p>
-            *Note that these number displays are off by 10 decimals
-            </p>
-            Use <a href="https://vfat.tools/polygon/polyvertex/">www.vfat.tools</a> to
-            confirm the amount
-          </div>
-        ) : null}
     </StyledTokenInput>
   )
 }

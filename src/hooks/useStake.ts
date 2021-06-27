@@ -11,8 +11,8 @@ const useStake = (pid: number) => {
   const masterChefContract = useMasterchef()
 
   const handleStake = useCallback(
-    async (amount: string) => {
-      const txHash = await stake(masterChefContract, pid, amount, account)
+    async (amount: string, decimals: number) => {
+      const txHash = await stake(masterChefContract, pid, amount, account, decimals)
       dispatch(fetchFarmUserDataAsync(account))
       console.info(txHash)
     },

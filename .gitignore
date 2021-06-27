@@ -35,3 +35,4 @@ sftp-config.json
 
 # vscode
 /.vscode/
+.history
