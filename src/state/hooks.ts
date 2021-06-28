@@ -5,6 +5,7 @@ import useRefresh from 'hooks/useRefresh'
 import { fetchFarmsPublicDataAsync, fetchPoolsPublicDataAsync, fetchPoolsUserDataAsync } from './actions'
 import { State, Farm, Pool, Vault } from './types'
 import { QuoteToken } from '../config/constants/types'
+import { fetchVaultsPublicDataAsync } from './vaults'
 
 const ZERO = new BigNumber(0)
 
@@ -13,6 +14,7 @@ export const useFetchPublicData = () => {
   const { slowRefresh } = useRefresh()
   useEffect(() => {
     dispatch(fetchFarmsPublicDataAsync())
+    dispatch(fetchVaultsPublicDataAsync())
     // dispatch(fetchPoolsPublicDataAsync())
   }, [dispatch, slowRefresh])
 }
@@ -68,7 +70,7 @@ export const usePoolFromPid = (sousId): Pool => {
 
 // Vaults 
 
-export const useVaults = (account): Vault[] => {
+export const useVaults = (): Vault[] => {
   const vaults = useSelector((state: State) => state.vaults.data)
   return vaults
 }
@@ -89,7 +91,6 @@ export const useVaultUser = (pid) => {
     allowance: vault.userData ? new BigNumber(vault.userData.allowance) : new BigNumber(0),
     tokenBalance: vault.userData ? new BigNumber(vault.userData.tokenBalance) : new BigNumber(0),
     stakedBalance: vault.userData ? new BigNumber(vault.userData.stakedBalance) : new BigNumber(0),
-    earnings: vault.userData ? new BigNumber(vault.userData.earnings) : new BigNumber(0),
   }
 }
 
@@ -118,14 +119,16 @@ export const usePriceBtcBusd = (): BigNumber => {
   return farm.tokenPriceVsQuote ? new BigNumber(farm.tokenPriceVsQuote) : ZERO;
 }
 
-export const useTotalValue = (): BigNumber => {
+export const useTotalValue = (): {farms:BigNumber, vaults:BigNumber} => {
   const farms = useFarms();
+  const vaults = useVaults();
   const bnbPrice = usePriceBnbBusd();
   const cakePrice = usePriceCakeBusd();
   const ethPrice = usePriceWethBusd();
-  const btcPrice = usePriceWethBusd();
-  let value = new BigNumber(0);
-  // TODO add vaults
+  const btcPrice = usePriceBtcBusd();
+  let farmsValue = new BigNumber(0);
+  let vaultsValue = new BigNumber(0);
+  
   for (let i = 0; i < farms.length; i++) {
     const farm = farms[i]
     if (farm.lpTotalInQuoteToken) {
@@ -140,10 +143,30 @@ export const useTotalValue = (): BigNumber => {
       }else{
         val = (farm.lpTotalInQuoteToken); // USDC etc
       }
-      value = value.plus(val);
+      farmsValue = farmsValue.plus(val);
     }
   
   }
-  const output = value.toString() === Infinity.toString() ? new BigNumber(0): value;
-  return output;
+
+  for (let i = 0; i < vaults.length; i++) {
+    const vault = vaults[i]
+    if (vault.lpTotalInQuoteToken) {
+      let val;
+      if (vault.quoteTokenSymbol === QuoteToken.BNB) {
+        val = (bnbPrice.times(vault.lpTotalInQuoteToken));
+      }else if (vault.quoteTokenSymbol === QuoteToken.CAKE) {
+        val = (cakePrice.times(vault.lpTotalInQuoteToken));
+      }else if (vault.quoteTokenSymbol === QuoteToken.BTC) {
+        val = (btcPrice.times(vault.lpTotalInQuoteToken));
+       
+      }else{
+        val = (vault.lpTotalInQuoteToken); // USDC etc
+      }
+      vaultsValue = vaultsValue.plus(val);
+    }
+  
+  }
+  const farmsOutput = farmsValue.toString() === Infinity.toString() ? new BigNumber(0): farmsValue;
+  const vaultsOutput = vaultsValue.toString() === Infinity.toString() ? new BigNumber(0): vaultsValue;
+  return {farms:farmsOutput, vaults:vaultsOutput};
 }

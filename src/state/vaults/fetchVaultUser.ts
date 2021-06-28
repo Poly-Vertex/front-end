@@ -1,18 +1,18 @@
 import BigNumber from 'bignumber.js'
 import erc20ABI from 'config/abi/erc20.json'
-import masterchefABI from 'config/abi/masterchef.json'
+import vaultChefABI from 'config/abi/vaultChef.json'
 import multicall from 'utils/multicall'
 import vaultsConfig from 'config/constants/vaults'
-import { getMasterChefAddress } from 'utils/addressHelpers'
+import { getVaultChefAddress } from 'utils/addressHelpers'
 
 const CHAIN_ID = process.env.REACT_APP_CHAIN_ID
 
 export const fetchVaultUserAllowances = async (account: string) => {
-  const masterChefAdress = getMasterChefAddress()
+  const vaultChefAddress = getVaultChefAddress()
 
   const calls = vaultsConfig.map((vault) => {
     const lpContractAddress = vault.isTokenOnly ? vault.tokenAddresses[CHAIN_ID] : vault.lpAddresses[CHAIN_ID]
-    return { address: lpContractAddress, name: 'allowance', params: [account, masterChefAdress] }
+    return { address: lpContractAddress, name: 'allowance', params: [account, vaultChefAddress] }
   })
 
   const rawLpAllowances = await multicall(erc20ABI, calls)
@@ -24,7 +24,7 @@ export const fetchVaultUserAllowances = async (account: string) => {
 
 export const fetchVaultUserTokenBalances = async (account: string) => {
   const calls = vaultsConfig.map((vault) => {
-    const lpContractAddress = vault.isTokenOnly ? vault.tokenAddresses[CHAIN_ID] : vault.lpAddresses[CHAIN_ID]
+    const lpContractAddress = vault.lpAddresses[CHAIN_ID]
     return {
       address: lpContractAddress,
       name: 'balanceOf',
@@ -40,37 +40,20 @@ export const fetchVaultUserTokenBalances = async (account: string) => {
 }
 
 export const fetchVaultUserStakedBalances = async (account: string) => {
-  const masterChefAdress = getMasterChefAddress()
+  const vaultChefAddress = getVaultChefAddress()
 
   const calls = vaultsConfig.map((vault) => {
     return {
-      address: masterChefAdress,
+      address: vaultChefAddress,
       name: 'userInfo',
       params: [vault.pid, account],
     }
   })
 
-  const rawStakedBalances = await multicall(masterchefABI, calls)
+  const rawStakedBalances = await multicall(vaultChefABI, calls)
   const parsedStakedBalances = rawStakedBalances.map((stakedBalance) => {
     return new BigNumber(stakedBalance[0]._hex).toJSON()
   })
   return parsedStakedBalances
 }
 
-export const fetchVaultUserEarnings = async (account: string) => {
-  const masterChefAdress = getMasterChefAddress()
-
-  const calls = vaultsConfig.map((vault) => {
-    return {
-      address: masterChefAdress,
-      name: 'pendingEgg',
-      params: [vault.pid, account],
-    }
-  })
-
-  const rawEarnings = await multicall(masterchefABI, calls)
-  const parsedEarnings = rawEarnings.map((earnings) => {
-    return new BigNumber(earnings).toJSON()
-  })
-  return parsedEarnings
-}

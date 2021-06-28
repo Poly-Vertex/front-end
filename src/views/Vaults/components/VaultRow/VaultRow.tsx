@@ -2,19 +2,20 @@ import React, { useMemo, useState } from 'react'
 import BigNumber from 'bignumber.js'
 import styled, { keyframes } from 'styled-components'
 import { Flex, Text, Skeleton, ChevronDownIcon, ChevronUpIcon } from '@pancakeswap-libs/uikit'
-import { communityFarms } from 'config/constants'
-import { Farm, Vault } from 'state/types'
+// import { communityVaults } from 'config/constants'
+import { Vault } from 'state/types'
 import { provider } from 'web3-core'
 import useI18n from 'hooks/useI18n'
-import { getFullDisplayBalance } from 'utils/formatBalance'
+import { getFullDisplayBalance, getBalanceNumber, getCorrectedNumber } from 'utils/formatBalance'
 import ExpandableSectionButton from 'components/ExpandableSectionButton'
 import { QuoteToken } from 'config/constants/types'
 import { apyModalRoi, calculateCakeEarnedPerThousandDollars } from 'utils/compoundApyHelpers'
-import { useFarmUser, useVaultUser } from 'state/hooks'
+import { useVaultUser } from 'state/hooks'
 import DetailsSection from './DetailsSection'
 import CardHeading from './CardHeading'
 import CardActionsContainer from './CardActionsContainer'
 import ApyButton from './ApyButton'
+import {SciNumber} from './StakeAction'
 
 export interface VaultWithStakedValue extends Vault {
   apy?: BigNumber
@@ -94,7 +95,12 @@ const Row = styled.div<{clickable?: boolean }>`
   text-align: center;
   cursor: ${(props) => (props.clickable ? 'pointer' : 'default')};
 `
-
+const Label = styled.div`
+  color: ${({ theme }) => theme.colors.textSubtle};
+  font-size: 12px;
+  align: left;
+  display: inline;
+`
 interface VaultRowProps {
   vault: VaultWithStakedValue
   removed: boolean
@@ -112,14 +118,11 @@ interface VaultRowProps {
 const VaultRow: React.FC<VaultRowProps> = ({ vault, removed, cakePrice, bnbPrice, ethereum, account, wethPrice }) => {
   const TranslateString = useI18n()
   const [showExpandableSection, setShowExpandableSection] = useState(false)
-  const { allowance, tokenBalance, stakedBalance, earnings } = useVaultUser(vault.pid)
-  const farmImage = `${vault.tokenSymbol.toLowerCase()}-${vault.quoteTokenSymbol.toLowerCase()}`
+  const { allowance, tokenBalance, stakedBalance } = useVaultUser(vault.pid)
+  const vaultImage = `${vault.tokenSymbol.toLowerCase()}-${vault.quoteTokenSymbol.toLowerCase()}`
   
-  // const fullBalance = useMemo(() => {
-  //   return getFullDisplayBalance(tokenBalance, 18) // 18 because is LP
-  // }, [tokenBalance])
+  const fullBalance = getBalanceNumber(tokenBalance, 18).toPrecision(9) // 18 because is LP
 
-  const fullBalance = tokenBalance.toString();
 
   const totalValue: BigNumber = useMemo(() => {
     if (!vault.lpTotalInQuoteToken) {
@@ -147,7 +150,7 @@ const VaultRow: React.FC<VaultRowProps> = ({ vault, removed, cakePrice, bnbPrice
   
   const apy = vault.apy.times(new BigNumber(100)).toNumber();
 
-  let farmAPY = vault.apy && apy.toLocaleString(undefined, {
+  let vaultAPY = vault.apy && apy.toLocaleString(undefined, {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })
@@ -161,7 +164,7 @@ const VaultRow: React.FC<VaultRowProps> = ({ vault, removed, cakePrice, bnbPrice
     { value: 1e9, symbol: "B" },
     { value: 1e12, symbol: "T" },
   ];
-  let formatted = farmAPY;
+  let formatted = vaultAPY;
   formats.forEach(format => {
     if(vault.apy.times(new BigNumber(100).toNumber()).gt(format.value)){
       formatted = vault.apy && vault.apy.times(new BigNumber(100)).div(format.value).toNumber().toLocaleString(undefined, {
@@ -173,8 +176,37 @@ const VaultRow: React.FC<VaultRowProps> = ({ vault, removed, cakePrice, bnbPrice
     }
   });
 
-  farmAPY = formatted;
+  vaultAPY = formatted;
+  let usdPer1LP = new BigNumber(0);
+  let usdStaked = new BigNumber(0);
+  let usdWallet = new BigNumber(0);
 
+  if(totalValue && vault.lpStakedTotal){
+    usdPer1LP = new BigNumber(totalValue).dividedBy(vault.lpTokenBalanceChef)
+    usdStaked = stakedBalance.times(usdPer1LP); // TODO This value is wrong
+    usdWallet = tokenBalance.times(usdPer1LP);
+  }  
+
+  // Deposited Balance
+  const rawStakedBalance = getBalanceNumber(stakedBalance, 18);
+  const correctedStakeBalance = parseFloat(rawStakedBalance.toPrecision(4));
+  const displayDepositedBalance = getCorrectedNumber(correctedStakeBalance);
+
+  // Deposited USD
+  const rawDepositedDisplayUsd = new BigNumber(usdStaked).toNumber()
+  const correctedWalletDisplayUsd = parseFloat(rawDepositedDisplayUsd.toPrecision(4))
+  const displayStakedUSD = getCorrectedNumber(correctedWalletDisplayUsd);
+  
+  
+  // Wallet Balance
+  const rawWalletBalance = getBalanceNumber(tokenBalance, 18);
+  const correctedWalletBalance = parseFloat(rawWalletBalance.toPrecision(4))
+  const displayWalletBalance = getCorrectedNumber(correctedWalletBalance);
+  
+  // Wallet USD
+  const rawWalletDisplayUsd =  new BigNumber(usdWallet).toNumber()
+  const correctedDisplayUsd = parseFloat(rawWalletDisplayUsd.toPrecision(4))
+  const displayWalletUSD = getCorrectedNumber(correctedDisplayUsd);
 
 
 
@@ -189,7 +221,7 @@ const VaultRow: React.FC<VaultRowProps> = ({ vault, removed, cakePrice, bnbPrice
         multiplier={vault.multiplier}
         risk={risk}
         depositFee={vault.depositFeeBP}
-        farmImage={farmImage}
+        farmImage={vaultImage}
         tokenSymbol={vault.tokenSymbol}
       />
       {!removed && (
@@ -207,7 +239,7 @@ const VaultRow: React.FC<VaultRowProps> = ({ vault, removed, cakePrice, bnbPrice
                   apy={vault.apy}
                   pid={vault.pid}
                 />
-                {farmAPY}%
+                {vaultAPY}%
               </>
             ) : (
               <Skeleton height={24} width={80} />
@@ -216,16 +248,62 @@ const VaultRow: React.FC<VaultRowProps> = ({ vault, removed, cakePrice, bnbPrice
         </Flex>
       )}
       <Flex justifyContent='center' flexDirection="column">
-        <Text>{TranslateString(999, 'Daily')}:</Text>
-        <Text bold>{oneDayROI}</Text>
+        <Text>{TranslateString(999, 'Daily ROI')}:</Text>
+        <Text bold>{oneDayROI}%</Text>
       </Flex>
+
+
       <Flex justifyContent='center' flexDirection="column">
         <Text>{TranslateString(999, 'Wallet')}:</Text>
-        <Text bold>{fullBalance}</Text>
+      
+        <Text bold>
+
+<SciNumber>
+  {displayWalletBalance} 
+  {correctedWalletBalance < 1e-5  && correctedWalletBalance>0 ? (
+    <Label>{'  '}e{correctedWalletBalance.toExponential(2).split('e')[1].toLocaleString()}</Label>
+    ) : (
+      null
+      )}{' '}
+</SciNumber>{' '}
+<SciNumber>
+  {tokenBalance.gt(0) ? <Label>~$
+  {displayWalletUSD} 
+  {correctedWalletDisplayUsd < 1e-5  && correctedWalletDisplayUsd>0 ? (
+    <Label>{'  '}e{correctedWalletDisplayUsd.toExponential(2).split('e')[1].toLocaleString()}</Label>
+  ) : (
+    null
+  )}
+  {' '} USD</Label> : null}
+</SciNumber>
+</Text>
       </Flex>
+
+
+
       <Flex justifyContent='center' flexDirection="column">
         <Text>{TranslateString(999, 'Deposited')}:</Text>
-        <Text bold>{69420}</Text>
+        <Text bold>
+
+        <SciNumber>
+          {displayDepositedBalance} 
+          {correctedStakeBalance < 1e-5  && correctedStakeBalance>0 ? (
+            <Label>{'  '}e{correctedStakeBalance.toExponential(2).split('e')[1].toLocaleString()}</Label>
+            ) : (
+              null
+              )}{' '}
+        </SciNumber>{' '}
+        <SciNumber>
+          {usdStaked.gt(0) ? <Label>~$
+          {displayStakedUSD.toString()} 
+          {correctedDisplayUsd < 1e-5  && correctedDisplayUsd>0 ? (
+            <Label>{'  '}e{correctedDisplayUsd.toExponential(2).split('e')[1].toLocaleString()}</Label>
+          ) : (
+            null
+          )}
+          {' '} USD</Label> : null}
+        </SciNumber>
+        </Text>
       </Flex>
       <Flex justifyContent='center' flexDirection="column">
         <Text>{TranslateString(999, 'TVL')}:</Text>
@@ -234,9 +312,10 @@ const VaultRow: React.FC<VaultRowProps> = ({ vault, removed, cakePrice, bnbPrice
 
       {showExpandableSection ? <ChevronUpIcon /> : <ChevronDownIcon />}
       </Row>
+  <Divider/>
 <Row >
       <ExpandingWrapper expanded={showExpandableSection}>
-      <CardActionsContainer farm={vault} ethereum={ethereum} account={account} totalValue={totalValue} allowance={allowance} tokenBalance={tokenBalance} stakedBalance= {stakedBalance} earnings={earnings}  />
+      <CardActionsContainer vault={vault} ethereum={ethereum} account={account} totalValue={totalValue} allowance={allowance} tokenBalance={tokenBalance} stakedBalance= {stakedBalance}/>
         <DetailsSection
           removed={removed}
           isTokenOnly={vault.isTokenOnly}

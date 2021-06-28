@@ -5,7 +5,7 @@ import { Button, Flex, Heading, IconButton, AddIcon, MinusIcon, useModal } from 
 import useI18n from 'hooks/useI18n'
 import useStake from 'hooks/useStake'
 import useUnstake from 'hooks/useUnstake'
-import { getBalanceNumber } from 'utils/formatBalance'
+import { getBalanceNumber, getCorrectedNumber } from 'utils/formatBalance'
 import DepositModal from '../DepositModal'
 import WithdrawModal from '../WithdrawModal'
 
@@ -15,7 +15,7 @@ interface FarmCardActionsProps {
   tokenName?: string
   pid?: number
   depositFeeBP?: number
-  usdStaked: BigNumber
+  usdStaked: BigNumber,
 }
 
 const IconButtonWrapper = styled.div`
@@ -28,9 +28,10 @@ const Label = styled.div`
   color: ${({ theme }) => theme.colors.textSubtle};
   font-size: 12px;
   align: left;
+  display: inline;
 `
 
-const SciNumber = styled.div`
+export const SciNumber = styled.div`
   display: flex;
   white-space: nowrap;
   overflow: hidden;
@@ -50,40 +51,26 @@ const StakeAction: React.FC<FarmCardActionsProps> = ({
   const { onStake } = useStake(pid)
   const { onUnstake } = useUnstake(pid)
 
-  const rawStakedBalance = getBalanceNumber(stakedBalance)
-  let displayUSD = getBalanceNumber(usdStaked).toLocaleString()
+  const rawStakedBalance = getBalanceNumber(stakedBalance, 18);
+  const correctedStakeBalance = parseFloat(rawStakedBalance.toPrecision(4));
+  const displayBalance = getCorrectedNumber(correctedStakeBalance);
 
-
-  let correctedStakeBalance = rawStakedBalance;
-
-  if (pid === 7 || pid === 5) {
-    // USDT or USDC
-    correctedStakeBalance = new BigNumber(rawStakedBalance).multipliedBy(10 ** 12).toNumber()
-    displayUSD = getBalanceNumber(usdStaked, 6).toLocaleString()
-  }
-  if (pid === 9) {
-    // WBTC
-    correctedStakeBalance = new BigNumber(rawStakedBalance).multipliedBy(10000000000).toNumber()
-    displayUSD = getBalanceNumber(usdStaked, 8).toLocaleString()
-  }
+  // Deposited USD
+  const rawDepositedDisplayUsd = new BigNumber(usdStaked).toNumber()
+  const correctedWalletDisplayUsd = parseFloat(rawDepositedDisplayUsd.toPrecision(4))
+  const displayStakedUSD = getCorrectedNumber(correctedWalletDisplayUsd);
   
-  correctedStakeBalance = parseFloat(correctedStakeBalance.toPrecision(4));
-  const displayBalance =
-  correctedStakeBalance < 1e-5 && correctedStakeBalance>0 
-    ? correctedStakeBalance.toExponential(2).split('e')[0].toLocaleString()
-    : correctedStakeBalance.toLocaleString(undefined, {maximumFractionDigits: correctedStakeBalance>0.001?4:9})
-
 
   const [onPresentDeposit] = useModal(
-    <DepositModal  max={tokenBalance} onConfirm={onStake} tokenName={tokenName} depositFeeBP={depositFeeBP} />,
+    <DepositModal  max={tokenBalance} onConfirm={onStake} tokenName={tokenName}  depositFeeBP={depositFeeBP} />,
   )
   const [onPresentWithdraw] = useModal(
-    <WithdrawModal  max={stakedBalance} onConfirm={onUnstake} tokenName={tokenName} />,
+    <WithdrawModal max={stakedBalance} onConfirm={onUnstake} tokenName={tokenName}/>,
   )
 
   const renderStakingButtons = () => {
     return rawStakedBalance === 0 ? (
-      <Button onClick={onPresentDeposit}>{TranslateString(999, 'Stake')}</Button>
+      <Button onClick={onPresentDeposit}>{TranslateString(999, 'Deposit')}</Button>
     ) : (
       <IconButtonWrapper>
         <IconButton variant="tertiary" onClick={onPresentWithdraw} mr="6px">
@@ -97,7 +84,7 @@ const StakeAction: React.FC<FarmCardActionsProps> = ({
   }
 
   return (
-    <Flex justifyContent="space-between" alignItems="center">
+    <Flex justifyContent="center" alignItems="center">
       <Heading color={correctedStakeBalance === 0 ? 'textDisabled' : 'text'}>
         <SciNumber>
           {displayBalance} 
@@ -107,7 +94,16 @@ const StakeAction: React.FC<FarmCardActionsProps> = ({
             null
           )}{' '}
         </SciNumber>{' '}
-        {usdStaked.gt(0) ? <Label>~${displayUSD} USD</Label> : null}
+        <SciNumber>
+          {usdStaked.gt(0) ? <Label>~$
+          {displayStakedUSD} 
+          {correctedWalletDisplayUsd < 1e-5  && correctedWalletDisplayUsd>0 ? (
+            <Label>{'  '}e{correctedWalletDisplayUsd.toExponential(2).split('e')[1].toLocaleString()}</Label>
+          ) : (
+            null
+          )}
+          {' '} USD</Label> : null}
+        </SciNumber>
       </Heading>
       {renderStakingButtons()}
     </Flex>

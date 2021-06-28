@@ -49,6 +49,7 @@ export interface Vault extends VaultConfig {
   isFinished?: boolean
   tokenDecimals?: number,
   quoteTokenDecimals?: number,
+  lpTokenBalanceChef?: BigNumber
 }
 
 // Slices states

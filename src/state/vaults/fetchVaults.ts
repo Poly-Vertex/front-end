@@ -1,8 +1,9 @@
 import BigNumber from 'bignumber.js'
 import erc20 from 'config/abi/erc20.json'
-import masterchefABI from 'config/abi/masterchef.json'
+import vaultChefABI from 'config/abi/vaultChef.json'
+import vaultStrategyABI from 'config/abi/vaultStrategy.json'
 import multicall from 'utils/multicall'
-import { getMasterChefAddress } from 'utils/addressHelpers'
+import { getVaultChefAddress } from 'utils/addressHelpers'
 import vaultsConfig from 'config/constants/vaults'
 import { QuoteToken } from '../../config/constants/types'
 
@@ -12,30 +13,42 @@ const fetchVaults = async () => {
   const data = await Promise.all(
     vaultsConfig.map(async (vaultConfig) => {
   
+      const [info] = await multicall(vaultChefABI, [
+        {
+          address: getVaultChefAddress(),
+          name: 'poolInfo',
+          params: [vaultConfig.pid],
+        },
+      ])
+      const token = info[0] // token
+      const strategy = info[1] // strategy
+      
+      const [lpTokenBalanceMC] = await multicall(vaultStrategyABI, [
+        {
+          address: strategy,
+          name: 'vaultSharesTotal',
+          params: [],
+        },
+      ])
 
-      const lpAdress = vaultConfig.lpAddresses[CHAIN_ID]
-      const calls = [
+      // const lpAddress = vaultConfig.lpAddresses[CHAIN_ID] // unnecessary (use token instead)
+      const lpAddress = token 
+      const erc20Calls = [
         // Balance of token in the LP contract
         {
           address: vaultConfig.tokenAddresses[CHAIN_ID],
           name: 'balanceOf',
-          params: [lpAdress],
+          params: [lpAddress],
         },
         // Balance of quote token on LP contract
         {
           address: vaultConfig.quoteTokenAdresses[CHAIN_ID],
           name: 'balanceOf',
-          params: [lpAdress],
-        },
-        // Balance of LP tokens in the master chef contract
-        {
-          address: vaultConfig.isTokenOnly ? vaultConfig.tokenAddresses[CHAIN_ID] : lpAdress,
-          name: 'balanceOf',
-          params: [getMasterChefAddress()],
+          params: [lpAddress],
         },
         // Total supply of LP tokens
         {
-          address: lpAdress,
+          address: lpAddress,
           name: 'totalSupply',
         },
         // Token decimals
@@ -52,12 +65,11 @@ const fetchVaults = async () => {
 
       const [
         tokenBalanceLP,
-        quoteTokenBlanceLP,
-        lpTokenBalanceMC,
+        quoteTokenBalanceLP,
         lpTotalSupply,
         tokenDecimals,
         quoteTokenDecimals
-      ] = await multicall(erc20, calls)
+      ] = await multicall(erc20, erc20Calls)
 
       let tokenAmount;
       let lpTotalInQuoteToken;
@@ -70,7 +82,7 @@ const fetchVaults = async () => {
         if(vaultConfig.tokenSymbol === QuoteToken.BUSD && vaultConfig.quoteTokenSymbol === QuoteToken.BUSD){
           tokenPriceVsQuote = new BigNumber(1);          
         }else{
-          tokenPriceVsQuote = new BigNumber(quoteTokenBlanceLP).div(new BigNumber(10).pow(quoteTokenDecimals)).div(new BigNumber(tokenBalanceLP).div(new BigNumber(10).pow(tokenDecimals)));
+          tokenPriceVsQuote = new BigNumber(quoteTokenBalanceLP).div(new BigNumber(10).pow(quoteTokenDecimals)).div(new BigNumber(tokenBalanceLP).div(new BigNumber(10).pow(tokenDecimals)));
         }
 
         lpTotalInQuoteToken = tokenAmount.times(tokenPriceVsQuote);
@@ -79,19 +91,19 @@ const fetchVaults = async () => {
       }else{
         // Ratio in % a LP tokens that are in staking, vs the total number in circulation
         const lpTokenRatio = new BigNumber(lpTokenBalanceMC).div(new BigNumber(lpTotalSupply))
-
         // Total value in staking in quote token value
-        lpTotalInQuoteToken = new BigNumber(quoteTokenBlanceLP)
-          .div(new BigNumber(10).pow(quoteTokenDecimals))
-          .times(new BigNumber(2))
-          .times(lpTokenRatio)
-
+        lpTotalInQuoteToken = new BigNumber(quoteTokenBalanceLP)
+        .div(new BigNumber(10).pow(quoteTokenDecimals))
+        .times(new BigNumber(2))
+        .times(lpTokenRatio)
+        
         // Amount of token in the LP that are considered staking (i.e amount of token * lp ratio)
         tokenAmount = new BigNumber(tokenBalanceLP)
           .div(new BigNumber(10).pow(tokenDecimals))
           .times(lpTokenRatio)
+
         
-        const quoteTokenAmount = new BigNumber(quoteTokenBlanceLP)
+        const quoteTokenAmount = new BigNumber(quoteTokenBalanceLP)
           .div(new BigNumber(10).pow(quoteTokenDecimals))
           .times(lpTokenRatio)
 
@@ -101,37 +113,16 @@ const fetchVaults = async () => {
         lpStakedTotal = new BigNumber(lpTokenBalanceMC).div(new BigNumber(10).pow(tokenDecimals))        
       }
 
-      const [info, totalAllocPoint, eggPerBlock] = await multicall(masterchefABI, [
-        {
-          address: getMasterChefAddress(),
-          name: 'poolInfo',
-          params: [vaultConfig.pid],
-        },
-        {
-          address: getMasterChefAddress(),
-          name: 'totalAllocPoint',
-        },
-        {
-          address: getMasterChefAddress(),
-          name: 'eggPerBlock',
-        },
-      ])
-
-      
-      const allocPoint = new BigNumber(info.allocPoint._hex)
-      const poolWeight = allocPoint.div(new BigNumber(totalAllocPoint))
 
       return {
         ...vaultConfig,
         tokenAmount: tokenAmount.toJSON(),
-        // quoteTokenAmount: quoteTokenAmount,
         lpTotalInQuoteToken: lpTotalInQuoteToken.toJSON(),
         tokenPriceVsQuote: tokenPriceVsQuote.toJSON(),
-        poolWeight: poolWeight.toNumber(),
-        multiplier: `${allocPoint.div(100).toString()}X`,
-        depositFeeBP: info.depositFeeBP,
-        eggPerBlock: new BigNumber(eggPerBlock).toNumber(),
-        lpStakedTotal: lpStakedTotal.toJSON()
+        // poolWeight: poolWeight.toNumber(),
+        // depositFeeBP: info.depositFeeBP,
+        lpStakedTotal: lpStakedTotal.toJSON(),
+        lpTokenBalanceChef: lpTokenBalanceMC
       }
     }),
   )

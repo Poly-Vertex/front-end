@@ -3,9 +3,9 @@ import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { Contract } from 'web3-eth-contract'
 import { ethers } from 'ethers'
 import { useDispatch } from 'react-redux'
-import { updateUserAllowance, fetchFarmUserDataAsync } from 'state/actions'
+import { updateUserAllowance, fetchFarmUserDataAsync, fetchVaultUserDataAsync } from 'state/actions'
 import { approve } from 'utils/callHelpers'
-import { useMasterchef, useCake, useSousChef, useLottery } from './useContract'
+import { useMasterchef, useVaultChef, useCake, useSousChef, useLottery } from './useContract'
 
 // Approve a Farm
 export const useApprove = (lpContract: Contract) => {
@@ -22,6 +22,24 @@ export const useApprove = (lpContract: Contract) => {
       return false
     }
   }, [account, dispatch, lpContract, masterChefContract])
+
+  return { onApprove: handleApprove }
+}
+// Approve a Vault
+export const useVaultApprove = (lpContract: Contract) => {
+  const dispatch = useDispatch()
+  const { account }: { account: string } = useWallet()
+  const vaultChefContract = useVaultChef()
+
+  const handleApprove = useCallback(async () => {
+    try {
+      const tx = await approve(lpContract, vaultChefContract, account)
+      dispatch(fetchVaultUserDataAsync(account))
+      return tx
+    } catch (e) {
+      return false
+    }
+  }, [account, dispatch, lpContract, vaultChefContract])
 
   return { onApprove: handleApprove }
 }

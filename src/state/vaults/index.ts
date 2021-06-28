@@ -3,7 +3,6 @@ import { createSlice } from '@reduxjs/toolkit'
 import vaultsConfig from 'config/constants/vaults'
 import fetchVaults from './fetchVaults'
 import {
-  fetchVaultUserEarnings,
   fetchVaultUserAllowances,
   fetchVaultUserTokenBalances,
   fetchVaultUserStakedBalances,
@@ -19,7 +18,7 @@ export const vaultsSlice = createSlice({
     setVaultsPublicData: (state, action) => {
       const liveVaultsData: Vault[] = action.payload
       state.data = state.data.map((vault) => {
-        const liveVaultData = liveVaultsData.find((f) => f.pid === vault.pid)
+        const liveVaultData = liveVaultsData.find((v) => v.pid === vault.pid)
         return { ...vault, ...liveVaultData }
       })
     },
@@ -45,15 +44,12 @@ export const fetchVaultUserDataAsync = (account) => async (dispatch) => {
   const userVaultAllowances = await fetchVaultUserAllowances(account)
   const userVaultTokenBalances = await fetchVaultUserTokenBalances(account)
   const userStakedBalances = await fetchVaultUserStakedBalances(account)
-  const userVaultEarnings = await fetchVaultUserEarnings(account)
-
   const arrayOfUserDataObjects = userVaultAllowances.map((vaultAllowance, index) => {
     return {
       index,
       allowance: userVaultAllowances[index],
       tokenBalance: userVaultTokenBalances[index],
       stakedBalance: userStakedBalances[index],
-      earnings: userVaultEarnings[index],
     }
   })
 

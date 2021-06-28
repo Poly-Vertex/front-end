@@ -2,7 +2,6 @@ import React from 'react'
 import styled from 'styled-components'
 import { Card, CardBody, Heading, Skeleton, Text } from '@pancakeswap-libs/uikit'
 import useI18n from 'hooks/useI18n'
-import { useGetStats } from 'hooks/api'
 import { useTotalValue } from '../../../state/hooks'
 import CardValue from './CardValue'
 
@@ -14,10 +13,9 @@ const StyledTotalValueLockedCard = styled(Card)`
 
 const TotalValueLockedCard = () => {
   const TranslateString = useI18n()
-  // const data = useGetStats()
-  const totalValue = useTotalValue();
-  // const tvl = totalValue.toFixed(2);
+  const {farms:totalValueFarms, vaults:totalValueVaults} = useTotalValue();
 
+  
   return (
     <StyledTotalValueLockedCard>
       <CardBody>
@@ -27,9 +25,10 @@ const TotalValueLockedCard = () => {
         <>
           {/* <Heading size="xl">{`$${tvl}`}</Heading> */}
           {/* <Heading size="xl"> */}
-            <CardValue value={totalValue.toNumber()} prefix="$" decimals={2}/>
+            <CardValue value={totalValueFarms.toNumber() + totalValueVaults.toNumber()} prefix="$" decimals={2}/>
           {/* </Heading> */}
-          <Text color="textSubtle">{TranslateString(999, 'Across all Farms and Pools')}</Text>
+          <Text color="textSubtle"><b>{TranslateString(999, 'Farms and pools')}:</b> <CardValue value={totalValueFarms.toNumber()} prefix="$" decimals={2} fontSize="20px"/></Text>
+          <Text color="textSubtle"><b>{TranslateString(999, 'Vaults')}:</b> <CardValue value={totalValueVaults.toNumber()} prefix="$" decimals={2} fontSize="20px"/></Text>
         </>
       </CardBody>
     </StyledTotalValueLockedCard>

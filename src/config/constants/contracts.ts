@@ -7,6 +7,10 @@ export default {
     137: '0x8bE82Ab9B6179bE6EB88431E3E4E0fd93b9E607C', // LIVE
     80001: '0x9cCA28d98EC895c50C266b7f138dD6316aADB52A',
   },
+  vaultChef: {
+    137: '0xbda1f897e851c7ef22cd490d2cf2dace4645a904', // POLYCAT!! VaultChef
+    80001: '',
+  },
   wbnb: {
     137: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270', // WMATIC
     80001: '',
