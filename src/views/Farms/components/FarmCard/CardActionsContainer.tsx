@@ -5,13 +5,13 @@ import { provider } from 'web3-core'
 import { getContract } from 'utils/erc20'
 import { Button, Flex, Text} from '@pancakeswap-libs/uikit'
 import { Farm } from 'state/types'
-import { QuoteToken } from 'config/constants/types'
-import { useFarmFromPid, useFarmFromSymbol, useFarmUser, usePriceBnbBusd, usePriceCakeBusd } from 'state/hooks'
+import { useFarmFromPid, useFarmUser, usePriceCakeBusd } from 'state/hooks'
 import useI18n from 'hooks/useI18n'
 import UnlockButton from 'components/UnlockButton'
 import { useApprove } from 'hooks/useApprove'
 import StakeAction from './StakeAction'
 import HarvestAction from './HarvestAction'
+
 
 const Action = styled.div`
   padding-top: 16px;
@@ -27,8 +27,6 @@ interface FarmCardActionsProps {
   totalValue?: BigNumber
 }
 
-
-
 const CardActions: React.FC<FarmCardActionsProps> = ({ farm, ethereum, account, totalValue }) => {
   const TranslateString = useI18n()
   const [requestedApproval, setRequestedApproval] = useState(false)
@@ -39,7 +37,6 @@ const CardActions: React.FC<FarmCardActionsProps> = ({ farm, ethereum, account, 
   const lpName = farm.lpSymbol.toUpperCase()
   const isApproved = account && allowance && allowance.isGreaterThan(0)
   const cakePrice = usePriceCakeBusd();
-  const bnbPrice = usePriceBnbBusd();
   const lpContract = useMemo(() => {
     if(isTokenOnly){
       return getContract(ethereum as provider, tokenAddress);
@@ -65,12 +62,9 @@ const CardActions: React.FC<FarmCardActionsProps> = ({ farm, ethereum, account, 
     usdStaked = usdStaked.times(new BigNumber(totalValue).div(farm.lpStakedTotal));
   }  
 
-  if(farm.pid === 10)
-    usdStaked = usdStaked.times(new BigNumber(10).pow(10));
-
   const renderApprovalOrStakeButton = () => {
     return isApproved ? (
-      <StakeAction stakedBalance={stakedBalance} tokenBalance={tokenBalance} tokenName={lpName} pid={pid} depositFeeBP={depositFeeBP} usdStaked={usdStaked} />
+      <StakeAction isTokenOnly={isTokenOnly} stakedBalance={stakedBalance} tokenBalance={tokenBalance} tokenDecimals={farm.tokenDecimals} tokenName={lpName} pid={pid} depositFeeBP={depositFeeBP} usdStaked={usdStaked} quoteTokenDecimals={farm.quoteTokenDecimals} />
       ) : (
       <Button mt="8px" fullWidth disabled={requestedApproval} onClick={handleApprove}>
         {TranslateString(999, 'Approve Contract')}

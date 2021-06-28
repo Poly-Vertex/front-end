@@ -15,7 +15,9 @@ export interface Farm extends FarmConfig {
     stakedBalance: BigNumber
     earnings: BigNumber
   },
-  lpStakedTotal?: BigNumber
+  lpStakedTotal?: BigNumber,
+  tokenDecimals?: number,
+  quoteTokenDecimals?: number,
 }
 
 export interface Pool extends PoolConfig {
