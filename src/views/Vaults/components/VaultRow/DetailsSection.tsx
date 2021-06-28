@@ -52,7 +52,7 @@ const DetailsSection: React.FC<ExpandableSectionProps> = ({
 
   return (
     <Wrapper>
-      <Flex justifyContent="space-between">
+      <Flex justifyContent="center" flexDirection="row">
         <Text>{TranslateString(316, 'Stake')}:</Text>
         <StyledLinkExternal href={
           isTokenOnly ?
@@ -63,13 +63,8 @@ const DetailsSection: React.FC<ExpandableSectionProps> = ({
           {lpLabel}
         </StyledLinkExternal>
       </Flex>
-      {!removed && (
-        <Flex justifyContent="space-between">
-          <Text>{TranslateString(23, 'Total Liquidity')}:</Text>
-          <Text>{totalValueFormated}</Text>
-        </Flex>
-      )}
-      <Flex justifyContent="flex-start">
+
+      <Flex justifyContent="center">
         <Link external href={bscScanAddress} bold={false}>
           {TranslateString(356, 'View on polygonscan')}
         </Link>

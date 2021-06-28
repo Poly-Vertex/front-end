@@ -69,21 +69,28 @@ export const usePoolFromPid = (sousId): Pool => {
 // Vaults 
 
 export const useVaults = (account): Vault[] => {
-  const { fastRefresh } = useRefresh()
-  const dispatch = useDispatch()
-  useEffect(() => {
-    if (account) {
-      dispatch(fetchPoolsUserDataAsync(account))
-    }
-  }, [account, dispatch, fastRefresh])
-
   const vaults = useSelector((state: State) => state.vaults.data)
   return vaults
 }
 
-export const useVaultsFromPid = (pid): Vault => {
+export const useVaultFromPid = (pid): Vault => {
   const vault = useSelector((state: State) => state.vaults.data.find((p) => p.pid === pid))
   return vault
+}
+
+export const useVaultFromSymbol = (lpSymbol: string): Vault => {
+  const vault = useSelector((state: State) => state.vaults.data.find((f) => f.lpSymbol === lpSymbol))
+  return vault
+}
+
+export const useVaultUser = (pid) => {
+  const vault = useVaultFromPid(pid)
+  return {
+    allowance: vault.userData ? new BigNumber(vault.userData.allowance) : new BigNumber(0),
+    tokenBalance: vault.userData ? new BigNumber(vault.userData.tokenBalance) : new BigNumber(0),
+    stakedBalance: vault.userData ? new BigNumber(vault.userData.stakedBalance) : new BigNumber(0),
+    earnings: vault.userData ? new BigNumber(vault.userData.earnings) : new BigNumber(0),
+  }
 }
 
 // Prices

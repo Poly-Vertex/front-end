@@ -1,13 +1,16 @@
 import React, { useMemo, useState } from 'react'
 import BigNumber from 'bignumber.js'
 import styled, { keyframes } from 'styled-components'
-import { Flex, Text, Skeleton } from '@pancakeswap-libs/uikit'
+import { Flex, Text, Skeleton, ChevronDownIcon, ChevronUpIcon } from '@pancakeswap-libs/uikit'
 import { communityFarms } from 'config/constants'
 import { Farm, Vault } from 'state/types'
 import { provider } from 'web3-core'
 import useI18n from 'hooks/useI18n'
+import { getFullDisplayBalance } from 'utils/formatBalance'
 import ExpandableSectionButton from 'components/ExpandableSectionButton'
 import { QuoteToken } from 'config/constants/types'
+import { apyModalRoi, calculateCakeEarnedPerThousandDollars } from 'utils/compoundApyHelpers'
+import { useFarmUser, useVaultUser } from 'state/hooks'
 import DetailsSection from './DetailsSection'
 import CardHeading from './CardHeading'
 import CardActionsContainer from './CardActionsContainer'
@@ -59,12 +62,12 @@ const VCard = styled.div`
   background: ${(props) => props.theme.card.background};
   border-radius: 32px;
   box-shadow: 0px 2px 12px -8px rgba(25, 19, 38, 0.1), 0px 1px 1px rgba(25, 19, 38, 0.05);
-  display: flex;
+  display: inline-block;
   width: 100%;
   max-width: 100%;
   flex-direction: row;
-  justify-content: space-around;
-  padding: 24px;
+  justify-content: space-between;
+  padding: 20px;
   position: relative;
   text-align: center;
 `
@@ -78,7 +81,18 @@ const Divider = styled.div`
 
 const ExpandingWrapper = styled.div<{ expanded: boolean }>`
   height: ${(props) => (props.expanded ? '100%' : '0px')};
+  width: 100%;
   overflow: hidden;
+`
+const Row = styled.div<{clickable?: boolean }>`
+  display: flex;
+  width: 100%;
+  max-width: 100%;
+  flex-direction: row;
+  justify-content: space-between;
+  position: relative;
+  text-align: center;
+  cursor: ${(props) => (props.clickable ? 'pointer' : 'default')};
 `
 
 interface VaultRowProps {
@@ -92,12 +106,20 @@ interface VaultRowProps {
   wethPrice?:BigNumber
 }
 
+
+
+
 const VaultRow: React.FC<VaultRowProps> = ({ vault, removed, cakePrice, bnbPrice, ethereum, account, wethPrice }) => {
   const TranslateString = useI18n()
-
   const [showExpandableSection, setShowExpandableSection] = useState(false)
-
+  const { allowance, tokenBalance, stakedBalance, earnings } = useVaultUser(vault.pid)
   const farmImage = `${vault.tokenSymbol.toLowerCase()}-${vault.quoteTokenSymbol.toLowerCase()}`
+  
+  // const fullBalance = useMemo(() => {
+  //   return getFullDisplayBalance(tokenBalance, 18) // 18 because is LP
+  // }, [tokenBalance])
+
+  const fullBalance = tokenBalance.toString();
 
   const totalValue: BigNumber = useMemo(() => {
     if (!vault.lpTotalInQuoteToken) {
@@ -122,11 +144,17 @@ const VaultRow: React.FC<VaultRowProps> = ({ vault, removed, cakePrice, bnbPrice
     : '-'
    
   const lpLabel = vault.lpSymbol
-  const earnLabel = 'VERT'
-  let farmAPY = vault.apy && vault.apy.times(new BigNumber(100)).toNumber().toLocaleString(undefined, {
+  
+  const apy = vault.apy.times(new BigNumber(100)).toNumber();
+
+  let farmAPY = vault.apy && apy.toLocaleString(undefined, {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })
+  const oneThousandDollarsWorthOfCake = 1000 / cakePrice.toNumber()
+  const cakeEarnedPerThousand1D = calculateCakeEarnedPerThousandDollars({ numberOfDays: 1, farmApy:apy, cakePrice })
+  const oneDayROI = apyModalRoi({ amountEarned: cakeEarnedPerThousand1D, amountInvested: oneThousandDollarsWorthOfCake })
+
   const formats = [
     { value: 1e3, symbol: "K" } , 
     { value: 1e6, symbol: "M" },
@@ -148,11 +176,14 @@ const VaultRow: React.FC<VaultRowProps> = ({ vault, removed, cakePrice, bnbPrice
   farmAPY = formatted;
 
 
-  
+
+
   const { quoteTokenAdresses, quoteTokenSymbol, tokenAddresses, risk, lpSymbol } = vault
   return (
-    <VCard>
+    <VCard  >
       {vault.tokenSymbol === 'VERT' && <StyledCardAccent />}
+      <Row clickable onClick={() => setShowExpandableSection(!showExpandableSection)}>
+        
       <CardHeading
         lpLabel={lpLabel}
         multiplier={vault.multiplier}
@@ -162,7 +193,7 @@ const VaultRow: React.FC<VaultRowProps> = ({ vault, removed, cakePrice, bnbPrice
         tokenSymbol={vault.tokenSymbol}
       />
       {!removed && (
-        <Flex justifyContent='space-between' alignItems='center'>
+        <Flex justifyContent='center' alignItems='center' flexDirection="column"> 
           <Text>{TranslateString(352, 'APR')}:</Text>
           <Text bold style={{ display: 'flex', alignItems: 'center' }}>
             {vault.apy ? (
@@ -184,21 +215,28 @@ const VaultRow: React.FC<VaultRowProps> = ({ vault, removed, cakePrice, bnbPrice
           </Text>
         </Flex>
       )}
-      <Flex justifyContent='space-between'>
-        <Text>{TranslateString(318, 'Earn')}:</Text>
-        <Text bold>{earnLabel}</Text>
+      <Flex justifyContent='center' flexDirection="column">
+        <Text>{TranslateString(999, 'Daily')}:</Text>
+        <Text bold>{oneDayROI}</Text>
       </Flex>
-      <Flex justifyContent='space-between'>
-        <Text style={{ fontSize: '24px' }}>{TranslateString(10001, 'Deposit Fee')}:</Text>
-        <Text bold style={{ fontSize: '24px' }}>{(vault.depositFeeBP / 100)}%</Text>
+      <Flex justifyContent='center' flexDirection="column">
+        <Text>{TranslateString(999, 'Wallet')}:</Text>
+        <Text bold>{fullBalance}</Text>
       </Flex>
-      <CardActionsContainer farm={vault} ethereum={ethereum} account={account} totalValue={totalValue} />
-      <Divider />
-      <ExpandableSectionButton
-        onClick={() => setShowExpandableSection(!showExpandableSection)}
-        expanded={showExpandableSection}
-      />
+      <Flex justifyContent='center' flexDirection="column">
+        <Text>{TranslateString(999, 'Deposited')}:</Text>
+        <Text bold>{69420}</Text>
+      </Flex>
+      <Flex justifyContent='center' flexDirection="column">
+        <Text>{TranslateString(999, 'TVL')}:</Text>
+        <Text bold>{totalValueFormated}</Text>
+      </Flex>
+
+      {showExpandableSection ? <ChevronUpIcon /> : <ChevronDownIcon />}
+      </Row>
+<Row >
       <ExpandingWrapper expanded={showExpandableSection}>
+      <CardActionsContainer farm={vault} ethereum={ethereum} account={account} totalValue={totalValue} allowance={allowance} tokenBalance={tokenBalance} stakedBalance= {stakedBalance} earnings={earnings}  />
         <DetailsSection
           removed={removed}
           isTokenOnly={vault.isTokenOnly}
@@ -216,6 +254,7 @@ const VaultRow: React.FC<VaultRowProps> = ({ vault, removed, cakePrice, bnbPrice
           pid={vault.pid}
         />
       </ExpandingWrapper>
+</Row>
     </VCard>
   )
 }

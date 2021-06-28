@@ -56,7 +56,7 @@ const Vaults: React.FC = () => {
             <li>{TranslateString(999, 'Auto-compounding.')}</li>
             <li>{TranslateString(999, 'Grow your deposit over time.')}</li>
             <li>{TranslateString(999, 'You can unstake at any time.')}</li>
-            <li>{TranslateString(999, 'Compound every X minutes to maximize yield')}</li>
+            <li>{TranslateString(999, 'Compounds every X minutes to maximize yield.')}</li>
           </ul>
         </div>
         {/* <img src="/images/.png" alt="Vaults Icon width={410} height={191} /> */}

@@ -20,7 +20,7 @@ interface ApyCalculatorModalProps {
 
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(4, auto);
   margin-bottom: 24px;
 `
@@ -67,11 +67,7 @@ const ApyCalculatorModal: React.FC<ApyCalculatorModalProps> = ({
             {TranslateString(999, 'ROI')}
           </Text>
         </GridItem>
-        <GridItem>
-          <Text fontSize="12px" bold color="textSubtle" textTransform="uppercase" mb="20px">
-            {TranslateString(999, 'VERT per $1000')}
-          </Text>
-        </GridItem>
+       
         {/* 1 day row */}
         <GridItem>
           <Text>1d</Text>
@@ -81,9 +77,7 @@ const ApyCalculatorModal: React.FC<ApyCalculatorModalProps> = ({
             {apyModalRoi({ amountEarned: cakeEarnedPerThousand1D, amountInvested: oneThousandDollarsWorthOfCake })}%
           </Text>
         </GridItem>
-        <GridItem>
-          <Text>{cakeEarnedPerThousand1D}</Text>
-        </GridItem>
+        
         {/* 7 day row */}
         <GridItem>
           <Text>7d</Text>
@@ -93,9 +87,7 @@ const ApyCalculatorModal: React.FC<ApyCalculatorModalProps> = ({
             {apyModalRoi({ amountEarned: cakeEarnedPerThousand7D, amountInvested: oneThousandDollarsWorthOfCake })}%
           </Text>
         </GridItem>
-        <GridItem>
-          <Text>{cakeEarnedPerThousand7D}</Text>
-        </GridItem>
+       
         {/* 30 day row */}
         <GridItem>
           <Text>30d</Text>
@@ -105,10 +97,7 @@ const ApyCalculatorModal: React.FC<ApyCalculatorModalProps> = ({
             {apyModalRoi({ amountEarned: cakeEarnedPerThousand30D, amountInvested: oneThousandDollarsWorthOfCake })}%
           </Text>
         </GridItem>
-        <GridItem>
-          <Text>{cakeEarnedPerThousand30D}</Text>
-        </GridItem>
-        {/* 365 day / APY row */}
+        
         <GridItem>
           <Text>365d(APY)</Text>
         </GridItem>
@@ -117,9 +106,7 @@ const ApyCalculatorModal: React.FC<ApyCalculatorModalProps> = ({
             {apyModalRoi({ amountEarned: cakeEarnedPerThousand365D, amountInvested: oneThousandDollarsWorthOfCake })}%
           </Text>
         </GridItem>
-        <GridItem>
-          <Text>{cakeEarnedPerThousand365D}</Text>
-        </GridItem>
+       
       </Grid>
       <Description fontSize="12px" color="textSubtle">
         {TranslateString(
