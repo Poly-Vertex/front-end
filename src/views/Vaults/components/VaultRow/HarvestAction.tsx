@@ -46,7 +46,7 @@ const HarvestAction: React.FC<FarmCardActionsProps> = ({ earnings, pid, usdEarni
             marginBottom='15px'
             onClick={async () => {
               setPendingTx(true)
-              await onStake(rawEarningsBalance.toString())
+              await onStake(rawEarningsBalance.toString(), 18) // TODO 18?
               setPendingTx(false)
             }}
           >

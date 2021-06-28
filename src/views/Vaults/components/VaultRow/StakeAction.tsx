@@ -6,8 +6,8 @@ import useI18n from 'hooks/useI18n'
 import useStake from 'hooks/useStake'
 import useUnstake from 'hooks/useUnstake'
 import { getBalanceNumber } from 'utils/formatBalance'
-import DepositModal from '../../../Farms/components/DepositModal'
-import WithdrawModal from '../../../Farms/components/WithdrawModal'
+import DepositModal from '../DepositModal'
+import WithdrawModal from '../WithdrawModal'
 
 interface FarmCardActionsProps {
   stakedBalance?: BigNumber
@@ -75,10 +75,10 @@ const StakeAction: React.FC<FarmCardActionsProps> = ({
 
 
   const [onPresentDeposit] = useModal(
-    <DepositModal max={tokenBalance} onConfirm={onStake} tokenName={tokenName} depositFeeBP={depositFeeBP} />,
+    <DepositModal  max={tokenBalance} onConfirm={onStake} tokenName={tokenName} depositFeeBP={depositFeeBP} />,
   )
   const [onPresentWithdraw] = useModal(
-    <WithdrawModal max={stakedBalance} onConfirm={onUnstake} tokenName={tokenName} />,
+    <WithdrawModal  max={stakedBalance} onConfirm={onUnstake} tokenName={tokenName} />,
   )
 
   const renderStakingButtons = () => {

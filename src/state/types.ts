@@ -47,6 +47,8 @@ export interface Vault extends VaultConfig {
   lpStakedTotal?: BigNumber
   endBlock: number
   isFinished?: boolean
+  tokenDecimals?: number,
+  quoteTokenDecimals?: number,
 }
 
 // Slices states
