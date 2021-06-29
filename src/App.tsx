@@ -6,10 +6,10 @@ import BigNumber from 'bignumber.js'
 import { useFetchPublicData } from 'state/hooks'
 import Image from 'views/Nft/components/Image'
 import styled from 'styled-components'
-import GlobalStyle from './style/Global'
 import Menu from './components/Menu'
 import PageLoader from './components/PageLoader'
 import NftGlobalNotification from './views/Nft/components/NftGlobalNotification'
+import GlobalStyle from './style/Global'
 
 // Route-based code splitting
 // Only pool is included in the main bundle because of it's the most visited page'

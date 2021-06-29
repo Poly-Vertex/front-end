@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
-import { Heading, Text, BaseLayout } from '@pancakeswap-libs/uikit'
+import { Heading, Text, BaseLayout , Button, ToastContainer} from '@pancakeswap-libs/uikit'
 import useI18n from 'hooks/useI18n'
+import useToast from 'hooks/useToast'
 import Page from 'components/layout/Page'
 import FarmStakingCard from './components/FarmStakingCard'
 import LotteryCard from './components/LotteryCard'
@@ -54,8 +55,12 @@ const Cards = styled(BaseLayout)`
   }
 `
 
+
+
+
 const Home: React.FC = () => {
   const TranslateString = useI18n()
+  
 
   return (
     <Page>
