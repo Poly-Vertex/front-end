@@ -8,7 +8,6 @@ import { Farm } from 'state/types'
 import { useFarmFromPid, useFarmUser, usePriceCakeBusd } from 'state/hooks'
 import useI18n from 'hooks/useI18n'
 import UnlockButton from 'components/UnlockButton'
-import useToast from 'hooks/useToast'
 import { useApprove } from 'hooks/useApprove'
 import StakeAction from './StakeAction'
 import HarvestAction from './HarvestAction'
@@ -17,7 +16,7 @@ const Action = styled.div`
   padding-top: 16px;
 `
 const ToastContainerSticky = styled(ToastContainer)`
-  position:sticky
+  position:absolute
 `
 export interface FarmWithStakedValue extends Farm {
   apy?: BigNumber
@@ -49,12 +48,8 @@ const CardActions: React.FC<FarmCardActionsProps> = ({ farm, ethereum, account, 
   }, [ethereum, lpAddress, tokenAddress, isTokenOnly])
 
 
-  const [toasts, setToasts] = useState([])
 
-  const handleRemove = (id: string) => {
-    setToasts((prevToasts) => prevToasts.filter((prevToast) => prevToast.id !== id))
-  }
-
+  
   const { onApprove } = useApprove(lpContract)
 
   const handleApprove = useCallback(async () => {
@@ -62,24 +57,10 @@ const CardActions: React.FC<FarmCardActionsProps> = ({ farm, ethereum, account, 
       setRequestedApproval(true)
       await onApprove()
       setRequestedApproval(false)
-      if (isApproved) {
-        setToasts((prevToasts) => [
-          {title:"Got approval", type: toastTypes.SUCCESS }
-          , ...prevToasts])
-      } else {
-        setToasts((prevToasts) => [
-          {title:'An error occurred while getting approval, please try again', type: toastTypes.DANGER },
-          ...prevToasts,
-        ])
-      }
     } catch (e) {
       console.error(e)
-      setToasts((prevToasts) => [
-        {title:'An error occurred while getting approval, please try again', type: toastTypes.DANGER },
-        ...prevToasts,
-      ])
     }
-  }, [onApprove, isApproved])
+  }, [onApprove])
 
   let usdStaked = stakedBalance
 
@@ -109,7 +90,6 @@ const CardActions: React.FC<FarmCardActionsProps> = ({ farm, ethereum, account, 
 
   return (
     <Action>
-      <ToastContainerSticky toasts={toasts} onRemove={handleRemove} />
       <Flex>
         <Text bold textTransform="uppercase" color="secondary" fontSize="12px" pr="3px">
           {/* TODO: Is there a way to get a dynamic value here from useFarmFromSymbol? */}

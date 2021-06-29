@@ -3,6 +3,7 @@ import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { Contract } from 'web3-eth-contract'
 import { ethers } from 'ethers'
 import { useDispatch } from 'react-redux'
+import useToast from 'hooks/useToast'
 import { updateUserAllowance, fetchFarmUserDataAsync } from 'state/actions'
 import { approve } from 'utils/callHelpers'
 import { useMasterchef, useCake, useSousChef, useLottery } from './useContract'
@@ -12,16 +13,19 @@ export const useApprove = (lpContract: Contract) => {
   const dispatch = useDispatch()
   const { account }: { account: string } = useWallet()
   const masterChefContract = useMasterchef()
+  const { toastError, toastSuccess } = useToast()
 
   const handleApprove = useCallback(async () => {
     try {
       const tx = await approve(lpContract, masterChefContract, account)
       dispatch(fetchFarmUserDataAsync(account))
+      toastSuccess("Success", `Got approval!`);
       return tx
     } catch (e) {
+      toastError("An error occurred.", `Did not get approval, please try again`);
       return false
     }
-  }, [account, dispatch, lpContract, masterChefContract])
+  }, [account, dispatch, lpContract, masterChefContract, toastError, toastSuccess])
 
   return { onApprove: handleApprove }
 }

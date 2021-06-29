@@ -6,6 +6,7 @@ import BigNumber from 'bignumber.js'
 import { useFetchPublicData } from 'state/hooks'
 import Image from 'views/Nft/components/Image'
 import styled from 'styled-components'
+import { ToastListener } from './contexts/ToastsContext'
 import Menu from './components/Menu'
 import PageLoader from './components/PageLoader'
 import NftGlobalNotification from './views/Nft/components/NftGlobalNotification'
@@ -80,6 +81,7 @@ const App: React.FC = () => {
         </Suspense>
       </Menu>
       {/* <NftGlobalNotification /> */}
+      <ToastListener />
     </Router>
   )
 }
