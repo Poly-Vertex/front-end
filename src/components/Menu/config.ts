@@ -62,9 +62,10 @@ const config: MenuEntry[] = [
         label: 'DappRadar',
         href: 'https://dappradar.com/polygon/defi/polyvertex-yield-farm',
       },
-      
-     
-
+      {
+        label: 'CoinGecko',
+        href: 'https://www.coingecko.com/en/coins/polyvertex',
+      },
     ],
   },
   {
