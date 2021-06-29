@@ -1,6 +1,8 @@
 import { useCallback } from 'react'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { useDispatch } from 'react-redux'
+import useToast from 'hooks/useToast'
+
 import {
   fetchFarmUserDataAsync,
   updateUserStakedBalance,
@@ -14,14 +16,20 @@ const useUnstake = (pid: number) => {
   const dispatch = useDispatch()
   const { account } = useWallet()
   const masterChefContract = useMasterchef()
+  const { toastError, toastSuccess } = useToast()
 
   const handleUnstake = useCallback(
     async (amount: string, decimals: number) => {
+      try {
       const txHash = await unstake(masterChefContract, pid, amount, account, decimals)
       dispatch(fetchFarmUserDataAsync(account))
       console.info(txHash)
+      toastSuccess("Success","Unstaking transaction confirmed")
+    } catch (e) {
+      toastError("An error occurred.", `Transaction unsuccessful, please try again`);
+    }
     },
-    [account, dispatch, masterChefContract, pid],
+    [account, dispatch, masterChefContract, pid, toastSuccess, toastError],
   )
 
   return { onUnstake: handleUnstake }
