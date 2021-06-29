@@ -70,7 +70,18 @@ const CardActions: React.FC<VaultCardActionsProps> = ({ vault, ethereum, account
 
   const renderApprovalOrStakeButton = () => {
     return isApproved ? (
+      <>
+      <Flex flexDirection="column">
+      <Text bold textTransform="uppercase" color="secondary" fontSize="12px" pr="3px">
+        {lpName}
+      </Text>
+      <Text bold textTransform="uppercase" color="textSubtle" fontSize="12px">
+        {TranslateString(999, 'deposited')}
+      </Text>
+
+    </Flex>
       <StakeAction stakedBalance={stakedBalance} tokenBalance={tokenBalance} tokenName={lpName} pid={pid} depositFeeBP={depositFeeBP} usdStaked={usdStaked}  />
+      </>
       ) : (
       <Button mt="8px" fullWidth disabled={requestedApproval} onClick={handleApprove}>
         {TranslateString(999, 'Approve Contract')}
@@ -80,18 +91,12 @@ const CardActions: React.FC<VaultCardActionsProps> = ({ vault, ethereum, account
 
   return (
     <Action>
-      
-      {/* <HarvestAction earnings={earnings} pid={pid} usdEarnings={cakePrice.multipliedBy(earnings.dividedBy(10**18))} /> */}
-      <Flex flexDirection="column">
-        <Text bold textTransform="uppercase" color="secondary" fontSize="12px" pr="3px">
-          {lpName}
-        </Text>
-        <Text bold textTransform="uppercase" color="textSubtle" fontSize="12px">
-          {TranslateString(999, 'deposited')}
-        </Text>
-
-      </Flex>
-      {!account ? <UnlockButton mt="8px" fullWidth /> : renderApprovalOrStakeButton()}
+       {!account ? <UnlockButton mt="8px" fullWidth /> :(
+       <>
+      {renderApprovalOrStakeButton()}
+      </>
+      )
+      }
      
     </Action>
   )

@@ -35,6 +35,9 @@ const StyledLinkExternal = styled(LinkExternal)`
     fill: ${({ theme }) => theme.colors.primary};
   }
 `
+const WhiteSpaceText= styled(Text)`
+white-space:pre
+`
 
 const DetailsSection: React.FC<ExpandableSectionProps> = ({
   isTokenOnly,
@@ -53,7 +56,7 @@ const DetailsSection: React.FC<ExpandableSectionProps> = ({
   return (
     <Wrapper>
       <Flex justifyContent="center" flexDirection="row">
-        <Text>{TranslateString(316, 'Stake')}:</Text>
+        <WhiteSpaceText >{TranslateString(316, 'Deposit')}: </WhiteSpaceText>
         <StyledLinkExternal href={
           isTokenOnly ?
             `https://quickswap.exchange/#/swap/${tokenAddresses[process.env.REACT_APP_CHAIN_ID]}`
@@ -66,7 +69,7 @@ const DetailsSection: React.FC<ExpandableSectionProps> = ({
 
       <Flex justifyContent="center">
         <Link external href={bscScanAddress} bold={false}>
-          {TranslateString(356, 'View on polygonscan')}
+          {TranslateString(356, 'View on PolygonScan')}
         </Link>
       </Flex>
     </Wrapper>

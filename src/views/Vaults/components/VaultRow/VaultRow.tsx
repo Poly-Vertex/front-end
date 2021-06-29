@@ -84,6 +84,8 @@ const ExpandingWrapper = styled.div<{ expanded: boolean }>`
   height: ${(props) => (props.expanded ? '100%' : '0px')};
   width: 100%;
   overflow: hidden;
+  transition: height 1s;
+  transition-timing-function: ease-in-out
 `
 const Row = styled.div<{clickable?: boolean }>`
   display: flex;
@@ -314,7 +316,7 @@ const VaultRow: React.FC<VaultRowProps> = ({ vault, removed, cakePrice, bnbPrice
       </Row>
   <Divider/>
 <Row >
-      <ExpandingWrapper expanded={showExpandableSection}>
+      <ExpandingWrapper expanded={showExpandableSection} >
       <CardActionsContainer vault={vault} ethereum={ethereum} account={account} totalValue={totalValue} allowance={allowance} tokenBalance={tokenBalance} stakedBalance= {stakedBalance}/>
         <DetailsSection
           removed={removed}
