@@ -9,6 +9,7 @@ import LotteryCard from './components/LotteryCard'
 import CakeStats from './components/CakeStats'
 import TotalValueLockedCard from './components/TotalValueLockedCard'
 import TwitterCard from './components/TwitterCard'
+import SpecialCard from './components/SpecialCard'
 import HomePageCountdown from '../HomePageCountdown'
 
 const Hero = styled.div`
@@ -75,6 +76,7 @@ const Home: React.FC = () => {
       <div>
         <Cards>
           <FarmStakingCard />
+          <SpecialCard />
           <TwitterCard/>
           <CakeStats />
           <TotalValueLockedCard />
