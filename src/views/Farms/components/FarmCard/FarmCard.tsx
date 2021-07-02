@@ -54,6 +54,31 @@ const StyledCardAccent = styled.div`
   z-index: -1;
 `
 
+const StyledCardAccentSpecial = styled.div`
+  background: linear-gradient(45deg,
+  rgba(0, 255, 255, 1) 0%,
+  rgba(0, 101, 255, 1) 10%,
+  rgba(47, 255, 222, 1) 20%,
+  rgba(176, 35, 181, 1) 30%,
+  rgba(192, 37, 39, 1) 40%,
+  rgba(208, 54, 29, 1) 50%,
+  rgba(197, 98, 17, 1) 60%,
+  rgba(95, 234, 13, 1) 70%,
+  rgba(69, 243, 7, 1) 80%,
+  rgba(4, 248, 38, 1) 90%,
+  rgba(0, 255, 255, 1) 100%);
+  background-size: 300% 300%;
+  animation: ${RainbowLight} 2s linear infinite;
+  border-radius: 16px;
+  filter: blur(6px);
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  bottom: -2px;
+  left: -2px;
+  z-index: -1;
+`
+
 const FCard = styled.div`
   align-self: baseline;
   background: ${(props) => props.theme.card.background};
@@ -155,6 +180,7 @@ const FarmCard: React.FC<FarmCardProps> = ({ farm, removed, cakePrice, bnbPrice,
   return (
     <FCard>
       {farm.tokenSymbol === 'VERT' && <StyledCardAccent />}
+      {farm.pid === 5 && <StyledCardAccentSpecial />}
       <CardHeading
         lpLabel={lpLabel}
         multiplier={farm.multiplier}

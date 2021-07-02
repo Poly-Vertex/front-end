@@ -3,6 +3,25 @@ import { FarmConfig, QuoteToken } from './types'
 
 const farms: FarmConfig[] = [
   {
+    pid: 5,
+    risk: 999,
+    isTokenOnly: true,
+    lpSymbol: 'USDC',
+    lpAddresses: {
+      80001: '',
+      137: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174', // USDC (use USDC for pool)
+    },
+    tokenSymbol: 'USDC',
+    tokenAddresses: {
+      80001: '',
+      137: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174', // USDC
+    },
+    quoteTokenSymbol: QuoteToken.BUSD,
+    quoteTokenAdresses: contracts.busd,
+  },
+  {
+
+
     pid: 0,
     risk: 5,
     lpSymbol: 'VERT-USDC LP',
@@ -99,6 +118,7 @@ const farms: FarmConfig[] = [
     quoteTokenAdresses: contracts.busd,
   },
 
+  
   {
     pid: 3,
     risk: 5,
@@ -118,23 +138,6 @@ const farms: FarmConfig[] = [
     quoteTokenAdresses: contracts.cake,
   },
 
-  {
-    pid: 5,
-    risk: 1,
-    isTokenOnly: true,
-    lpSymbol: 'USDC',
-    lpAddresses: {
-      80001: '',
-      137: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174', // USDC (use USDC for pool)
-    },
-    tokenSymbol: 'USDC',
-    tokenAddresses: {
-      80001: '',
-      137: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174', // USDC
-    },
-    quoteTokenSymbol: QuoteToken.BUSD,
-    quoteTokenAdresses: contracts.busd,
-  },
 
   {
     pid: 6,

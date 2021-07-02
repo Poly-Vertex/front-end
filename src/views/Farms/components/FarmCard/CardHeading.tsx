@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Tag, Flex, Heading, Image } from '@pancakeswap-libs/uikit'
-import { CommunityTag, CoreTag, NoFeeTag, RiskTag } from 'components/Tags'
+import { CommunityTag, CoreTag, NoFeeTag, RiskTag, SpecialTag } from 'components/Tags'
 
 export interface ExpandableSectionProps {
   lpLabel?: string
@@ -39,7 +39,7 @@ const CardHeading: React.FC<ExpandableSectionProps> = ({
         <Flex justifyContent="center">
           {depositFee === 0 ? <NoFeeTag /> : null}
           {/* {isCommunityFarm ? <CommunityTag /> : <CoreTag />} */}
-          {/* <RiskTag risk={risk} /> */}
+          {risk===999?<SpecialTag/>: null}
           <MultiplierTag variant="success" >{multiplier}</MultiplierTag>
         </Flex>
       </Flex>
