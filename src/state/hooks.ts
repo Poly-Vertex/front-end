@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js'
-import { useEffect, useMemo } from 'react'
+import axios from 'axios'
+import React, { useEffect, useMemo } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import useRefresh from 'hooks/useRefresh'
 import { fetchFarmsPublicDataAsync, fetchPoolsPublicDataAsync, fetchPoolsUserDataAsync } from './actions'
@@ -67,6 +68,23 @@ export const usePoolFromPid = (sousId): Pool => {
 }
 
 // Prices
+const useFetch = (url, options) => {
+  const [data, setData] = React.useState({ response:null, route:null});
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await axios(
+        url,
+      );
+ 
+      setData(result.data);
+    };
+ 
+    fetchData();
+  }, [url]);
+  const err = null;
+  return {data, err};
+};
 
 export const usePriceBnbBusd = (): BigNumber => {
   const pid = 2 // USDC-MATIC LP
@@ -89,6 +107,19 @@ export const usePriceBtcBusd = (): BigNumber => {
   const pid = 10; // BTC-USDC LP
   const farm = useFarmFromPid(pid);
   return farm.tokenPriceVsQuote ? new BigNumber(farm.tokenPriceVsQuote) : ZERO;
+}
+export const usePriceRouteBusd = (): BigNumber => {
+  const url = "https://api.coingecko.com/api/v3/simple/price?ids=route&vs_currencies=usd"
+  const { data, err} = useFetch(url, null);
+  // console.log(data.response.route.usd); 
+  let output = new BigNumber(0);
+  console.log(data);
+  if(data.route){
+    output = new BigNumber(data.route.usd);
+  }
+  return output;
+
+  
 }
 
 export const useTotalValue = (): BigNumber => {

@@ -39,6 +39,10 @@ export default {
     137: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619', // weth
     80001: '',
   },
+  route: {
+    137: '0x16eccfdbb4ee1a85a33f3a9b21175cd7ae753db4', // route
+    80001: '',
+  },
 
   // TIMELOCK: 0x8eC313CFbc877a9E0559c8e80763a9a058C28C69
 }

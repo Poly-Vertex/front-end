@@ -30,6 +30,7 @@ export enum QuoteToken {
   'WETH' = 'WETH',
   'VERT' = 'VERT',
   'BTC' = 'BTC',
+  'ROUTE' = 'ROUTE',
 }
 
 export enum PoolCategory {
@@ -60,6 +61,7 @@ export interface FarmConfig {
     earnLabel: string
     endBlock: number
   }
+  exchange?:string
 }
 
 export interface PoolConfig {

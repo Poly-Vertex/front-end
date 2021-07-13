@@ -6,14 +6,19 @@ import BigNumber from 'bignumber.js'
 import useI18n from 'hooks/useI18n'
 
 const StyledFarmStakingCard = styled(Card)`
-  background-image: url('/images/special.jpg');
+  background-image: url('/images/special/vert-route-announcement.png');
   background-repeat: no-repeat;
   background-position: middle center;
-  min-height: 300px;
+  min-height: 400px;
   min-width: 750px;
+  width:750px;
+  height:400px;
   padding:0px;
   margin:0px;
   height:400px
+  align-self:center;
+  margin:auto;
+  margin-bottom:10%;
 `
 
 const Block = styled.div`
@@ -28,13 +33,11 @@ const SpecialCard = () => {
 
 
   return (
+      <a href="/farms">
     <StyledFarmStakingCard>
-      <a href="/nests">
-      <CardBody>
-        {/* <CardImage src="/images/special.jpg" alt="special logo" width={64} height={64} /> */}
-      </CardBody>
-      </a>
+      <CardBody/>
     </StyledFarmStakingCard>
+      </a>
   )
 }
 

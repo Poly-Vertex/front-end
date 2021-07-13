@@ -113,9 +113,10 @@ interface FarmCardProps {
   account?: string
   btcPrice?:BigNumber
   wethPrice?:BigNumber
+  routePrice?:BigNumber
 }
 
-const FarmCard: React.FC<FarmCardProps> = ({ farm, removed, cakePrice, bnbPrice, ethereum, account, wethPrice }) => {
+const FarmCard: React.FC<FarmCardProps> = ({ farm, removed, cakePrice, bnbPrice, ethereum, account, wethPrice, routePrice }) => {
   const TranslateString = useI18n()
 
   const [showExpandableSection, setShowExpandableSection] = useState(false)
@@ -140,9 +141,12 @@ const FarmCard: React.FC<FarmCardProps> = ({ farm, removed, cakePrice, bnbPrice,
     if (farm.quoteTokenSymbol === QuoteToken.WETH) {
       return wethPrice.times(farm.lpTotalInQuoteToken)
     }
+    if (farm.quoteTokenSymbol === QuoteToken.ROUTE) {
+      return routePrice.times(farm.lpTotalInQuoteToken)
+    }
    
     return farm.lpTotalInQuoteToken
-  }, [bnbPrice, cakePrice, farm.lpTotalInQuoteToken, farm.quoteTokenSymbol, wethPrice])
+  }, [bnbPrice, cakePrice, farm.lpTotalInQuoteToken, farm.quoteTokenSymbol, wethPrice, routePrice])
 
   const totalValueFormated = totalValue
     ? `$${Number(totalValue).toLocaleString(undefined, { maximumFractionDigits: 0 })}`
@@ -242,6 +246,7 @@ const FarmCard: React.FC<FarmCardProps> = ({ farm, removed, cakePrice, bnbPrice,
           quoteTokenSymbol={quoteTokenSymbol}
           tokenAddresses={tokenAddresses}
           pid={farm.pid}
+          exchange={farm.exchange}
         />
       </ExpandingWrapper>
     </FCard>

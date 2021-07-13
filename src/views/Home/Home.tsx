@@ -4,6 +4,7 @@ import { Heading, Text, BaseLayout , Button, ToastContainer} from '@pancakeswap-
 import useI18n from 'hooks/useI18n'
 import useToast from 'hooks/useToast'
 import Page from 'components/layout/Page'
+import Divider from 'views/Farms/components/Divider'
 import FarmStakingCard from './components/FarmStakingCard'
 import LotteryCard from './components/LotteryCard'
 import CakeStats from './components/CakeStats'
@@ -72,11 +73,11 @@ const Home: React.FC = () => {
         <Text>{TranslateString(578, '')}</Text>
       
       </Hero>
-     {/* <HomePageCountdown/> */}
       <div>
+          <Divider/>
+          <SpecialCard />
         <Cards>
           <FarmStakingCard />
-          {/* <SpecialCard /> */}
           <TwitterCard/>
           <CakeStats />
           <TotalValueLockedCard />

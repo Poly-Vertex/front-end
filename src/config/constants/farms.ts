@@ -4,11 +4,9 @@ import { FarmConfig, QuoteToken } from './types'
 const farms: FarmConfig[] = [
  
   {
-
-
     pid: 0,
     risk: 5,
-    lpSymbol: 'VERT-USDC LP',
+    lpSymbol: 'VERT-USDC QLP',
     lpAddresses: {
       80001: '',
       137: '0x668269d6E5D2c2dE31D132Ac218044211643622B',
@@ -20,11 +18,47 @@ const farms: FarmConfig[] = [
     },
     quoteTokenSymbol: QuoteToken.BUSD,
     quoteTokenAdresses: contracts.busd,
+    exchange:"QuickSwap"
+
   },
+  // {
+  //   pid: NAN,
+  //   risk: 5,
+  //   lpSymbol: 'VERT-DFYN LP',
+  //   lpAddresses: {
+  //     80001: '0xae27a37cf724d2e775b4a436f40e5c9d7e1239cd',
+  //     137: '0xae27a37cf724d2e775b4a436f40e5c9d7e1239cd',
+  //   },
+  //   tokenSymbol: 'VERT',
+  //   tokenAddresses: {
+  //     80001: contracts.cake[80001],
+  //     137: contracts.cake[137],
+  //   },
+  //   quoteTokenSymbol: QuoteToken.BUSD,
+  //   quoteTokenAdresses: contracts.busd,
+  // },
+  {
+    pid: 12,
+    risk: 5,
+    lpSymbol: 'VERT-ROUTE DLP',
+    lpAddresses: {
+      80001: '',
+      137: '0xd4689694e9928564647ad483c075f271419b2a5f',
+    },
+    tokenSymbol: 'VERT',
+    tokenAddresses: {
+      80001: contracts.cake[80001],
+      137: contracts.cake[137],
+    },
+    quoteTokenSymbol: QuoteToken.ROUTE,
+    quoteTokenAdresses: contracts.route,
+    exchange:"DFYN"
+  },
+
   {
     pid: 1,
     risk: 5,
-    lpSymbol: 'VERT-MATIC LP',
+    lpSymbol: 'VERT-MATIC QLP',
     lpAddresses: {
       80001: '',
       137: '0xfCD877cb5C3ecBF51E329DF525213BCeEEF741Dd',
@@ -40,7 +74,7 @@ const farms: FarmConfig[] = [
   {
     pid: 4,
     risk: 5,
-    lpSymbol: 'VERT-WETH LP',
+    lpSymbol: 'VERT-WETH QLP',
     lpAddresses: {
       80001: '',
       137: '0xfef87340394bc37b8d54cde7c2b37e616d741b31', // vert-weth
@@ -52,11 +86,13 @@ const farms: FarmConfig[] = [
     },
     quoteTokenSymbol: QuoteToken.WETH,
     quoteTokenAdresses: contracts.weth,
+    exchange:"QuickSwap"
+
   },
   {
     pid: 2,
     risk: 3,
-    lpSymbol: 'WMATIC-USDC LP',
+    lpSymbol: 'WMATIC-USDC QLP',
     lpAddresses: {
       80001: '',
       137: '0x6e7a5FAFcec6BB1e78bAE2A1F0B612012BF14827',
@@ -68,11 +104,13 @@ const farms: FarmConfig[] = [
     },
     quoteTokenSymbol: QuoteToken.BUSD,
     quoteTokenAdresses: contracts.busd,
+    exchange:"QuickSwap"
+
   },
   {
     pid: 8,
     risk: 3,
-    lpSymbol: 'WETH-USDC LP',
+    lpSymbol: 'WETH-USDC QLP',
     lpAddresses: {
       80001: '',
       137: '0x853ee4b2a13f8a742d64c8f088be7ba2131f670d',
@@ -84,11 +122,13 @@ const farms: FarmConfig[] = [
     },
     quoteTokenSymbol: QuoteToken.BUSD,
     quoteTokenAdresses: contracts.busd,
+    exchange:"QuickSwap"
+
   },
   {
     pid: 10,
     risk: 3,
-    lpSymbol: 'WBTC-USDC LP',
+    lpSymbol: 'WBTC-USDC QLP',
     lpAddresses: {
       80001: '',
       137: '0xf6a637525402643b0654a54bead2cb9a83c8b498',
@@ -100,9 +140,10 @@ const farms: FarmConfig[] = [
     },
     quoteTokenSymbol: QuoteToken.BUSD,
     quoteTokenAdresses: contracts.busd,
-  },
+    exchange:"QuickSwap"
 
-  
+  },
+    
   {
     pid: 3,
     risk: 5,
@@ -191,7 +232,7 @@ const farms: FarmConfig[] = [
     quoteTokenAdresses: contracts.busd,
   },
   {
-    pid: 11, // **** TODO: TEST BEFORE PUSHING TO LIVE
+    pid: 11,
     risk: 2,
     isTokenOnly: true,
     lpSymbol: 'WETH',
@@ -204,9 +245,26 @@ const farms: FarmConfig[] = [
       80001: '',
       137: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
     },
-    quoteTokenSymbol: QuoteToken.WETH, //  **** TODO: TEST BEFORE PUSHING TO LIVE
+    quoteTokenSymbol: QuoteToken.WETH,
     quoteTokenAdresses: contracts.weth,
   },
+  // {
+  //   pid: 13, 
+  //   risk: 3,
+  //   isTokenOnly: true,
+  //   lpSymbol: 'KOGE',
+  //   lpAddresses: {
+  //     80001: '',
+  //     137: '0x3885503aef5e929fcb7035fbdca87239651c8154', // KOGE-MATIC LP
+  //   },
+  //   tokenSymbol: 'KOGE',
+  //   tokenAddresses: {
+  //     80001: '',
+  //     137: '0x13748d548D95D78a3c83fe3F32604B4796CFfa23', // KOGE
+  //   },
+  //   quoteTokenSymbol: QuoteToken.BUSD, 
+  //   quoteTokenAdresses: contracts.busd,
+  // },
   // // {
   // //   pid: ,
   // //   risk: 2,

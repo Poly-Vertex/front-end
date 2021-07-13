@@ -8,7 +8,7 @@ import { Image, Heading } from '@pancakeswap-libs/uikit'
 import { BLOCKS_PER_YEAR, CAKE_PER_BLOCK, CAKE_POOL_PID } from 'config'
 import FlexLayout from 'components/layout/Flex'
 import Page from 'components/layout/Page'
-import { useFarms, usePriceBnbBusd, usePriceCakeBusd, usePriceWethBusd, usePriceBtcBusd } from 'state/hooks'
+import { useFarms, usePriceBnbBusd, usePriceCakeBusd, usePriceWethBusd, usePriceBtcBusd, usePriceRouteBusd } from 'state/hooks'
 import useRefresh from 'hooks/useRefresh'
 import { fetchFarmUserDataAsync } from 'state/actions'
 import { QuoteToken } from 'config/constants/types'
@@ -29,6 +29,7 @@ const Farms: React.FC<FarmsProps> = (farmsProps) => {
   const bnbPrice = usePriceBnbBusd()
   const wethPrice = usePriceWethBusd()
   const btcPrice = usePriceBtcBusd()
+  const routePrice = usePriceRouteBusd();
   const { account, ethereum }: { account: string; ethereum: provider } = useWallet()
   const {tokenMode} = farmsProps;
 
@@ -74,6 +75,9 @@ const Farms: React.FC<FarmsProps> = (farmsProps) => {
         if (farm.quoteTokenSymbol === QuoteToken.WETH) {
           totalValue = totalValue.times(wethPrice);
         }
+        if (farm.quoteTokenSymbol === QuoteToken.ROUTE) {
+          totalValue = totalValue.times(routePrice);
+        }
 
 
         if(totalValue.comparedTo(0) > 0){
@@ -94,10 +98,11 @@ const Farms: React.FC<FarmsProps> = (farmsProps) => {
           account={account}
           wethPrice={wethPrice}
           // btcPrice={btcPrice}
+          routePrice={routePrice}
         />
       ))
     },
-    [bnbPrice, account, cakePrice, ethereum, wethPrice],
+    [bnbPrice, account, cakePrice, ethereum, wethPrice, routePrice],
   )
 
   return (

@@ -10,6 +10,10 @@ const getLiquidityUrlPathParts = ({ quoteTokenAdresses, quoteTokenSymbol, tokenA
     // VERT-WETH
     return `0x72572CCf5208b59f4BcC14e6653d8c31Cd1fC5a0/0x7ceb23fd6bc0add59e62ac25578270cff1b9f619`
   }
+  if(pid === 12){
+    // VERT-ROUTE
+    return `0x72572CCf5208b59f4BcC14e6653d8c31Cd1fC5a0/0x16eccfdbb4ee1a85a33f3a9b21175cd7ae753db4`
+  }
   return `${firstPart}/${secondPart}`
 }
 

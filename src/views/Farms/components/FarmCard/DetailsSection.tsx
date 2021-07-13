@@ -14,7 +14,8 @@ export interface ExpandableSectionProps {
   quoteTokenAdresses?: Address
   quoteTokenSymbol?: string
   tokenAddresses: Address,
-  pid: number
+  pid: number,
+  exchange? : string
 }
 
 const Wrapper = styled.div`
@@ -45,20 +46,34 @@ const DetailsSection: React.FC<ExpandableSectionProps> = ({
   quoteTokenAdresses,
   quoteTokenSymbol,
   tokenAddresses,
-  pid
+  pid,
+  exchange
 }) => {
   const TranslateString = useI18n()
   const liquidityUrlPathParts = getLiquidityUrlPathParts({ quoteTokenAdresses, quoteTokenSymbol, tokenAddresses, pid })
 
+  let swapURLFirstPart = "https://quickswap.exchange/#/swap"
+  let addURLFirstPart = "https://quickswap.exchange/#/add"
+
+  switch (exchange) {
+    case "DFYN":
+      swapURLFirstPart = "https://exchange.dfyn.network/#/swap"
+      addURLFirstPart = "https://exchange.dfyn.network/#/add"
+      break;
+    case "QuickSwap":
+    default:
+      break;
+  }
+  
   return (
     <Wrapper>
       <Flex justifyContent="space-between">
         <Text>{TranslateString(316, 'Stake')}:</Text>
         <StyledLinkExternal href={
           isTokenOnly ?
-            `https://quickswap.exchange/#/swap/${tokenAddresses[process.env.REACT_APP_CHAIN_ID]}`
+            `${swapURLFirstPart}/${tokenAddresses[process.env.REACT_APP_CHAIN_ID]}`
             :
-          `https://quickswap.exchange/#/add/${liquidityUrlPathParts}`
+          `${addURLFirstPart}/${liquidityUrlPathParts}`
         }>
           {lpLabel}
         </StyledLinkExternal>
