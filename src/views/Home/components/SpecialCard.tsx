@@ -6,7 +6,7 @@ import BigNumber from 'bignumber.js'
 import useI18n from 'hooks/useI18n'
 
 const StyledFarmStakingCard = styled(Card)`
-  background-image: url('/images/special/vert-route-announcement.png');
+  background-image: url('/images/special/koge-partnership.png');
   background-repeat: no-repeat;
   background-position: middle center;
   min-height: 400px;

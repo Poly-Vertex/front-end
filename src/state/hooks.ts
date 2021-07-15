@@ -118,8 +118,6 @@ export const usePriceRouteBusd = (): BigNumber => {
     output = new BigNumber(data.route.usd);
   }
   return output;
-
-  
 }
 
 export const useTotalValue = (): BigNumber => {
