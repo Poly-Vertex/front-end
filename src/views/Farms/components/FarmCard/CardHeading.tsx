@@ -39,9 +39,9 @@ const CardHeading: React.FC<ExpandableSectionProps> = ({
         <Flex justifyContent="center">
           {depositFee === 0 ? <NoFeeTag /> : null}
           {/* {isCommunityFarm ? <CommunityTag /> : <CoreTag />} */}
-          {risk===999?<SpecialTag/>: null}
           <MultiplierTag variant="success" >{multiplier}</MultiplierTag>
         </Flex>
+          {risk===999?<SpecialTag/>: null}
       </Flex>
     </Wrapper>
   )

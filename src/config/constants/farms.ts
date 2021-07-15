@@ -2,7 +2,24 @@ import contracts from './contracts'
 import { FarmConfig, QuoteToken } from './types'
 
 const farms: FarmConfig[] = [
- 
+  {
+    pid: 13, 
+    risk: 999,
+    isTokenOnly: true,
+    lpSymbol: 'KOGE',
+    lpAddresses: {
+      80001: '',
+      137: '0x1c5a040ea7b4df2c3e7370961491aab7b27e5ad8', // KOGE-USDC LP
+    },
+    tokenSymbol: 'KOGE',
+    tokenAddresses: {
+      80001: '',
+      137: '0x13748d548D95D78a3c83fe3F32604B4796CFfa23', // KOGE
+    },
+    quoteTokenSymbol: QuoteToken.BUSD, 
+    quoteTokenAdresses: contracts.busd,
+  },
+  
   {
     pid: 0,
     risk: 5,
@@ -248,23 +265,7 @@ const farms: FarmConfig[] = [
     quoteTokenSymbol: QuoteToken.WETH,
     quoteTokenAdresses: contracts.weth,
   },
-  {
-    pid: 13, 
-    risk: 3,
-    isTokenOnly: true,
-    lpSymbol: 'KOGE',
-    lpAddresses: {
-      80001: '',
-      137: '0x1c5a040ea7b4df2c3e7370961491aab7b27e5ad8', // KOGE-USDC LP
-    },
-    tokenSymbol: 'KOGE',
-    tokenAddresses: {
-      80001: '',
-      137: '0x13748d548D95D78a3c83fe3F32604B4796CFfa23', // KOGE
-    },
-    quoteTokenSymbol: QuoteToken.BUSD, 
-    quoteTokenAdresses: contracts.busd,
-  },
+
   // // {
   // //   pid: ,
   // //   risk: 2,
