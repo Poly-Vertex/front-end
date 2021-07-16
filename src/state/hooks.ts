@@ -111,9 +111,7 @@ export const usePriceBtcBusd = (): BigNumber => {
 export const usePriceRouteBusd = (): BigNumber => {
   const url = "https://api.coingecko.com/api/v3/simple/price?ids=route&vs_currencies=usd"
   const { data, err} = useFetch(url, null);
-  // console.log(data.response.route.usd); 
   let output = new BigNumber(0);
-  console.log(data);
   if(data.route){
     output = new BigNumber(data.route.usd);
   }
