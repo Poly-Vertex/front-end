@@ -90,7 +90,7 @@ export const usePriceBnbBusd = (): BigNumber => {
   const url = "https://api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=usd"
   const { data, err} = useFetch(url, null);
   let output = new BigNumber(0);
-  if(data.route){
+  if(data["matic-network"]){
     output = new BigNumber(data["matic-network"].usd);
   }
   return output;
