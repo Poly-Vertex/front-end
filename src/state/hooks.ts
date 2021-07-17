@@ -69,7 +69,7 @@ export const usePoolFromPid = (sousId): Pool => {
 
 // Prices
 const useFetch = (url, options) => {
-  const [data, setData] = React.useState({ response:null, route:null});
+  const [data, setData] = React.useState({ response:null, route:null, ethereum: null, polyvertex:null, bitcoin:null});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -87,26 +87,41 @@ const useFetch = (url, options) => {
 };
 
 export const usePriceBnbBusd = (): BigNumber => {
-  const pid = 2 // USDC-MATIC LP
-  const farm = useFarmFromPid(pid)
-  return farm.tokenPriceVsQuote ? new BigNumber(farm.tokenPriceVsQuote) : ZERO
+  const url = "https://api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=usd"
+  const { data, err} = useFetch(url, null);
+  let output = new BigNumber(0);
+  if(data.route){
+    output = new BigNumber(data["matic-network"].usd);
+  }
+  return output;
 }
 
-// works 
 export const usePriceCakeBusd = (): BigNumber => {
-  const pid = 0; // VERT-USDC LP
-  const farm = useFarmFromPid(pid);
-  return farm.tokenPriceVsQuote ? new BigNumber(farm.tokenPriceVsQuote) : ZERO;
+  const url = "https://api.coingecko.com/api/v3/simple/price?ids=polyvertex&vs_currencies=usd"
+  const { data, err} = useFetch(url, null);
+  let output = new BigNumber(0);
+  if(data.polyvertex){
+    output = new BigNumber(data.polyvertex.usd);
+  }
+  return output;
 }
 export const usePriceWethBusd = (): BigNumber => {
-  const pid = 8; // ETH-USDC LP
-  const farm = useFarmFromPid(pid);
-  return farm.tokenPriceVsQuote ? new BigNumber(farm.tokenPriceVsQuote) : ZERO;
+  const url = "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd"
+  const { data, err} = useFetch(url, null);
+  let output = new BigNumber(0);
+  if(data.ethereum){
+    output = new BigNumber(data.ethereum.usd);
+  }
+  return output;
 }
 export const usePriceBtcBusd = (): BigNumber => {
-  const pid = 10; // BTC-USDC LP
-  const farm = useFarmFromPid(pid);
-  return farm.tokenPriceVsQuote ? new BigNumber(farm.tokenPriceVsQuote) : ZERO;
+  const url = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd"
+  const { data, err} = useFetch(url, null);
+  let output = new BigNumber(0);
+  if(data.bitcoin){
+    output = new BigNumber(data.bitcoin.usd);
+  }
+  return output;
 }
 export const usePriceRouteBusd = (): BigNumber => {
   const url = "https://api.coingecko.com/api/v3/simple/price?ids=route&vs_currencies=usd"
