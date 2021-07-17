@@ -2,6 +2,7 @@ import React, { useEffect, Suspense, lazy } from 'react'
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { Link, ResetCSS } from '@pancakeswap-libs/uikit'
+import useToast from 'hooks/useToast'
 import BigNumber from 'bignumber.js'
 import { useFetchPublicData } from 'state/hooks'
 import Image from 'views/Nft/components/Image'
@@ -23,6 +24,8 @@ const NotFound = lazy(() => import('./views/NotFound'))
 // const Nft = lazy(() => import('./views/Nft'))
 
 
+let didAskToJoinTelegram = false;
+
 // This config is required for number formating
 BigNumber.config({
   EXPONENTIAL_AT: 1000,
@@ -38,6 +41,16 @@ const App: React.FC = () => {
   }, [account, connect])
 
   useFetchPublicData()
+
+  const { toastSuccess} = useToast()
+  const v = Math.random();
+  if (v < 0.3 && !didAskToJoinTelegram){
+    const action = {text:"Join now", url:"https://t.me/polyvertex"}
+    toastSuccess("Have you joined our Telegram community?", "Come chat with us!", action);
+  }
+  didAskToJoinTelegram = true;
+  
+    
 
   return (
     <Router>

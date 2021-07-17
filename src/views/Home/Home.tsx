@@ -62,7 +62,7 @@ const Cards = styled(BaseLayout)`
 
 const Home: React.FC = () => {
   const TranslateString = useI18n()
-  
+
 
   return (
     <Page>
