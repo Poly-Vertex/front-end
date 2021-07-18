@@ -69,8 +69,13 @@ const Vaults: React.FC = () => {
     (vaultsToDisplay, removed: boolean) => {
       const vaultsToDisplayWithAPY: VaultWithStakedValue[] = vaultsToDisplay.map((vault) => {
 
-     
-      let apy = cakePrice.times(0); // TODO calculate APY
+        const cakeRewardPerBlock = new BigNumber(vault.eggPerBlock || 1);
+
+        const rewardPerPeriod = cakeRewardPerBlock.times(BLOCKS_PER_YEAR)
+                                                  .div(356)
+                                                  .times(cakePrice);
+
+        let apy = rewardPerPeriod.plus(1).pow(365).minus(1);
 
         let totalValue = new BigNumber(vault.lpTotalInQuoteToken || 0);
         
