@@ -72,20 +72,15 @@ const config: MenuEntry[] = [
     label: 'More',
     icon: 'MoreIcon',
     items: [
-      // {
-      //   label: 'Github',
-      //   href: '#',
-      // },
       {
         label: 'Docs',
         href: 'https://docs.polyvertex.finance/',
       },
-      // {
-      //   label: 'Review by RugDoc',
-      //   href: 'https://rugdoc.io/project/polyvertex/ ',
-      // },
-    
-       
+      {
+        label: 'Github',
+        href: 'https://github.com/Poly-Vertex',
+      },
+      
       // {
       //   label: 'Blog',
       //   href: '#',
