@@ -77,7 +77,7 @@ const config: MenuEntry[] = [
         href: 'https://docs.polyvertex.finance/',
       },
       {
-        label: 'Github',
+        label: 'GitHub',
         href: 'https://github.com/Poly-Vertex',
       },
       
