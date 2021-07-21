@@ -2,8 +2,6 @@ import contracts from './contracts'
 import { FarmConfig, QuoteToken } from './types'
 
 const farms: FarmConfig[] = [
-
-  
   {
     pid: 0,
     risk: 5,
@@ -16,6 +14,24 @@ const farms: FarmConfig[] = [
     tokenAddresses: {
       80001: contracts.cake[80001],
       137: contracts.cake[137],
+    },
+    quoteTokenSymbol: QuoteToken.BUSD,
+    quoteTokenAdresses: contracts.busd,
+    exchange:"QuickSwap"
+
+  },
+  {
+    pid: 14,
+    risk: 999,
+    lpSymbol: 'PLATIN-USDC QLP',
+    lpAddresses: {
+      80001: '',
+      137: '0x60beff3e9d3b4e8409471ecc58e568eb153f1e00',
+    },
+    tokenSymbol: 'PLATIN',
+    tokenAddresses: {
+      80001: '0x782eb3304F8b9adD877F13a5cA321f72c4AA9804',
+      137: '0x782eb3304F8b9adD877F13a5cA321f72c4AA9804',
     },
     quoteTokenSymbol: QuoteToken.BUSD,
     quoteTokenAdresses: contracts.busd,

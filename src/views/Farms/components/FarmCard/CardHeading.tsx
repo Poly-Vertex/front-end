@@ -41,7 +41,7 @@ const CardHeading: React.FC<ExpandableSectionProps> = ({
           {/* {isCommunityFarm ? <CommunityTag /> : <CoreTag />} */}
           <MultiplierTag variant="success" >{multiplier}</MultiplierTag>
         </Flex>
-          {risk===999?<SpecialTag/>: null}
+          {/* {risk===999?<SpecialTag/>: null} */}
       </Flex>
     </Wrapper>
   )
