@@ -9,13 +9,10 @@ const StyledFarmStakingCard = styled(Card)`
   background-image: url('/images/special/platin-usdc.jpg');
   background-repeat: no-repeat;
   background-position: middle center;
-  min-height: 422px;
-  min-width: 750px;
   width:750px;
   height:422px;
   padding:0px;
   margin:0px;
-  height:422px
   align-self:center;
   margin:auto;
   margin-bottom:10%;

@@ -11,6 +11,7 @@ import CakeStats from './components/CakeStats'
 import TotalValueLockedCard from './components/TotalValueLockedCard'
 import TwitterCard from './components/TwitterCard'
 import SpecialCard from './components/SpecialCard'
+import Background from '../Background'
 import HomePageCountdown from '../HomePageCountdown'
 
 const Hero = styled.div`
@@ -65,9 +66,11 @@ const Home: React.FC = () => {
 
 
   return (
+    <>
+
     <Page>
       <Hero>
-        <Heading as="h1" size="xl" mb="24px" color="secondary">
+        <Heading as="h1" size="xxl" mb="24px" color="secondary">
           {TranslateString(576, 'PolyVertex')}
         </Heading>
         <Text>{TranslateString(578, '')}</Text>
@@ -84,7 +87,11 @@ const Home: React.FC = () => {
         </Cards>
       </div>
     </Page>
-  )
-}
+    <Background/>
 
-export default Home
+      </>
+      )
+    }
+    
+    export default Home
+    

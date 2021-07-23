@@ -8,7 +8,15 @@ import { Image, Heading } from '@pancakeswap-libs/uikit'
 import { BLOCKS_PER_YEAR, CAKE_PER_BLOCK, CAKE_POOL_PID } from 'config'
 import FlexLayout from 'components/layout/Flex'
 import Page from 'components/layout/Page'
-import { useFarms, usePriceBnbBusd, usePriceCakeBusd, usePriceWethBusd, usePriceBtcBusd, usePriceRouteBusd } from 'state/hooks'
+import Background from '../Background'
+import {
+  useFarms,
+  usePriceBnbBusd,
+  usePriceCakeBusd,
+  usePriceWethBusd,
+  usePriceBtcBusd,
+  usePriceRouteBusd,
+} from 'state/hooks'
 import useRefresh from 'hooks/useRefresh'
 import { fetchFarmUserDataAsync } from 'state/actions'
 import { QuoteToken } from 'config/constants/types'
@@ -17,7 +25,7 @@ import FarmCard, { FarmWithStakedValue } from './components/FarmCard/FarmCard'
 import FarmTabButtons from './components/FarmTabButtons'
 import Divider from './components/Divider'
 
-export interface FarmsProps{
+export interface FarmsProps {
   tokenMode?: boolean
 }
 
@@ -29,9 +37,9 @@ const Farms: React.FC<FarmsProps> = (farmsProps) => {
   const bnbPrice = usePriceBnbBusd()
   const wethPrice = usePriceWethBusd()
   const btcPrice = usePriceBtcBusd()
-  const routePrice = usePriceRouteBusd();
+  const routePrice = usePriceRouteBusd()
   const { account, ethereum }: { account: string; ethereum: provider } = useWallet()
-  const {tokenMode} = farmsProps;
+  const { tokenMode } = farmsProps
 
   const dispatch = useDispatch()
   const { fastRefresh } = useRefresh()
@@ -60,33 +68,34 @@ const Farms: React.FC<FarmsProps> = (farmsProps) => {
         // if (!farm.tokenAmount || !farm.lpTotalInQuoteToken || !farm.lpTotalInQuoteToken) {
         //   return farm
         // }
-        const cakeRewardPerBlock = new BigNumber(farm.eggPerBlock || 1).times(new BigNumber(farm.poolWeight)) .div(new BigNumber(10).pow(18))
+        const cakeRewardPerBlock = new BigNumber(farm.eggPerBlock || 1)
+          .times(new BigNumber(farm.poolWeight))
+          .div(new BigNumber(10).pow(18))
         const cakeRewardPerYear = cakeRewardPerBlock.times(BLOCKS_PER_YEAR)
-        let apy = cakePrice.times(cakeRewardPerYear);
-        
-        let totalValue = new BigNumber(farm.lpTotalInQuoteToken || 0);
-        
+        let apy = cakePrice.times(cakeRewardPerYear)
+
+        let totalValue = new BigNumber(farm.lpTotalInQuoteToken || 0)
+
         if (farm.quoteTokenSymbol === QuoteToken.BNB) {
-          totalValue = totalValue.times(bnbPrice);
+          totalValue = totalValue.times(bnbPrice)
         }
         if (farm.quoteTokenSymbol === QuoteToken.CAKE) {
-          totalValue = totalValue.times(cakePrice);
+          totalValue = totalValue.times(cakePrice)
         }
         if (farm.quoteTokenSymbol === QuoteToken.WETH) {
-          totalValue = totalValue.times(wethPrice);
+          totalValue = totalValue.times(wethPrice)
         }
         if (farm.quoteTokenSymbol === QuoteToken.ROUTE) {
-          totalValue = totalValue.times(routePrice);
+          totalValue = totalValue.times(routePrice)
         }
 
-
-        if(totalValue.comparedTo(0) > 0){
-          apy = apy.div(totalValue);
+        if (totalValue.comparedTo(0) > 0) {
+          apy = apy.div(totalValue)
         }
 
         return { ...farm, apy }
       })
-      
+
       return farmsToDisplayWithAPY.map((farm) => (
         <FarmCard
           key={farm.pid}
@@ -106,32 +115,32 @@ const Farms: React.FC<FarmsProps> = (farmsProps) => {
   )
 
   return (
-    <Page>
-      <Heading as="h1" size="lg" color="primary" mb="50px" style={{ textAlign: 'center' }}>
-        {
-          tokenMode ?
-            TranslateString(10002, 'Stake tokens to earn VERT')
-            :
-          TranslateString(320, 'Stake LP tokens to earn VERT')
-        }
-      </Heading>
-      <Heading as="h2" color="secondary" mb="50px" style={{ textAlign: 'center' }}>
-        {TranslateString(10000, 'Deposit Fee will be used to buyback VERT')}
-      </Heading>
-      <FarmTabButtons stakedOnly={stakedOnly} setStakedOnly={setStakedOnly}/>
-      <div>
-        <Divider />
-        <FlexLayout>
-          <Route exact path={`${path}`}>
-            {stakedOnly ? farmsList(stakedOnlyFarms, false) : farmsList(activeFarms, false)}
-          </Route>
-          <Route exact path={`${path}/history`}>
-            {farmsList(inactiveFarms, true)}
-          </Route>
-        </FlexLayout>
-      </div>
-      {/* <Image src="/images/egg/8.png" alt="illustration" width={1352} height={587} responsive /> */}
-    </Page>
+    <>
+      <Page>
+        <Heading as="h1" size="lg" color="primary" mb="50px" style={{ textAlign: 'center' }}>
+          {tokenMode
+            ? TranslateString(10002, 'Stake tokens to earn VERT')
+            : TranslateString(320, 'Stake LP tokens to earn VERT')}
+        </Heading>
+        <Heading as="h2" color="secondary" mb="50px" style={{ textAlign: 'center' }}>
+          {TranslateString(10000, 'Deposit Fee will be used to buyback VERT')}
+        </Heading>
+        <FarmTabButtons stakedOnly={stakedOnly} setStakedOnly={setStakedOnly} />
+        <div>
+          <Divider />
+          <FlexLayout>
+            <Route exact path={`${path}`}>
+              {stakedOnly ? farmsList(stakedOnlyFarms, false) : farmsList(activeFarms, false)}
+            </Route>
+            <Route exact path={`${path}/history`}>
+              {farmsList(inactiveFarms, true)}
+            </Route>
+          </FlexLayout>
+        </div>
+        {/* <Image src="/images/egg/8.png" alt="illustration" width={1352} height={587} responsive /> */}
+      </Page>
+      <Background enableConsent/>
+    </>
   )
 }
 
