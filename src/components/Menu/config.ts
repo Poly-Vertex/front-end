@@ -12,11 +12,11 @@ const config: MenuEntry[] = [
     items: [
       {
         label: 'Exchange',
-        href: 'https://quickswap.exchange/#/swap?outputCurrency=0x72572CCf5208b59f4BcC14e6653d8c31Cd1fC5a0',
+        href: 'https://docs.polyvertex.finance/general/vertex-token/how-to-trade',
       },
       {
         label: 'Liquidity',
-        href: 'https://quickswap.exchange/#/add/ETH/0x72572CCf5208b59f4BcC14e6653d8c31Cd1fC5a0',
+        href: 'https://docs.polyvertex.finance/general/vertex-token/how-to-add-remove-liquidity',
       },
     ],
   },

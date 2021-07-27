@@ -20,40 +20,25 @@ const farms: FarmConfig[] = [
     exchange:"QuickSwap"
 
   },
+ 
   {
-    pid: 14,
+    pid: 15,
     risk: 999,
-    lpSymbol: 'PLATIN-USDC QLP',
+    lpSymbol: 'ROUTE-DFYN DLP',
     lpAddresses: {
       80001: '',
-      137: '0x60beff3e9d3b4e8409471ecc58e568eb153f1e00',
+      137: '0xb0dc320ea9eea823a150763abb4a7ba8286cd08b',
     },
-    tokenSymbol: 'PLATIN',
+    tokenSymbol: 'DFYN',
     tokenAddresses: {
-      80001: '0x782eb3304F8b9adD877F13a5cA321f72c4AA9804',
-      137: '0x782eb3304F8b9adD877F13a5cA321f72c4AA9804',
+      80001: '0xc168e40227e4ebd8c1cae80f7a55a4f0e6d66c97',
+      137: '0xc168e40227e4ebd8c1cae80f7a55a4f0e6d66c97',
     },
-    quoteTokenSymbol: QuoteToken.BUSD,
-    quoteTokenAdresses: contracts.busd,
-    exchange:"QuickSwap"
-
+    quoteTokenSymbol: QuoteToken.ROUTE,
+    quoteTokenAdresses: contracts.route,
+    exchange:"DFYN"
   },
-  // {
-  //   pid: NAN,
-  //   risk: 5,
-  //   lpSymbol: 'VERT-DFYN LP',
-  //   lpAddresses: {
-  //     80001: '0xae27a37cf724d2e775b4a436f40e5c9d7e1239cd',
-  //     137: '0xae27a37cf724d2e775b4a436f40e5c9d7e1239cd',
-  //   },
-  //   tokenSymbol: 'VERT',
-  //   tokenAddresses: {
-  //     80001: contracts.cake[80001],
-  //     137: contracts.cake[137],
-  //   },
-  //   quoteTokenSymbol: QuoteToken.BUSD,
-  //   quoteTokenAdresses: contracts.busd,
-  // },
+ 
   {
     pid: 12,
     risk: 5,
@@ -103,6 +88,24 @@ const farms: FarmConfig[] = [
     },
     quoteTokenSymbol: QuoteToken.WETH,
     quoteTokenAdresses: contracts.weth,
+    exchange:"QuickSwap"
+
+  },
+  {
+    pid: 14,
+    risk: 3,
+    lpSymbol: 'PLATIN-USDC QLP',
+    lpAddresses: {
+      80001: '',
+      137: '0x60beff3e9d3b4e8409471ecc58e568eb153f1e00',
+    },
+    tokenSymbol: 'PLATIN',
+    tokenAddresses: {
+      80001: '0x782eb3304F8b9adD877F13a5cA321f72c4AA9804',
+      137: '0x782eb3304F8b9adD877F13a5cA321f72c4AA9804',
+    },
+    quoteTokenSymbol: QuoteToken.BUSD,
+    quoteTokenAdresses: contracts.busd,
     exchange:"QuickSwap"
 
   },
