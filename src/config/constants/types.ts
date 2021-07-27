@@ -31,6 +31,7 @@ export enum QuoteToken {
   'VERT' = 'VERT',
   'BTC' = 'BTC',
   'ROUTE' = 'ROUTE',
+  'DFYN' = 'DFYN',
 }
 
 export enum PoolCategory {
