@@ -119,8 +119,12 @@ const fetchFarms = async () => {
 
       
       const allocPoint = new BigNumber(info.allocPoint._hex)
-      const poolWeight = allocPoint.div(new BigNumber(totalAllocPoint))
-
+      let poolWeight = allocPoint.div(new BigNumber(totalAllocPoint))
+      if (tokenPriceVsQuote === undefined){
+        console.error(`Could not get token price for pool ${farmConfig.pid} ${farmConfig.lpSymbol}`)
+        tokenPriceVsQuote = new BigNumber("0");
+        poolWeight = new BigNumber(0)
+      }
       return {
         ...farmConfig,
         tokenAmount: tokenAmount.toJSON(),
