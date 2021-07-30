@@ -132,7 +132,7 @@ const fetchFarms = async () => {
         lpTotalInQuoteToken: lpTotalInQuoteToken.toJSON(),
         tokenPriceVsQuote: tokenPriceVsQuote.toJSON(),
         poolWeight: poolWeight.toNumber(),
-        multiplier: `${allocPoint.div(100).toString()}X`,
+        multiplier: poolWeight.gt(0)? `${allocPoint.div(100).toString()}X` : "Failed to fetch",
         depositFeeBP: info.depositFeeBP,
         eggPerBlock: new BigNumber(eggPerBlock).toNumber(),
         lpStakedTotal: lpStakedTotal.toJSON(),
