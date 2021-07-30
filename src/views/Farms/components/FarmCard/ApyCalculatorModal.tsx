@@ -12,7 +12,7 @@ interface ApyCalculatorModalProps {
   lpLabel?: string
   cakePrice?: BigNumber
   apy?: BigNumber
-  quoteTokenAdresses?: Address
+  quoteTokenAddresses?: Address
   quoteTokenSymbol?: string
   tokenAddresses: Address,
   pid: number
@@ -37,7 +37,7 @@ const Description = styled(Text)`
 const ApyCalculatorModal: React.FC<ApyCalculatorModalProps> = ({
   onDismiss,
   lpLabel,
-  quoteTokenAdresses,
+  quoteTokenAddresses,
   quoteTokenSymbol,
   tokenAddresses,
   cakePrice,
@@ -45,7 +45,7 @@ const ApyCalculatorModal: React.FC<ApyCalculatorModalProps> = ({
   pid
 }) => {
   const TranslateString = useI18n()
-  const liquidityUrlPathParts = getLiquidityUrlPathParts({ quoteTokenAdresses, quoteTokenSymbol, tokenAddresses, pid })
+  const liquidityUrlPathParts = getLiquidityUrlPathParts({ quoteTokenAddresses, quoteTokenSymbol, tokenAddresses, pid })
   const farmApy = apy.times(new BigNumber(100)).toNumber()
   const oneThousandDollarsWorthOfCake = 1000 / cakePrice.toNumber()
 

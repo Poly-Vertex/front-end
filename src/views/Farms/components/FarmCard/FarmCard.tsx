@@ -182,7 +182,7 @@ const FarmCard: React.FC<FarmCardProps> = ({ farm, removed, cakePrice, bnbPrice,
 
 
   
-  const { quoteTokenAdresses, quoteTokenSymbol, tokenAddresses, risk, lpSymbol } = farm
+  const { quoteTokenAddresses, quoteTokenSymbol, tokenAddresses, risk, lpSymbol } = farm
   return (
     <FCard>
       {farm.tokenSymbol === 'VERT' && <StyledCardAccent />}
@@ -203,7 +203,7 @@ const FarmCard: React.FC<FarmCardProps> = ({ farm, removed, cakePrice, bnbPrice,
               <>
                 <ApyButton
                   lpLabel={lpLabel}
-                  quoteTokenAdresses={quoteTokenAdresses}
+                  quoteTokenAddresses={quoteTokenAddresses}
                   quoteTokenSymbol={quoteTokenSymbol}
                   tokenAddresses={tokenAddresses}
                   cakePrice={cakePrice}
@@ -244,7 +244,7 @@ const FarmCard: React.FC<FarmCardProps> = ({ farm, removed, cakePrice, bnbPrice,
           }
           totalValueFormated={totalValueFormated}
           lpLabel={lpLabel}
-          quoteTokenAdresses={quoteTokenAdresses}
+          quoteTokenAddresses={quoteTokenAddresses}
           quoteTokenSymbol={quoteTokenSymbol}
           tokenAddresses={tokenAddresses}
           pid={farm.pid}
