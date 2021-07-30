@@ -23,7 +23,7 @@ const fetchFarms = async () => {
         },
         // Balance of quote token on LP contract
         {
-          address: farmConfig.quoteTokenAdresses[CHAIN_ID],
+          address: farmConfig.quoteTokenAddresses[CHAIN_ID],
           name: 'balanceOf',
           params: [lpAddress],
         },
@@ -45,7 +45,7 @@ const fetchFarms = async () => {
         },
         // Quote token decimals
         {
-          address: farmConfig.quoteTokenAdresses[CHAIN_ID],
+          address: farmConfig.quoteTokenAddresses[CHAIN_ID],
           name: 'decimals',
         },
       ]
