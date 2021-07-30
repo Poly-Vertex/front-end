@@ -64,7 +64,6 @@ const fetchFarms = async () => {
       let lpStakedTotal;
       let tokenPriceVsQuote;
 
-
       if(farmConfig.isTokenOnly){
         tokenAmount = new BigNumber(lpTokenBalanceMC).div(new BigNumber(10).pow(tokenDecimals));
         
@@ -73,7 +72,7 @@ const fetchFarms = async () => {
         }else{
           tokenPriceVsQuote = new BigNumber(quoteTokenBalanceLP).div(new BigNumber(10).pow(quoteTokenDecimals)).div(new BigNumber(tokenBalanceLP).div(new BigNumber(10).pow(tokenDecimals)));
         }
-
+        
         lpTotalInQuoteToken = tokenAmount.times(tokenPriceVsQuote);
         
         lpStakedTotal = tokenAmount;
@@ -99,7 +98,10 @@ const fetchFarms = async () => {
           if(tokenAmount.comparedTo(0) > 0){
             tokenPriceVsQuote = quoteTokenAmount.div(tokenAmount);
           }
-        lpStakedTotal = new BigNumber(lpTokenBalanceMC).div(new BigNumber(10).pow(quoteTokenDecimals))        
+        lpStakedTotal = new BigNumber(lpTokenBalanceMC).div(new BigNumber(10).pow(quoteTokenDecimals)) 
+        
+       
+   
       }
 
       const [info, totalAllocPoint, eggPerBlock] = await multicall(masterchefABI, [
