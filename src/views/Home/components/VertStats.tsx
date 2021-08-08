@@ -6,6 +6,7 @@ import { getBalanceNumber } from 'utils/formatBalance'
 import { useTotalSupply, useBurnedBalance } from 'hooks/useTokenBalance'
 import useI18n from 'hooks/useI18n'
 import { getCakeAddress } from 'utils/addressHelpers'
+import useTheme from 'hooks/useTheme'
 import CardValue from './CardValue'
 import { useFarms, usePriceCakeBusd } from '../../../state/hooks'
 
@@ -38,6 +39,11 @@ const LinkedText = styled(Text)`
   white-space:pre;
 `
 
+
+const InvertedImage = styled(Image)`
+    filter:invert(100%);
+  `
+
 const VertStats = () => {
   const TranslateString = useI18n()
   const totalSupply = useTotalSupply()
@@ -47,6 +53,7 @@ const VertStats = () => {
   const circSupply = totalSupply ? totalSupply.minus(burnedBalance) : new BigNumber(0);
   const cakeSupply = getBalanceNumber(circSupply);
   const marketCap = eggPrice.times(circSupply);
+  const { isDark } = useTheme()
 
   let eggPerBlock = 0;
   if(farms && farms[0] && farms[0].eggPerBlock){
@@ -69,7 +76,8 @@ const VertStats = () => {
         </Row>
           <LinkRow target= "_blank" href="https://polygonscan.com/token/0x72572ccf5208b59f4bcc14e6653d8c31cd1fc5a0?a=0x000000000000000000000000000000000000dEaD">
           <LinkedText fontSize="14px">{TranslateString(538, 'Total Burned')}{"   "}
-             <Image width={20} height={20} alt="external link" src="https://img.icons8.com/windows/32/000000/share-arrow-squared.png"/>
+            {isDark? <InvertedImage width={20} height={20} alt="external link" src="https://img.icons8.com/windows/32/000000/share-arrow-squared.png"/>:
+            <Image width={20} height={20} alt="external link" src="https://img.icons8.com/windows/32/000000/share-arrow-squared.png"/>}
           </LinkedText>
 
           <CardValue fontSize="14px" value={getBalanceNumber(burnedBalance)} decimals={0} />
