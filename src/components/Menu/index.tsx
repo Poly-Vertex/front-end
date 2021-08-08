@@ -25,7 +25,7 @@ const Menu = (props) => {
       setLang={setSelectedLanguage}
       cakePriceUsd={cakePriceUsd.toNumber()}
       links={config}
-      priceLink="https://quickchart.app/token/0x72572CCf5208b59f4BcC14e6653d8c31Cd1fC5a0"
+      priceLink="https://dex.guru/token/0x72572ccf5208b59f4bcc14e6653d8c31cd1fc5a0-polygon"
       {...props}
     />
   )
