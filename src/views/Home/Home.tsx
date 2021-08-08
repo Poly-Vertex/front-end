@@ -7,7 +7,7 @@ import Page from 'components/layout/Page'
 import Divider from 'views/Farms/components/Divider'
 import FarmStakingCard from './components/FarmStakingCard'
 import LotteryCard from './components/LotteryCard'
-import CakeStats from './components/CakeStats'
+import VertStats from './components/VertStats'
 import TotalValueLockedCard from './components/TotalValueLockedCard'
 import TwitterCard from './components/TwitterCard'
 import SpecialCard from './components/SpecialCard'
@@ -82,7 +82,7 @@ const Home: React.FC = () => {
         <Cards>
           <FarmStakingCard />
           <TwitterCard/>
-          <CakeStats />
+          <VertStats />
           <TotalValueLockedCard />
         </Cards>
       </div>

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Card, CardBody, Heading, Text } from '@pancakeswap-libs/uikit'
+import { Card, CardBody, Heading, Text, Link, Image } from '@pancakeswap-libs/uikit'
 import BigNumber from 'bignumber.js/bignumber'
 import styled from 'styled-components'
 import { getBalanceNumber } from 'utils/formatBalance'
@@ -9,7 +9,7 @@ import { getCakeAddress } from 'utils/addressHelpers'
 import CardValue from './CardValue'
 import { useFarms, usePriceCakeBusd } from '../../../state/hooks'
 
-const StyledCakeStats = styled(Card)`
+const StyledVertStats = styled(Card)`
   margin-left: auto;
   margin-right: auto;
 `
@@ -22,7 +22,23 @@ const Row = styled.div`
   margin-bottom: 8px;
 `
 
-const CakeStats = () => {
+const LinkRow = styled.a`
+  align-items: center;
+  display: flex;
+  font-size: 14px;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  :hover{
+    text-decoration: underline;
+  }
+`
+
+const LinkedText = styled(Text)`
+  display: flexbox;
+  white-space:pre;
+`
+
+const VertStats = () => {
   const TranslateString = useI18n()
   const totalSupply = useTotalSupply()
   const burnedBalance = useBurnedBalance(getCakeAddress())
@@ -38,7 +54,7 @@ const CakeStats = () => {
   }
 
   return (
-    <StyledCakeStats>
+    <StyledVertStats>
       <CardBody>
         <Heading size="xl" mb="24px">
           {TranslateString(534, 'VERT Stats')}
@@ -51,10 +67,13 @@ const CakeStats = () => {
           <Text fontSize="14px">{TranslateString(536, 'Total Minted')}</Text>
           {totalSupply && <CardValue fontSize="14px" value={getBalanceNumber(totalSupply)} decimals={0} />}
         </Row>
-        <Row>
-          <Text fontSize="14px">{TranslateString(538, 'Total Burned')}</Text>
+          <LinkRow target= "_blank" href="https://polygonscan.com/token/0x72572ccf5208b59f4bcc14e6653d8c31cd1fc5a0?a=0x000000000000000000000000000000000000dEaD">
+          <LinkedText fontSize="14px">{TranslateString(538, 'Total Burned')}{"   "}
+             <Image width={20} height={20} alt="external link" src="https://img.icons8.com/windows/32/000000/share-arrow-squared.png"/>
+          </LinkedText>
+
           <CardValue fontSize="14px" value={getBalanceNumber(burnedBalance)} decimals={0} />
-        </Row>
+        </LinkRow>
         <Row>
           <Text fontSize="14px">{TranslateString(10004, 'Circulating Supply')}</Text>
           {cakeSupply && <CardValue fontSize="14px" value={cakeSupply} decimals={0} />}
@@ -68,8 +87,8 @@ const CakeStats = () => {
           <Text bold fontSize="14px">3 million VERT</Text>
         </Row>
       </CardBody>
-    </StyledCakeStats>
+    </StyledVertStats>
   )
 }
 
-export default CakeStats
+export default VertStats
