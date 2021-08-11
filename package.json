@@ -35,6 +35,7 @@
     "@ethersproject/abi": "^5.0.7",
     "@pancakeswap-libs/uikit": "https://github.com/Poly-Vertex/uikit.git",
     "@progress/kendo-drawing": "^1.11.0",
+    "@progress/kendo-licensing": "^1.2.0",
     "@progress/kendo-react-gauges": "^4.8.0",
     "@reduxjs/toolkit": "^1.5.0",
     "@types/react": "^17.0.0",
