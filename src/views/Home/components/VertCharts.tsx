@@ -51,7 +51,7 @@ const VertCharts = () => {
       </ChartContainer>
       <ChartContainer>
         <ChartHeading>Vertex emission</ChartHeading>
-        <VertGauge />
+        <VertGauge isMobile={isMobile}/>
       </ChartContainer>
     </Charts>
   )
@@ -117,13 +117,14 @@ function VertPie(props: Props) {
   )
 }
 
-const VertGauge = () => {
+const VertGauge = (props: any) => {
   const { theme } = useTheme()
   const totalSupply = (useTotalSupply())
 
   const maxSupply = 3000000
+  const {isMobile} = props;
   const style = {
-    width: '400px',
+    width: isMobile?'100%':'75%',
     height: '100px',
     display: 'block',
   }
