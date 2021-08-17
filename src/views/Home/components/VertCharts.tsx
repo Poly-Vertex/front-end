@@ -86,10 +86,10 @@ function VertPie(props: Props) {
       radius={PieChart.defaultProps.radius - 6}
       lineWidth={100}
       segmentsStyle={{ transition: 'stroke .3s', cursor: 'pointer' }}
-      segmentsShift={(index) => (index === hovered && index === 0 ? 6 : 1)}
+      segmentsShift={(index) => ((index === hovered && index === 0) ? 6 : 1)}
       animate
-      label={({ dataEntry }) => dataEntry.title}
-      labelPosition={100 - lineWidth / 100}
+      label={({ dataEntry }) => `${dataEntry.title} - ${dataEntry.percentage.toLocaleString(undefined, {maximumFractionDigits:2})}%`}
+      labelPosition={80 - lineWidth / 100}
       labelStyle={{
         fill: theme.colors.contrast,
         opacity: 0.75,
