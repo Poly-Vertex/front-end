@@ -100,7 +100,7 @@ const config: MenuEntry[] = [
   {
     icon: 'Ballot',
     label: 'Governance',
-    href: 'vote.polyvertex.finance',
+    href: 'https://vote.polyvertex.finance',
   },
   // {
     //   label: 'Review by RugDoc',
