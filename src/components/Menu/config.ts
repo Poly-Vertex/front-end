@@ -98,7 +98,7 @@ const config: MenuEntry[] = [
     href: 'https://github.com/TechRate/Smart-Contract-Audits/blob/main/PolyVertex%20Full%20Smart%20Contract%20Security%20Audit.pdf',
   },
   {
-    icon: 'Ballot',
+    icon: 'Ticket',
     label: 'Governance',
     href: 'https://vote.polyvertex.finance',
   },
