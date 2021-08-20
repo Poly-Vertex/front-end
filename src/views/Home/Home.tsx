@@ -66,14 +66,17 @@ const TitleImage = styled.img`
   ${({ theme }) => theme.mediaQueries.xs} {
     display: block;
     margin-top:5%;
+    width:100%;
   }
   ${({ theme }) => theme.mediaQueries.sm} {
     display: block;
     margin-top:5%;
+    width:100%;
   }
   
   ${({ theme }) => theme.mediaQueries.lg} {
     display: block;
+    width:60%;
   };
   content:url(${({theme})=>theme.isDark ? `images/title_home_dark.png`:`images/title_home_light.png`})
 
@@ -93,9 +96,9 @@ const Home: React.FC = () => {
       <Hero>
           <TitleImage alt="PolyVertex"/>
           
-        <Text>{TranslateString(578, '')}</Text>
-      
+
       </Hero>
+        <i><Heading size="sm">{TranslateString(999, 'The most community-led yield farm on Polygon')}</Heading></i>
       <div>
           <Divider/>
           {/* <SpecialCard /> */}
