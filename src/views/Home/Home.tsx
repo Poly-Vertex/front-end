@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { Heading, Text, BaseLayout , Button, ToastContainer} from '@pancakeswap-libs/uikit'
+import { Heading, Text, BaseLayout , Button, ToastContainer, Image} from '@pancakeswap-libs/uikit'
 import useI18n from 'hooks/useI18n'
 import useToast from 'hooks/useToast'
 import Page from 'components/layout/Page'
@@ -57,6 +57,28 @@ const Cards = styled(BaseLayout)`
   }
 `
 
+const TitleImage = styled.img`
+  width:60%;
+  height:auto;
+  padding:5%;
+  margin:auto;
+  
+  ${({ theme }) => theme.mediaQueries.xs} {
+    display: block;
+    margin-top:5%;
+  }
+  ${({ theme }) => theme.mediaQueries.sm} {
+    display: block;
+    margin-top:5%;
+  }
+  
+  ${({ theme }) => theme.mediaQueries.lg} {
+    display: block;
+  };
+  content:url(${({theme})=>theme.isDark ? `images/title_home_dark.png`:`images/title_home_light.png`})
+
+  `
+
 
 
 
@@ -69,9 +91,8 @@ const Home: React.FC = () => {
 
     <Page>
       <Hero>
-        <Heading as="h1" size="xxl" mb="24px" color="secondary">
-          {TranslateString(576, 'PolyVertex')}
-        </Heading>
+          <TitleImage alt="PolyVertex"/>
+          
         <Text>{TranslateString(578, '')}</Text>
       
       </Hero>

@@ -44,7 +44,7 @@ const StyledCardAccent = styled.div`
   rgba(255, 0, 0, 1) 100%);
   background-size: 300% 300%;
   animation: ${RainbowLight} 2s linear infinite;
-  border-radius: 16px;
+  border-radius: 4px;
   filter: blur(6px);
   position: absolute;
   top: -2px;
@@ -69,7 +69,7 @@ const StyledCardAccentSpecial = styled.div`
   rgba(0, 255, 255, 1) 100%);
   background-size: 300% 300%;
   animation: ${RainbowLight} 2s linear infinite;
-  border-radius: 16px;
+  border-radius: 4px;
   filter: blur(6px);
   position: absolute;
   top: -2px;
@@ -84,7 +84,7 @@ const FCard = styled.div`
   align-self: baseline;
   background: linear-gradient(to top, ${(props) => props.theme.card.background.concat("C8")}, ${(props) => props.theme.card.background.concat("FF")});
 
-  border-radius: 32px;
+  border-radius: 8px;
   box-shadow: 0px 2px 12px -8px rgba(25, 19, 38, 0.1), 0px 1px 1px rgba(25, 19, 38, 0.05);
   display: flex;
   flex-direction: column;

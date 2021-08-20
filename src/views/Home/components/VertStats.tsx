@@ -19,6 +19,7 @@ const StyledVertStats = styled(Card)<{isMobile:boolean}>`
   margin-right: auto;
   width:100%;
   ${(props)=>!props.isMobile? "grid-column: span 12 !important;" : ""}
+  border-radius:8px;
   
 `
 const ColumnLayout = styled(CardBody)<{isMobile:boolean}>`
