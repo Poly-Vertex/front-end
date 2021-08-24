@@ -174,7 +174,9 @@ const VaultRow: React.FC<VaultRowProps> = ({ vault, removed, cakePrice, bnbPrice
         maximumFractionDigits: 2,
       })
       const parts = formatted.match(/([\D]*)([\d.,]+)([\D]*)/)
-      formatted=`${parts[1]}${parts[2]} ${format.symbol}${parts[3]}`
+      if(parts !== null){
+        formatted=`${parts[1]}${parts[2]} ${format.symbol}${parts[3]}`
+      }
     }
   });
 

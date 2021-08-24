@@ -54,6 +54,22 @@ const farms: VaultConfig[] = [
     quoteTokenAddresses: contracts.busd,
     endBlock: 1000000000000
   },
+  {
+    pid: 5,
+    risk: 5,
+    lpSymbol: 'USDC-WETH QLP',
+    lpAddresses: {
+      80001: '',
+      137: '0x853ee4b2a13f8a742d64c8f088be7ba2131f670d',
+    },
+    tokenSymbol: 'USDC',
+    tokenAddresses: {
+      137: "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
+    },
+    quoteTokenSymbol: QuoteToken.BUSD,
+    quoteTokenAddresses: contracts.busd,
+    endBlock: 1000000000000
+  },
 ]
 
 export default farms

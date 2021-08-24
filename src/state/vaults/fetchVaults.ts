@@ -2,6 +2,7 @@ import BigNumber from 'bignumber.js'
 import erc20 from 'config/abi/erc20.json'
 import vaultChefABI from 'config/abi/vaultChef.json'
 import vaultStrategyABI from 'config/abi/vaultStrategy.json'
+import strategyMasterchefABI from 'config/abi/strategyMasterchef.json'
 import multicall from 'utils/multicall'
 import { getVaultChefAddress } from 'utils/addressHelpers'
 import vaultsConfig from 'config/constants/vaults'
@@ -113,7 +114,37 @@ const fetchVaults = async () => {
         lpStakedTotal = new BigNumber(lpTokenBalanceMC).div(new BigNumber(10).pow(tokenDecimals))        
       }
 
+      // ONLY FOR MASTERCHEF STRATEGIES:
+      
+      const [masterChefAddr, masterchefPID] = await multicall(strategyMasterchefABI, [
+        {
+          address: strategy,
+          name: 'masterChefAddress',
+        },
+        {
+          address: strategy,
+          name: 'pid',
+        },
+      ])
 
+      const [masterchefInfo, totalAllocPoint, eggPerBlock] = await multicall(strategyMasterchefABI, [
+        {
+          address: masterChefAddr,
+          name: 'poolInfo',
+          params: [masterchefPID],
+        },
+        {
+          address: masterChefAddr,
+          name: 'totalAllocPoint',
+        },
+        {
+          address: masterChefAddr,
+          name: 'eggPerBlock',
+        },
+      ])
+
+      alert(eggPerBlock);
+      
       return {
         ...vaultConfig,
         tokenAmount: tokenAmount.toJSON(),
@@ -121,6 +152,7 @@ const fetchVaults = async () => {
         tokenPriceVsQuote: tokenPriceVsQuote.toJSON(),
         // poolWeight: poolWeight.toNumber(),
         // depositFeeBP: info.depositFeeBP,
+        eggPerBlock: new BigNumber(eggPerBlock).toNumber(),
         lpStakedTotal: lpStakedTotal.toJSON(),
         lpTokenBalanceChef: lpTokenBalanceMC
       }
