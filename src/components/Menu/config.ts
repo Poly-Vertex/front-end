@@ -12,11 +12,11 @@ const config: MenuEntry[] = [
     items: [
       {
         label: 'Exchange',
-        href: 'https://quickswap.exchange/#/swap?outputCurrency=0x72572CCf5208b59f4BcC14e6653d8c31Cd1fC5a0',
+        href: 'https://docs.polyvertex.finance/general/vertex-token/how-to-trade',
       },
       {
         label: 'Liquidity',
-        href: 'https://quickswap.exchange/#/add/ETH/0x72572CCf5208b59f4BcC14e6653d8c31Cd1fC5a0',
+        href: 'https://docs.polyvertex.finance/general/vertex-token/how-to-add-remove-liquidity',
       },
     ],
   },
@@ -62,29 +62,25 @@ const config: MenuEntry[] = [
         label: 'DappRadar',
         href: 'https://dappradar.com/polygon/defi/polyvertex-yield-farm',
       },
-      
-     
-
+      {
+        label: 'CoinGecko',
+        href: 'https://www.coingecko.com/en/coins/polyvertex',
+      },
     ],
   },
   {
     label: 'More',
     icon: 'MoreIcon',
     items: [
-      // {
-      //   label: 'Github',
-      //   href: '#',
-      // },
       {
         label: 'Docs',
         href: 'https://docs.polyvertex.finance/',
       },
-      // {
-      //   label: 'Review by RugDoc',
-      //   href: 'https://rugdoc.io/project/polyvertex/ ',
-      // },
-    
-       
+      {
+        label: 'GitHub',
+        href: 'https://github.com/Poly-Vertex',
+      },
+      
       // {
       //   label: 'Blog',
       //   href: '#',
@@ -100,6 +96,11 @@ const config: MenuEntry[] = [
     icon: 'AuditIcon',
     label: 'Audit by TechRate',
     href: 'https://github.com/TechRate/Smart-Contract-Audits/blob/main/PolyVertex%20Full%20Smart%20Contract%20Security%20Audit.pdf',
+  },
+  {
+    icon: 'TicketIcon',
+    label: 'Governance',
+    href: 'https://vote.polyvertex.finance',
   },
   // {
     //   label: 'Review by RugDoc',

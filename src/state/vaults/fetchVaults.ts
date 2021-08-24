@@ -42,7 +42,7 @@ const fetchVaults = async () => {
         },
         // Balance of quote token on LP contract
         {
-          address: vaultConfig.quoteTokenAdresses[CHAIN_ID],
+          address: vaultConfig.quoteTokenAddresses[CHAIN_ID],
           name: 'balanceOf',
           params: [lpAddress],
         },
@@ -58,7 +58,7 @@ const fetchVaults = async () => {
         },
         // Quote token decimals
         {
-          address: vaultConfig.quoteTokenAdresses[CHAIN_ID],
+          address: vaultConfig.quoteTokenAddresses[CHAIN_ID],
           name: 'decimals',
         },
       ]

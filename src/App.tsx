@@ -2,15 +2,25 @@ import React, { useEffect, Suspense, lazy } from 'react'
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { Link, ResetCSS } from '@pancakeswap-libs/uikit'
+import useToast from 'hooks/useToast'
 import BigNumber from 'bignumber.js'
 import { useFetchPublicData } from 'state/hooks'
 import Image from 'views/Nft/components/Image'
 import styled from 'styled-components'
+import TagManager from 'react-gtm-module'
 import { ToastListener } from './contexts/ToastsContext'
 import Menu from './components/Menu'
 import PageLoader from './components/PageLoader'
 import NftGlobalNotification from './views/Nft/components/NftGlobalNotification'
 import GlobalStyle from './style/Global'
+
+
+const tagManagerArgs = {
+    gtmId: 'GTM-55C2WWJ'
+}
+
+TagManager.initialize(tagManagerArgs)
+
 
 // Route-based code splitting
 // Only pool is included in the main bundle because of it's the most visited page'
@@ -23,6 +33,8 @@ const Vaults = lazy(() => import('./views/Vaults'))
 const NotFound = lazy(() => import('./views/NotFound'))
 // const Nft = lazy(() => import('./views/Nft'))
 
+
+let didAskToJoinTelegram = false;
 
 // This config is required for number formating
 BigNumber.config({
@@ -39,6 +51,16 @@ const App: React.FC = () => {
   }, [account, connect])
 
   useFetchPublicData()
+
+  const { toastSuccess} = useToast()
+  const v = Math.random();
+  if (v < 0.3 && !didAskToJoinTelegram){
+    const action = {text:"Join now", url:"https://t.me/polyvertex"}
+    toastSuccess("Have you joined our Telegram community?", "Come chat with us!", action);
+  }
+  didAskToJoinTelegram = true;
+  
+    
 
   return (
     <Router>

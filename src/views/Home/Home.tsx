@@ -1,14 +1,16 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { Heading, Text, BaseLayout , Button, ToastContainer} from '@pancakeswap-libs/uikit'
+import { Heading, Text, BaseLayout , Button, ToastContainer, Image} from '@pancakeswap-libs/uikit'
 import useI18n from 'hooks/useI18n'
 import useToast from 'hooks/useToast'
 import Page from 'components/layout/Page'
+import Divider from 'views/Farms/components/Divider'
 import FarmStakingCard from './components/FarmStakingCard'
 import LotteryCard from './components/LotteryCard'
-import CakeStats from './components/CakeStats'
-import TotalValueLockedCard from './components/TotalValueLockedCard'
+import VertStats from './components/VertStats'
 import TwitterCard from './components/TwitterCard'
+import SpecialCard from './components/SpecialCard'
+import Background from '../Background'
 import HomePageCountdown from '../HomePageCountdown'
 
 const Hero = styled.div`
@@ -55,33 +57,63 @@ const Cards = styled(BaseLayout)`
   }
 `
 
+const TitleImage = styled.img`
+  width:60%;
+  height:auto;
+  padding:5%;
+  margin:auto;
+  
+  ${({ theme }) => theme.mediaQueries.xs} {
+    display: block;
+    margin-top:5%;
+    width:100%;
+  }
+  ${({ theme }) => theme.mediaQueries.sm} {
+    display: block;
+    margin-top:5%;
+    width:100%;
+  }
+  
+  ${({ theme }) => theme.mediaQueries.lg} {
+    display: block;
+    width:60%;
+  };
+  content:url(${({theme})=>theme.isDark ? `images/title_home_dark.png`:`images/title_home_light.png`})
+
+  `
+
 
 
 
 const Home: React.FC = () => {
   const TranslateString = useI18n()
-  
+
 
   return (
+    <>
+
     <Page>
       <Hero>
-        <Heading as="h1" size="xl" mb="24px" color="secondary">
-          {TranslateString(576, 'PolyVertex')}
-        </Heading>
-        <Text>{TranslateString(578, '')}</Text>
-      
+          <TitleImage alt="PolyVertex"/>
+          
+
       </Hero>
-     {/* <HomePageCountdown/> */}
+        <i><Heading size="sm">{TranslateString(999, 'The most community-led yield farm on Polygon')}</Heading></i>
       <div>
+          <Divider/>
+          {/* <SpecialCard /> */}
         <Cards>
           <FarmStakingCard />
           <TwitterCard/>
-          <CakeStats />
-          <TotalValueLockedCard />
+          <VertStats />
         </Cards>
       </div>
     </Page>
-  )
-}
+    <Background/>
 
-export default Home
+      </>
+      )
+    }
+    
+    export default Home
+    

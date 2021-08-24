@@ -11,7 +11,7 @@ export interface ExpandableSectionProps {
   removed?: boolean
   totalValueFormated?: string
   lpLabel?: string
-  quoteTokenAdresses?: Address
+  quoteTokenAddresses?: Address
   quoteTokenSymbol?: string
   tokenAddresses: Address,
   pid: number
@@ -45,13 +45,13 @@ const DetailsSection: React.FC<ExpandableSectionProps> = ({
   removed,
   totalValueFormated,
   lpLabel,
-  quoteTokenAdresses,
+  quoteTokenAddresses,
   quoteTokenSymbol,
   tokenAddresses,
   pid
 }) => {
   const TranslateString = useI18n()
-  const liquidityUrlPathParts = getLiquidityUrlPathParts({ quoteTokenAdresses, quoteTokenSymbol, tokenAddresses, pid })
+  const liquidityUrlPathParts = getLiquidityUrlPathParts({ quoteTokenAddresses, quoteTokenSymbol, tokenAddresses, pid })
 
   return (
     <Wrapper>

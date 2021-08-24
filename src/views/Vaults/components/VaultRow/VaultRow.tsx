@@ -212,7 +212,7 @@ const VaultRow: React.FC<VaultRowProps> = ({ vault, removed, cakePrice, bnbPrice
 
 
 
-  const { quoteTokenAdresses, quoteTokenSymbol, tokenAddresses, risk, lpSymbol } = vault
+  const { quoteTokenAddresses, quoteTokenSymbol, tokenAddresses, risk, lpSymbol } = vault
   return (
     <VCard  >
       {vault.tokenSymbol === 'VERT' && <StyledCardAccent />}
@@ -234,7 +234,7 @@ const VaultRow: React.FC<VaultRowProps> = ({ vault, removed, cakePrice, bnbPrice
               <>
                 <ApyButton
                   lpLabel={lpLabel}
-                  quoteTokenAdresses={quoteTokenAdresses}
+                  quoteTokenAddresses={quoteTokenAddresses}
                   quoteTokenSymbol={quoteTokenSymbol}
                   tokenAddresses={tokenAddresses}
                   cakePrice={cakePrice}
@@ -329,7 +329,7 @@ const VaultRow: React.FC<VaultRowProps> = ({ vault, removed, cakePrice, bnbPrice
           }
           totalValueFormated={totalValueFormated}
           lpLabel={lpLabel}
-          quoteTokenAdresses={quoteTokenAdresses}
+          quoteTokenAddresses={quoteTokenAddresses}
           quoteTokenSymbol={quoteTokenSymbol}
           tokenAddresses={tokenAddresses}
           pid={vault.pid}

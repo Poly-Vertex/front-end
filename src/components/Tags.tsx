@@ -13,6 +13,7 @@ const RiskTag = ({ risk }) => (
   </Tag>
 )
 
+
 const CoreTag = () => (
   <Tag variant='secondary' outline startIcon={<VerifiedIcon />}>
     Core
@@ -24,6 +25,11 @@ const CommunityTag = () => (
     Community
   </Tag>
 )
+const SpecialTag = () => (
+  <Tag variant='textSubtle' outline startIcon={<VerifiedIcon />}>
+    SPECIAL
+  </Tag>
+)
 
 const BinanceTag = () => (
   <Tag variant='binance' outline startIcon={<BinanceIcon />}>
@@ -31,4 +37,4 @@ const BinanceTag = () => (
   </Tag>
 )
 
-export { CoreTag, CommunityTag, BinanceTag, RiskTag, NoFeeTag }
+export { CoreTag, CommunityTag, BinanceTag, RiskTag, NoFeeTag, SpecialTag }

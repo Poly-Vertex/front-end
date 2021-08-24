@@ -20,6 +20,7 @@ const StyledFarmStakingCard = styled(Card)`
   background-repeat: no-repeat;
   background-position: top right;
   min-height: 376px;
+  border-radius:8px;
 `
 
 const Block = styled.div`

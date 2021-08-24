@@ -30,6 +30,8 @@ export enum QuoteToken {
   'WETH' = 'WETH',
   'VERT' = 'VERT',
   'BTC' = 'BTC',
+  'ROUTE' = 'ROUTE',
+  'DFYN' = 'DFYN',
 }
 
 export enum PoolCategory {
@@ -50,7 +52,7 @@ export interface FarmConfig {
   tokenSymbol: string
   tokenAddresses: Address
   quoteTokenSymbol: QuoteToken
-  quoteTokenAdresses: Address
+  quoteTokenAddresses: Address
   multiplier?: string
   isTokenOnly?: boolean
   isCommunity?: boolean
@@ -60,6 +62,7 @@ export interface FarmConfig {
     earnLabel: string
     endBlock: number
   }
+  exchange?:string
 }
 
 export interface PoolConfig {
@@ -86,7 +89,7 @@ export interface VaultConfig {
   tokenSymbol: string
   tokenAddresses: Address
   quoteTokenSymbol: QuoteToken
-  quoteTokenAdresses: Address
+  quoteTokenAddresses: Address
   multiplier?: string
   isTokenOnly?: boolean
   isCommunity?: boolean

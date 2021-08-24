@@ -44,7 +44,7 @@ const StyledCardAccent = styled.div`
   rgba(255, 0, 0, 1) 100%);
   background-size: 300% 300%;
   animation: ${RainbowLight} 2s linear infinite;
-  border-radius: 16px;
+  border-radius: 4px;
   filter: blur(6px);
   position: absolute;
   top: -2px;
@@ -54,10 +54,37 @@ const StyledCardAccent = styled.div`
   z-index: -1;
 `
 
+const StyledCardAccentSpecial = styled.div`
+  background: linear-gradient(45deg,
+  rgba(0, 255, 255, 1) 0%,
+  rgba(0, 101, 255, 1) 10%,
+  rgba(47, 255, 222, 1) 20%,
+  rgba(176, 35, 181, 1) 30%,
+  rgba(192, 37, 39, 1) 40%,
+  rgba(208, 54, 29, 1) 50%,
+  rgba(197, 98, 17, 1) 60%,
+  rgba(95, 234, 13, 1) 70%,
+  rgba(69, 243, 7, 1) 80%,
+  rgba(4, 248, 38, 1) 90%,
+  rgba(0, 255, 255, 1) 100%);
+  background-size: 300% 300%;
+  animation: ${RainbowLight} 2s linear infinite;
+  border-radius: 4px;
+  filter: blur(6px);
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  bottom: -2px;
+  left: -2px;
+  z-index: -1;
+`
+
+// background: linear-gradient(to top,rgb(255,255,255,.6), rgb(255,255,255,1));
 const FCard = styled.div`
   align-self: baseline;
-  background: ${(props) => props.theme.card.background};
-  border-radius: 32px;
+  background: linear-gradient(to top, ${(props) => props.theme.card.background.concat("C8")}, ${(props) => props.theme.card.background.concat("FF")});
+
+  border-radius: 8px;
   box-shadow: 0px 2px 12px -8px rgba(25, 19, 38, 0.1), 0px 1px 1px rgba(25, 19, 38, 0.05);
   display: flex;
   flex-direction: column;
@@ -88,9 +115,10 @@ interface FarmCardProps {
   account?: string
   btcPrice?:BigNumber
   wethPrice?:BigNumber
+  routePrice?:BigNumber
 }
 
-const FarmCard: React.FC<FarmCardProps> = ({ farm, removed, cakePrice, bnbPrice, ethereum, account, wethPrice }) => {
+const FarmCard: React.FC<FarmCardProps> = ({ farm, removed, cakePrice, bnbPrice, ethereum, account, wethPrice, routePrice }) => {
   const TranslateString = useI18n()
 
   const [showExpandableSection, setShowExpandableSection] = useState(false)
@@ -115,9 +143,12 @@ const FarmCard: React.FC<FarmCardProps> = ({ farm, removed, cakePrice, bnbPrice,
     if (farm.quoteTokenSymbol === QuoteToken.WETH) {
       return wethPrice.times(farm.lpTotalInQuoteToken)
     }
+    if (farm.quoteTokenSymbol === QuoteToken.ROUTE) {
+      return routePrice.times(farm.lpTotalInQuoteToken)
+    }
    
     return farm.lpTotalInQuoteToken
-  }, [bnbPrice, cakePrice, farm.lpTotalInQuoteToken, farm.quoteTokenSymbol, wethPrice])
+  }, [bnbPrice, cakePrice, farm.lpTotalInQuoteToken, farm.quoteTokenSymbol, wethPrice, routePrice])
 
   const totalValueFormated = totalValue
     ? `$${Number(totalValue).toLocaleString(undefined, { maximumFractionDigits: 0 })}`
@@ -151,10 +182,11 @@ const FarmCard: React.FC<FarmCardProps> = ({ farm, removed, cakePrice, bnbPrice,
 
 
   
-  const { quoteTokenAdresses, quoteTokenSymbol, tokenAddresses, risk, lpSymbol } = farm
+  const { quoteTokenAddresses, quoteTokenSymbol, tokenAddresses, risk, lpSymbol } = farm
   return (
     <FCard>
       {farm.tokenSymbol === 'VERT' && <StyledCardAccent />}
+      {farm.risk === 999 && <StyledCardAccentSpecial />}
       <CardHeading
         lpLabel={lpLabel}
         multiplier={farm.multiplier}
@@ -171,7 +203,7 @@ const FarmCard: React.FC<FarmCardProps> = ({ farm, removed, cakePrice, bnbPrice,
               <>
                 <ApyButton
                   lpLabel={lpLabel}
-                  quoteTokenAdresses={quoteTokenAdresses}
+                  quoteTokenAddresses={quoteTokenAddresses}
                   quoteTokenSymbol={quoteTokenSymbol}
                   tokenAddresses={tokenAddresses}
                   cakePrice={cakePrice}
@@ -212,10 +244,11 @@ const FarmCard: React.FC<FarmCardProps> = ({ farm, removed, cakePrice, bnbPrice,
           }
           totalValueFormated={totalValueFormated}
           lpLabel={lpLabel}
-          quoteTokenAdresses={quoteTokenAdresses}
+          quoteTokenAddresses={quoteTokenAddresses}
           quoteTokenSymbol={quoteTokenSymbol}
           tokenAddresses={tokenAddresses}
           pid={farm.pid}
+          exchange={farm.exchange}
         />
       </ExpandingWrapper>
     </FCard>

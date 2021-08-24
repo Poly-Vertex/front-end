@@ -13,29 +13,29 @@ const fetchFarms = async () => {
     farmsConfig.map(async (farmConfig) => {
   
 
-      const lpAdress = farmConfig.lpAddresses[CHAIN_ID]
+      const lpAddress = farmConfig.lpAddresses[CHAIN_ID]
       const calls = [
         // Balance of token in the LP contract
         {
           address: farmConfig.tokenAddresses[CHAIN_ID],
           name: 'balanceOf',
-          params: [lpAdress],
+          params: [lpAddress],
         },
         // Balance of quote token on LP contract
         {
-          address: farmConfig.quoteTokenAdresses[CHAIN_ID],
+          address: farmConfig.quoteTokenAddresses[CHAIN_ID],
           name: 'balanceOf',
-          params: [lpAdress],
+          params: [lpAddress],
         },
         // Balance of LP tokens in the master chef contract
         {
-          address: farmConfig.isTokenOnly ? farmConfig.tokenAddresses[CHAIN_ID] : lpAdress,
+          address: farmConfig.isTokenOnly ? farmConfig.tokenAddresses[CHAIN_ID] : lpAddress,
           name: 'balanceOf',
           params: [getMasterChefAddress()],
         },
         // Total supply of LP tokens
         {
-          address: lpAdress,
+          address: lpAddress,
           name: 'totalSupply',
         },
         // Token decimals
@@ -45,14 +45,14 @@ const fetchFarms = async () => {
         },
         // Quote token decimals
         {
-          address: farmConfig.quoteTokenAdresses[CHAIN_ID],
+          address: farmConfig.quoteTokenAddresses[CHAIN_ID],
           name: 'decimals',
         },
       ]
 
       const [
         tokenBalanceLP,
-        quoteTokenBlanceLP,
+        quoteTokenBalanceLP,
         lpTokenBalanceMC,
         lpTotalSupply,
         tokenDecimals,
@@ -70,9 +70,9 @@ const fetchFarms = async () => {
         if(farmConfig.tokenSymbol === QuoteToken.BUSD && farmConfig.quoteTokenSymbol === QuoteToken.BUSD){
           tokenPriceVsQuote = new BigNumber(1);          
         }else{
-          tokenPriceVsQuote = new BigNumber(quoteTokenBlanceLP).div(new BigNumber(10).pow(quoteTokenDecimals)).div(new BigNumber(tokenBalanceLP).div(new BigNumber(10).pow(tokenDecimals)));
+          tokenPriceVsQuote = new BigNumber(quoteTokenBalanceLP).div(new BigNumber(10).pow(quoteTokenDecimals)).div(new BigNumber(tokenBalanceLP).div(new BigNumber(10).pow(tokenDecimals)));
         }
-
+        
         lpTotalInQuoteToken = tokenAmount.times(tokenPriceVsQuote);
         
         lpStakedTotal = tokenAmount;
@@ -81,7 +81,7 @@ const fetchFarms = async () => {
         const lpTokenRatio = new BigNumber(lpTokenBalanceMC).div(new BigNumber(lpTotalSupply))
 
         // Total value in staking in quote token value
-        lpTotalInQuoteToken = new BigNumber(quoteTokenBlanceLP)
+        lpTotalInQuoteToken = new BigNumber(quoteTokenBalanceLP)
           .div(new BigNumber(10).pow(quoteTokenDecimals))
           .times(new BigNumber(2))
           .times(lpTokenRatio)
@@ -91,14 +91,17 @@ const fetchFarms = async () => {
           .div(new BigNumber(10).pow(tokenDecimals))
           .times(lpTokenRatio)
         
-        const quoteTokenAmount = new BigNumber(quoteTokenBlanceLP)
+        const quoteTokenAmount = new BigNumber(quoteTokenBalanceLP)
           .div(new BigNumber(10).pow(quoteTokenDecimals))
           .times(lpTokenRatio)
 
           if(tokenAmount.comparedTo(0) > 0){
             tokenPriceVsQuote = quoteTokenAmount.div(tokenAmount);
           }
-        lpStakedTotal = new BigNumber(lpTokenBalanceMC).div(new BigNumber(10).pow(quoteTokenDecimals))        
+        lpStakedTotal = new BigNumber(lpTokenBalanceMC).div(new BigNumber(10).pow(quoteTokenDecimals)) 
+        
+       
+   
       }
 
       const [info, totalAllocPoint, eggPerBlock] = await multicall(masterchefABI, [
@@ -119,8 +122,12 @@ const fetchFarms = async () => {
 
       
       const allocPoint = new BigNumber(info.allocPoint._hex)
-      const poolWeight = allocPoint.div(new BigNumber(totalAllocPoint))
-
+      let poolWeight = allocPoint.div(new BigNumber(totalAllocPoint))
+      if (tokenPriceVsQuote === undefined){
+        console.error(`Could not get token price for pool ${farmConfig.pid} ${farmConfig.lpSymbol}`)
+        tokenPriceVsQuote = new BigNumber("0");
+        poolWeight = new BigNumber(0)
+      }
       return {
         ...farmConfig,
         tokenAmount: tokenAmount.toJSON(),
@@ -128,7 +135,7 @@ const fetchFarms = async () => {
         lpTotalInQuoteToken: lpTotalInQuoteToken.toJSON(),
         tokenPriceVsQuote: tokenPriceVsQuote.toJSON(),
         poolWeight: poolWeight.toNumber(),
-        multiplier: `${allocPoint.div(100).toString()}X`,
+        multiplier: poolWeight.gt(0)? `${allocPoint.div(100).toString()}X` : "Failed to fetch",
         depositFeeBP: info.depositFeeBP,
         eggPerBlock: new BigNumber(eggPerBlock).toNumber(),
         lpStakedTotal: lpStakedTotal.toJSON(),
