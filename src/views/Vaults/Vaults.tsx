@@ -4,7 +4,7 @@ import BigNumber from 'bignumber.js'
 import styled from 'styled-components'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { Heading } from '@pancakeswap-libs/uikit'
-import { BLOCKS_PER_YEAR } from 'config'
+import { BLOCKS_PER_YEAR, VERT_DECIMALS } from 'config'
 import orderBy from 'lodash/orderBy'
 import { provider } from 'web3-core'
 import partition from 'lodash/partition'
@@ -14,11 +14,19 @@ import { fetchVaultUserDataAsync } from 'state/vaults'
 import { useDispatch } from 'react-redux'
 import useRefresh from 'hooks/useRefresh'
 import { getBalanceNumber } from 'utils/formatBalance'
-import { useFarms, usePriceBnbBusd, usePriceCakeBusd, useVaults, usePriceWethBusd,  usePriceBtcBusd} from 'state/hooks'
+import {
+  useFarms,
+  usePriceBnbBusd,
+  usePriceCakeBusd,
+  useVaults,
+  usePriceWethBusd,
+  usePriceBtcBusd,
+  usePriceRouteBusd,
+} from 'state/hooks'
 import { QuoteToken, PoolCategory } from 'config/constants/types'
 import FlexLayout from 'components/layout/Flex'
 import Page from 'components/layout/Page'
-import VaultRow, {VaultWithStakedValue} from './components/VaultRow/VaultRow'
+import VaultRow, { VaultWithStakedValue } from './components/VaultRow/VaultRow'
 import VaultTabButtons from './components/VaultTabButtons'
 import Divider from '../Farms/components/Divider'
 
@@ -33,10 +41,8 @@ const Vaults: React.FC = () => {
   const wethPrice = usePriceWethBusd()
   const btcPrice = usePriceBtcBusd()
   const block = useBlock()
+  const routePrice = usePriceRouteBusd()
 
-
-
-  
   const dispatch = useDispatch()
   const { fastRefresh } = useRefresh()
   useEffect(() => {
@@ -45,74 +51,67 @@ const Vaults: React.FC = () => {
     }
   }, [account, dispatch, fastRefresh])
 
-
   const [stakedOnly, setStakedOnly] = useState(false)
-  
-  const activeVaults = vaults; // TODO filtering
+
+  const activeVaults = vaults // TODO filtering
 
   const stakedOnlyVaults = activeVaults.filter(
     (vault) => vault.userData && new BigNumber(vault.userData.stakedBalance).isGreaterThan(0),
   )
 
-  // const vaultsWithApy = vaults.map((vault) => {
-  //   // const isBnbPool = vault.poolCategory === PoolCategory.BINANCE
-  //   return {
-  //     ...vault,
-  //     isFinished: vault.pid === 0 ? false : vault.isFinished || block > vault.endBlock,
-  //     apy,
-  //   }
-  // })
-
-  // const [finishedVaults, openVaults] = partition(vaultsWithApy, (vault) => vault.isFinished)
-
   const vaultsList = useCallback(
     (vaultsToDisplay, removed: boolean) => {
       const vaultsToDisplayWithAPY: VaultWithStakedValue[] = vaultsToDisplay.map((vault) => {
-
-        const cakeRewardPerBlock = new BigNumber(vault.eggPerBlock || 1);
-
-        const rewardPerPeriod = cakeRewardPerBlock.times(BLOCKS_PER_YEAR)
-                                                  .div(356)
-                                                  .times(cakePrice);
-
-        let apy = rewardPerPeriod.plus(1).pow(365).minus(1);
-
-        let totalValue = new BigNumber(vault.lpTotalInQuoteToken || 0);
+        if(vault.farm === undefined){
+          return null;
+        }
         
+        const cakeRewardPerBlock = new BigNumber(vault.farm.eggPerBlock || 1)
+        .times(new BigNumber(vault.farm.poolWeight))
+        .div(new BigNumber(10).pow(VERT_DECIMALS))
+        
+        
+        const cakeRewardPerYear = cakeRewardPerBlock.times(BLOCKS_PER_YEAR)
+        let apr = cakePrice.times(cakeRewardPerYear)
+
+        let totalFarmValue = new BigNumber(vault.farm.lpTotalInQuoteToken || 0)
         if (vault.quoteTokenSymbol === QuoteToken.BNB) {
-          totalValue = totalValue.times(bnbPrice);
+          totalFarmValue = totalFarmValue.times(bnbPrice)
         }
         if (vault.quoteTokenSymbol === QuoteToken.CAKE) {
-          totalValue = totalValue.times(cakePrice);
+          totalFarmValue = totalFarmValue.times(cakePrice)
         }
         if (vault.quoteTokenSymbol === QuoteToken.WETH) {
-          totalValue = totalValue.times(wethPrice);
+          totalFarmValue = totalFarmValue.times(wethPrice)
+        }
+        if (vault.quoteTokenSymbol === QuoteToken.ROUTE) {
+          totalFarmValue = totalFarmValue.times(routePrice)
         }
 
-
-        if(totalValue.comparedTo(0) > 0){
-          apy = apy.div(totalValue);
+        if (totalFarmValue.comparedTo(0) > 0) {
+          apr = apr.div(totalFarmValue)
         }
 
-        return { ...vault, apy }
+        const NUM_COMPOUNDS_PER_PERIOD = 1000;
+        const apy = new BigNumber(1).plus(apr.dividedBy(NUM_COMPOUNDS_PER_PERIOD)).pow(NUM_COMPOUNDS_PER_PERIOD).minus(1)
+        return { ...vault, apy, apr }
       })
-      
       return vaultsToDisplayWithAPY.map((vault) => (
+        vault === null? <div/>:
         <VaultRow
-        key={vault.pid}
-        vault={vault}
-        removed={removed}
-        bnbPrice={bnbPrice}
-        cakePrice={cakePrice}
-        ethereum={ethereum}
-        account={account}
-        wethPrice={wethPrice}
-      />
+          key={vault.pid}
+          vault={vault}
+          removed={removed}
+          bnbPrice={bnbPrice}
+          cakePrice={cakePrice}
+          ethereum={ethereum}
+          account={account}
+          wethPrice={wethPrice}
+        />
       ))
     },
-    [bnbPrice, account, cakePrice, ethereum, wethPrice],
+    [bnbPrice, account, cakePrice, ethereum, wethPrice, routePrice],
   )
-
 
   return (
     <Page>
@@ -125,7 +124,7 @@ const Vaults: React.FC = () => {
             <li>{TranslateString(999, 'Auto-compounding.')}</li>
             <li>{TranslateString(999, 'Grow your deposit over time.')}</li>
             <li>{TranslateString(999, 'You can unstake at any time.')}</li>
-            <li>{TranslateString(999, 'Compounds every X minutes to maximize yield.')}</li>
+            <li>{TranslateString(999, 'Compounds frequently to maximize yield.')}</li>
           </ul>
         </div>
         <img src="/images/vaults.png" alt="Vaults Icon" width={310} height={310} />
@@ -135,7 +134,7 @@ const Vaults: React.FC = () => {
       <FlexLayout>
         <Route exact path={`${path}`}>
           <>
-          {stakedOnly ? vaultsList(stakedOnlyVaults, false) : vaultsList(activeVaults, false)}
+            {stakedOnly ? vaultsList(stakedOnlyVaults, false) : vaultsList(activeVaults, false)}
             {/* {orderBy(openVaults, ['sortOrder']).map((vault) => (
               <VaultRow
                 key={vault.pid}

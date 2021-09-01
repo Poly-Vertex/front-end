@@ -35,9 +35,7 @@ export interface Vault extends VaultConfig {
   tokenAmount?: BigNumber
   lpTotalInQuoteToken?: BigNumber
   tokenPriceVsQuote?: BigNumber
-  poolWeight?: number
   depositFeeBP?: number
-  eggPerBlock?: number
     userData?: {
     allowance: BigNumber
     tokenBalance: BigNumber

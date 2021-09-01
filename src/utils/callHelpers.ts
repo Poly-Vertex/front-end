@@ -15,6 +15,14 @@ export const stake = async (masterChefContract, pid, amount, account, decimals =
       return tx.transactionHash
     })
 }
+export const vaultStake = async (vaultChefContract, pid, amount, account, decimals = 18) => {
+  return vaultChefContract.methods
+    .deposit(pid, new BigNumber(amount).times(new BigNumber(10).pow(decimals)).toString())
+    .send({ from: account })
+    .on('transactionHash', (tx) => {
+      return tx.transactionHash
+    })
+}
 
 export const sousStake = async (sousChefContract, amount, account) => {
   return sousChefContract.methods

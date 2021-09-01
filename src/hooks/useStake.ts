@@ -4,8 +4,8 @@ import { useDispatch } from 'react-redux'
 import { fetchFarmUserDataAsync, updateUserStakedBalance, updateUserBalance } from 'state/actions'
 import useToast from 'hooks/useToast'
 
-import { stake, sousStake, sousStakeBnb } from 'utils/callHelpers'
-import { useMasterchef, useSousChef } from './useContract'
+import { stake, sousStake, sousStakeBnb, vaultStake } from 'utils/callHelpers'
+import { useMasterchef, useSousChef, useVaultChef } from './useContract'
 
 const useStake = (pid: number) => {
   const dispatch = useDispatch()
@@ -54,4 +54,29 @@ export const useSousStake = (sousId, isUsingBnb = false) => {
   return { onStake: handleStake }
 }
 
-export default useStake
+
+const useVaultStake = (pid: number) => {
+  const dispatch = useDispatch()
+  const { account } = useWallet()
+  const vaultChefContract = useVaultChef()
+  const { toastError, toastSuccess } = useToast()
+
+  const handleStake = useCallback(
+    async (amount: string, decimals: number) => {
+      try {
+        const txHash = await stake(vaultChefContract, pid, amount, account, decimals)
+        dispatch(fetchFarmUserDataAsync(account))
+        console.info(txHash)
+        toastSuccess("Success","Staking transaction confirmed")
+      } catch (e) {
+        toastError("An error occurred.", `Transaction unsuccessful, please try again`);
+      }
+    },
+    [account, dispatch, vaultChefContract, pid, toastSuccess, toastError],
+  )
+
+  return { onStake: handleStake }
+}
+
+
+export {useStake as default, useVaultStake}

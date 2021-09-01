@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import BigNumber from 'bignumber.js'
 import { Card, CardBody, CardRibbon } from '@pancakeswap-libs/uikit'
-import { BSC_BLOCK_TIME } from 'config'
+import { POLYGON_BLOCK_TIME } from 'config'
 import { Ifo, IfoStatus } from 'config/constants/types'
 import useI18n from 'hooks/useI18n'
 import useBlock from 'hooks/useBlock'
@@ -121,8 +121,8 @@ const IfoCard: React.FC<IfoCardProps> = ({ ifo }) => {
 
       setState({
         isLoading: false,
-        secondsUntilEnd: blocksRemaining * BSC_BLOCK_TIME,
-        secondsUntilStart: (startBlockNum - currentBlock) * BSC_BLOCK_TIME,
+        secondsUntilEnd: blocksRemaining * POLYGON_BLOCK_TIME,
+        secondsUntilStart: (startBlockNum - currentBlock) * POLYGON_BLOCK_TIME,
         raisingAmount: new BigNumber(raisingAmount),
         totalAmount: new BigNumber(totalAmount),
         status,

@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import styled from 'styled-components'
 import { Card, CardBody, Heading, OpenNewIcon, Text, Link as UIKitLink, Progress } from '@pancakeswap-libs/uikit'
-import { BSC_BLOCK_TIME } from 'config'
+import { POLYGON_BLOCK_TIME } from 'config'
 import useI18n from 'hooks/useI18n'
 import useBlock from 'hooks/useBlock'
 import getTimePeriods from 'utils/getTimePeriods'
@@ -40,7 +40,7 @@ const NftProgress = () => {
   } = useContext(NftProviderContext)
   const TranslateString = useI18n()
   const currentBlock = useBlock()
-  const secondsRemaining = (endBlockNumber - currentBlock) * BSC_BLOCK_TIME
+  const secondsRemaining = (endBlockNumber - currentBlock) * POLYGON_BLOCK_TIME
   const timeLeft = formatTimePeriod(getTimePeriods(secondsRemaining), ['seconds'])
   const totalBlocks = endBlockNumber - startBlockNumber
   const progress = currentBlock > startBlockNumber ? ((currentBlock - startBlockNumber) / totalBlocks) * 100 : 5

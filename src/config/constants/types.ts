@@ -100,7 +100,9 @@ export interface VaultConfig {
     earnLabel: string
     endBlock: number
   }
-  endBlock: number
+  endBlock: number,
+  exchange: string,
+  farm?: FarmConfig
 }
 
 export type Nft = {

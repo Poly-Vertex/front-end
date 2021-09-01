@@ -89,6 +89,245 @@
 	},
 	{
 		"inputs": [],
+		"name": "convertDustToEarned",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_userAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_wantAmt",
+				"type": "uint256"
+			}
+		],
+		"name": "deposit",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "earn",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "panic",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "pause",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "renounceOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "resetAllowances",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_govAddress",
+				"type": "address"
+			}
+		],
+		"name": "setGov",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_controllerFee",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_rewardRate",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_buyBackRate",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_withdrawFeeFactor",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_slippageFactor",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "_uniRouterAddress",
+				"type": "address"
+			}
+		],
+		"name": "setSettings",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "newOwner",
+				"type": "address"
+			}
+		],
+		"name": "transferOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "unpanic",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "unpause",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_userAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_wantAmt",
+				"type": "uint256"
+			}
+		],
+		"name": "withdraw",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_vaultChefAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_masterchefAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_uniRouterAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_pid",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "_wantAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_earnedAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "address[]",
+				"name": "_earnedToWmaticPath",
+				"type": "address[]"
+			},
+			{
+				"internalType": "address[]",
+				"name": "_earnedToUsdcPath",
+				"type": "address[]"
+			},
+			{
+				"internalType": "address[]",
+				"name": "_earnedToFishPath",
+				"type": "address[]"
+			},
+			{
+				"internalType": "address[]",
+				"name": "_earnedToToken0Path",
+				"type": "address[]"
+			},
+			{
+				"internalType": "address[]",
+				"name": "_earnedToToken1Path",
+				"type": "address[]"
+			},
+			{
+				"internalType": "address[]",
+				"name": "_token0ToEarnedPath",
+				"type": "address[]"
+			},
+			{
+				"internalType": "address[]",
+				"name": "_token1ToEarnedPath",
+				"type": "address[]"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"inputs": [],
 		"name": "buyBackAddress",
 		"outputs": [
 			{
@@ -124,37 +363,6 @@
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_userAddress",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_wantAmt",
-				"type": "uint256"
-			}
-		],
-		"name": "deposit",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "earn",
-		"outputs": [],
-		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -345,7 +553,7 @@
 	},
 	{
 		"inputs": [],
-		"name": "owner",
+		"name": "masterchefAddress",
 		"outputs": [
 			{
 				"internalType": "address",
@@ -358,16 +566,15 @@
 	},
 	{
 		"inputs": [],
-		"name": "panic",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "pause",
-		"outputs": [],
-		"stateMutability": "nonpayable",
+		"name": "owner",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -385,16 +592,15 @@
 	},
 	{
 		"inputs": [],
-		"name": "renounceOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "resetAllowances",
-		"outputs": [],
-		"stateMutability": "nonpayable",
+		"name": "pid",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -421,57 +627,6 @@
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_govAddress",
-				"type": "address"
-			}
-		],
-		"name": "setGov",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_controllerFee",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_rewardRate",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_buyBackRate",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_withdrawFeeFactor",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_slippageFactor",
-				"type": "uint256"
-			},
-			{
-				"internalType": "address",
-				"name": "_uniRouterAddress",
-				"type": "address"
-			}
-		],
-		"name": "setSettings",
-		"outputs": [],
-		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -578,19 +733,6 @@
 		"type": "function"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "newOwner",
-				"type": "address"
-			}
-		],
-		"name": "transferOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
 		"inputs": [],
 		"name": "uniRouterAddress",
 		"outputs": [
@@ -601,20 +743,6 @@
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "unpanic",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "unpause",
-		"outputs": [],
-		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -680,30 +808,6 @@
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_userAddress",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_wantAmt",
-				"type": "uint256"
-			}
-		],
-		"name": "withdraw",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{

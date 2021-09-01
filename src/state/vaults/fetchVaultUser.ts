@@ -14,7 +14,7 @@ export const fetchVaultUserAllowances = async (account: string) => {
     const lpContractAddress = vault.isTokenOnly ? vault.tokenAddresses[CHAIN_ID] : vault.lpAddresses[CHAIN_ID]
     return { address: lpContractAddress, name: 'allowance', params: [account, vaultChefAddress] }
   })
-
+  
   const rawLpAllowances = await multicall(erc20ABI, calls)
   const parsedLpAllowances = rawLpAllowances.map((lpBalance) => {
     return new BigNumber(lpBalance).toJSON()

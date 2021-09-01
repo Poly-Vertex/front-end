@@ -3,8 +3,8 @@ import styled from 'styled-components'
 import BigNumber from 'bignumber.js'
 import { Button, Flex, Heading, IconButton, AddIcon, MinusIcon, useModal, Text, ToastContainer } from '@pancakeswap-libs/uikit'
 import useI18n from 'hooks/useI18n'
-import useStake from 'hooks/useStake'
-import useUnstake from 'hooks/useUnstake'
+import {useVaultStake} from 'hooks/useStake'
+import {useVaultUnstake} from 'hooks/useUnstake'
 import { getBalanceNumber, getCorrectedNumber } from 'utils/formatBalance'
 import DepositModal from '../DepositModal'
 import WithdrawModal from '../WithdrawModal'
@@ -52,8 +52,8 @@ const StakeAction: React.FC<FarmCardActionsProps> = ({
   usdStaked,
 }) => {
   const TranslateString = useI18n()
-  const { onStake } = useStake(pid)
-  const { onUnstake } = useUnstake(pid)
+  const { onStake } = useVaultStake(pid)
+  const { onUnstake } = useVaultUnstake(pid)
 
   const rawStakedBalance = getBalanceNumber(stakedBalance, 18)
   const correctedStakeBalance = parseFloat(rawStakedBalance.toPrecision(4))
@@ -73,11 +73,12 @@ const StakeAction: React.FC<FarmCardActionsProps> = ({
 
   return (
     <Flex justifyContent="center" alignItems="center" justifyItems="center" > 
-      <ActionButton variant="secondary" onClick={onPresentDeposit}>
-        <Text bold color="primary">
+     <ActionButton onClick={onPresentDeposit}>{TranslateString(999, 'Deposit')}</ActionButton>
+      {/* <ActionButton variant="primary" onClick={onPresentDeposit}>
+        <Text bold color="tertiary">
           Deposit
         </Text>
-      </ActionButton>
+      </ActionButton> */}
       <Flex justifyContent="center" alignItems="center" flexDirection="column">
         <Heading color={correctedStakeBalance === 0 ? 'textDisabled' : 'text'}>
           <SciNumber>
@@ -104,12 +105,7 @@ const StakeAction: React.FC<FarmCardActionsProps> = ({
           </SciNumber>
         </Heading>
       </Flex>
-
-        <ActionButton variant="secondary" onClick={onPresentWithdraw}>
-          <Text bold color="primary">
-            Withdraw
-          </Text>
-        </ActionButton>
+      <ActionButton onClick={onPresentWithdraw}>{TranslateString(999, 'Withdraw')}</ActionButton>
     </Flex>
   )
 }

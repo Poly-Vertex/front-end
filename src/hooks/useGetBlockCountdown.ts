@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { BSC_BLOCK_TIME } from 'config'
+import { POLYGON_BLOCK_TIME } from 'config'
 import { getWeb3 } from 'utils/web3'
 
 /**

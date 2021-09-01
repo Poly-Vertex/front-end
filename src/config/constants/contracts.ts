@@ -8,7 +8,7 @@ export default {
     80001: '0x9cCA28d98EC895c50C266b7f138dD6316aADB52A',
   },
   vaultChef: {
-    137: '0xbda1f897e851c7ef22cd490d2cf2dace4645a904', // POLYCAT!! VaultChef
+    137: '0xe91B1d1A8604543C722b3F94a4c32513159A609d', // VaultCheft TEST
     80001: '',
   },
   wbnb: {

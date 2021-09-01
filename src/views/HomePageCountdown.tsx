@@ -1,7 +1,7 @@
 import React from 'react'
 import { CountdownCircleTimer } from 'react-countdown-circle-timer'
 import { TranslateString } from 'utils/translateTextHelpers'
-import { BSC_BLOCK_TIME } from 'config'
+import { POLYGON_BLOCK_TIME } from 'config'
 import { getWeb3 } from 'utils/web3'
 import styled from 'styled-components'
 import { useMasterchef } from 'hooks/useContract'

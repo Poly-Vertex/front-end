@@ -63,7 +63,7 @@ const CardActions: React.FC<VaultCardActionsProps> = ({ vault, ethereum, account
   let usdStaked = stakedBalance;
    
   if(totalValue){
-    usdStaked = usdStaked.times(new BigNumber(totalValue).div(vault.lpStakedTotal)).div(10**6); // TODO Wrong value
+    usdStaked = usdStaked.times(new BigNumber(totalValue).div(vault.lpStakedTotal)).div(vault.tokenDecimals); // TODO Wrong value
   }    
 
   
