@@ -12,6 +12,18 @@ import { QuoteToken, FarmConfig } from '../../config/constants/types'
 
 const CHAIN_ID = process.env.REACT_APP_CHAIN_ID
 
+
+
+const getPriceVaultReward = async (address): Promise<BigNumber> => {
+  const url = `https://api.coingecko.com/api/v3/simple/token_price/polygon-pos?contract_addresses=${address}&vs_currencies=usd`
+  return fetch(url, null)
+  .then(response => response.json())
+  .then(data => {
+    const dataAddress = address.toLowerCase()
+    return new BigNumber(data[dataAddress].usd);
+  });
+}
+
 const fetchVaults = async () => {
   const data = await Promise.all(
     vaultsConfig.map(async (vaultConfig) => {
@@ -67,22 +79,52 @@ const fetchVaults = async () => {
           address: vaultConfig.quoteTokenAddresses[CHAIN_ID],
           name: 'decimals',
         },
+        // Reward token decimals
+        {
+          address: vaultConfig.rewardToken,
+          name: 'decimals',
+        },
       ]
       const [
         tokenBalanceLP,
         quoteTokenBalanceLP,
         lpTotalSupply,
         tokenDecimals,
-        quoteTokenDecimals
+        quoteTokenDecimals,
+        rewardTokenDecimals
       ] = await multicall(erc20, erc20Calls)
 
-      let tokenAmount;
-      let lpTotalInQuoteToken;
-      let lpStakedTotal;
+      // ONLY FOR MASTERCHEF STRATEGIES:
+      const [masterChefAddr] = await multicall(strategyMasterchefABI, [
+        {
+          address: strategy,
+          name: 'masterchefAddress',
+        },
+      ])
+      const mcCalls = [
+       // Balance of LP tokens in the master chef contract
+        {
+          address: vaultConfig.isTokenOnly ? vaultConfig.tokenAddresses[CHAIN_ID] : lpAddress,
+          name: 'balanceOf',
+          params: [masterChefAddr[0]],
+        },
+      ]
+      const [
+        lpTokenBalanceMC
+      ] = await multicall(erc20, mcCalls)
+
+
+      let tokenAmountVC;
+      let tokenAmountMC;
+      let lpTotalInQuoteTokenVC;
+      let lpTotalInQuoteTokenMC;
+      let lpStakedVCTotal;
+      let lpStakedMCTotal;
       let tokenPriceVsQuote;
 
       if(vaultConfig.isTokenOnly){
-        tokenAmount = new BigNumber(lpTokenBalanceVC).div(new BigNumber(10).pow(tokenDecimals));
+        tokenAmountVC = new BigNumber(lpTokenBalanceVC).div(new BigNumber(10).pow(tokenDecimals));
+        tokenAmountMC = new BigNumber(lpTokenBalanceMC).div(new BigNumber(10).pow(tokenDecimals));
         
         if(vaultConfig.tokenSymbol === QuoteToken.BUSD && vaultConfig.quoteTokenSymbol === QuoteToken.BUSD){
           tokenPriceVsQuote = new BigNumber(1);          
@@ -90,79 +132,84 @@ const fetchVaults = async () => {
           tokenPriceVsQuote = new BigNumber(quoteTokenBalanceLP).div(new BigNumber(10).pow(quoteTokenDecimals)).div(new BigNumber(tokenBalanceLP).div(new BigNumber(10).pow(tokenDecimals)));
         }
 
-        lpTotalInQuoteToken = tokenAmount.times(tokenPriceVsQuote);
+        lpTotalInQuoteTokenVC = tokenAmountVC.times(tokenPriceVsQuote);
+        lpTotalInQuoteTokenMC = tokenAmountMC.times(tokenPriceVsQuote);
         
-        lpStakedTotal = tokenAmount;
+        lpStakedVCTotal = tokenAmountVC;
+        lpStakedMCTotal = tokenAmountMC;
       }else{
         // Ratio in % a LP tokens that are in staking, vs the total number in circulation
-        const lpTokenRatio = new BigNumber(lpTokenBalanceVC).div(new BigNumber(lpTotalSupply))
-        // Total value in staking in quote token value
-        lpTotalInQuoteToken = new BigNumber(quoteTokenBalanceLP)
+        const lpTokenRatioVC = new BigNumber(lpTokenBalanceVC).div(new BigNumber(lpTotalSupply))
+        const lpTokenRatioMC = new BigNumber(lpTokenBalanceMC).div(new BigNumber(lpTotalSupply))
+
+        // Total value in staking (vault) in quote token value
+        lpTotalInQuoteTokenVC = new BigNumber(quoteTokenBalanceLP)
         .div(new BigNumber(10).pow(quoteTokenDecimals))
         .times(new BigNumber(2))
-        .times(lpTokenRatio)
+        .times(lpTokenRatioVC)
+        
+        // Total value in staking (farm) in quote token value
+        lpTotalInQuoteTokenMC = new BigNumber(quoteTokenBalanceLP)
+        .div(new BigNumber(10).pow(quoteTokenDecimals))
+        .times(new BigNumber(2))
+        .times(lpTokenRatioMC)
         
         // Amount of token in the LP that are considered staking (i.e amount of token * lp ratio)
-        tokenAmount = new BigNumber(tokenBalanceLP)
+        tokenAmountVC = new BigNumber(tokenBalanceLP)
           .div(new BigNumber(10).pow(tokenDecimals))
-          .times(lpTokenRatio)
+          .times(lpTokenRatioVC)
+        tokenAmountMC = new BigNumber(tokenBalanceLP)
+          .div(new BigNumber(10).pow(tokenDecimals))
+          .times(lpTokenRatioMC)
 
         
-        const quoteTokenAmount = new BigNumber(quoteTokenBalanceLP)
+        const quoteTokenAmountVC = new BigNumber(quoteTokenBalanceLP)
           .div(new BigNumber(10).pow(quoteTokenDecimals))
-          .times(lpTokenRatio)
+          .times(lpTokenRatioVC)
 
-          if(tokenAmount.comparedTo(0) > 0){
-            tokenPriceVsQuote = quoteTokenAmount.div(tokenAmount);
+          if(tokenAmountMC.comparedTo(0) > 0){
+            tokenPriceVsQuote = quoteTokenAmountVC.div(tokenAmountVC);
           }
-        lpStakedTotal = new BigNumber(lpTokenBalanceVC).div(new BigNumber(10).pow(tokenDecimals)) 
+        lpStakedVCTotal = new BigNumber(lpTokenBalanceVC).div(new BigNumber(10).pow(tokenDecimals)) 
+        lpStakedMCTotal = new BigNumber(lpTokenBalanceMC).div(new BigNumber(10).pow(tokenDecimals)) 
       }
 
-      // ONLY FOR MASTERCHEF STRATEGIES:
-
-
-      const [masterChefAddr, masterchefPID] = await multicall(strategyMasterchefABI, [
-        {
-          address: strategy,
-          name: 'masterchefAddress',
-        },
-        {
-          address: strategy,
-          name: 'pid',
-        },
-      ])
-
-      if(masterChefAddr == null){
-        console.error("Could not get masterchef address");
-      }
-
-      let farmConfig : FarmConfig = {
-        pid: parseInt(masterchefPID),
-        lpSymbol: vaultConfig.lpSymbol,
-        lpAddresses: vaultConfig.lpAddresses,
-        tokenSymbol: vaultConfig.tokenSymbol,
-        tokenAddresses: vaultConfig.tokenAddresses,
-        quoteTokenSymbol: vaultConfig.quoteTokenSymbol,
-        quoteTokenAddresses: vaultConfig.quoteTokenAddresses,
-        isTokenOnly: vaultConfig.isTokenOnly,
-        isCommunity: vaultConfig.isCommunity,
-        risk: vaultConfig.risk,
-        dual: vaultConfig.dual,
-        exchange:vaultConfig.exchange
-      }
-
-      if(farmConfig.pid !== undefined)
-        farmConfig = await fetchSingleFarm(farmConfig);
     
+
+      // if(masterChefAddr == null){
+      //   console.error("Could not get masterchef address");
+      // }
+
+      // let farmConfig : FarmConfig = {
+      //   pid: parseInt(masterchefPID),
+      //   lpSymbol: vaultConfig.lpSymbol,
+      //   lpAddresses: vaultConfig.lpAddresses,
+      //   tokenSymbol: vaultConfig.tokenSymbol,
+      //   tokenAddresses: vaultConfig.tokenAddresses,
+      //   quoteTokenSymbol: vaultConfig.quoteTokenSymbol,
+      //   quoteTokenAddresses: vaultConfig.quoteTokenAddresses,
+      //   isTokenOnly: vaultConfig.isTokenOnly,
+      //   isCommunity: vaultConfig.isCommunity,
+      //   risk: vaultConfig.risk,
+      //   dual: vaultConfig.dual,
+      //   exchange:vaultConfig.exchange
+      // }
+
+      // if(farmConfig.pid !== undefined)
+      //   farmConfig = await fetchSingleFarm(farmConfig, masterChefAddr[0]);
       
+      const rewardTokenPrice = await getPriceVaultReward(vaultConfig.rewardToken)
       return {
         ...vaultConfig,
-        tokenAmount: tokenAmount.toJSON(),
-        lpTotalInQuoteToken: lpTotalInQuoteToken.toJSON(),
-        tokenPriceVsQuote: tokenPriceVsQuote.toJSON(),
-        lpStakedTotal: lpStakedTotal.toJSON(),
+        tokenAmount: tokenAmountVC.toJSON(),
+        lpTotalInQuoteToken: lpTotalInQuoteTokenVC.toJSON(),
+        tokenPriceVsQuote: tokenPriceVsQuote!==undefined?tokenPriceVsQuote.toJSON() : new BigNumber(0).toJSON(),
+        lpStakedTotal: lpStakedVCTotal.toJSON(),
         lpTokenBalanceChef: lpTokenBalanceVC,
-        farm: farmConfig
+        farmLPTotalInQuoteToken: lpTotalInQuoteTokenMC.toJSON(),
+        rewardTokenDecimals,
+        rewardTokenPrice,
+        // farm: farmConfig
       }
     }),
   )

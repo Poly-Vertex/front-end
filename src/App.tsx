@@ -5,6 +5,7 @@ import { Link, ResetCSS } from '@pancakeswap-libs/uikit'
 import useToast from 'hooks/useToast'
 import BigNumber from 'bignumber.js'
 import { useFetchPublicData } from 'state/hooks'
+import Endowment from 'views/Vaults/Endowment'
 import Image from 'views/Nft/components/Image'
 import styled from 'styled-components'
 import TagManager from 'react-gtm-module'
@@ -80,6 +81,9 @@ const App: React.FC = () => {
             </Route>
             <Route path="/vaults">
              <Vaults />
+            </Route>
+            <Route path="/endowment">
+             <Endowment />
             </Route>
             {/* <Route path="/lottery"> */}
             {/*  <Lottery /> */}

@@ -13,7 +13,6 @@ import { useVaultApprove } from 'hooks/useApprove'
 import StakeAction from './StakeAction'
 import HarvestAction from './HarvestAction'
 
-
 const Action = styled.div`
   padding-top: 16px;
 `
@@ -28,13 +27,14 @@ interface VaultCardActionsProps {
   totalValue?: BigNumber,
   allowance?: BigNumber,
   tokenBalance?: BigNumber, 
-  stakedBalance?: BigNumber
+  stakedBalance?: BigNumber,
+  usdStaked?:BigNumber
 }
 
-const CardActions: React.FC<VaultCardActionsProps> = ({ vault, ethereum, account, totalValue, allowance, tokenBalance, stakedBalance }) => {
+const CardActions: React.FC<VaultCardActionsProps> = ({ vault, ethereum, account, totalValue, allowance, tokenBalance, stakedBalance, usdStaked }) => {
   const TranslateString = useI18n()
   const [requestedApproval, setRequestedApproval] = useState(false)
-  const { pid, lpAddresses, tokenAddresses, isTokenOnly, depositFeeBP } = useVaultFromPid(vault.pid)
+  const { pid, lpAddresses, tokenAddresses, isTokenOnly, depositFeeBP, withdrawalFeeBP, performanceFeeBP } = useVaultFromPid(vault.pid)
   const lpAddress = lpAddresses[process.env.REACT_APP_CHAIN_ID]
   const tokenAddress = tokenAddresses[process.env.REACT_APP_CHAIN_ID];
   const lpName = vault.lpSymbol.toUpperCase()
@@ -60,14 +60,7 @@ const CardActions: React.FC<VaultCardActionsProps> = ({ vault, ethereum, account
     }
   }, [onApprove])
   
-  let usdStaked = stakedBalance;
    
-  if(totalValue){
-    usdStaked = usdStaked.times(new BigNumber(totalValue).div(vault.lpStakedTotal)).div(vault.tokenDecimals); // TODO Wrong value
-  }    
-
-  
-
   const renderApprovalOrStakeButton = () => {
     return isApproved ? (
       <>
@@ -78,9 +71,9 @@ const CardActions: React.FC<VaultCardActionsProps> = ({ vault, ethereum, account
       <Text bold textTransform="uppercase" color="textSubtle" fontSize="12px">
         {TranslateString(999, 'deposited')}
       </Text>
-
+     
     </Flex>
-      <StakeAction stakedBalance={stakedBalance} tokenBalance={tokenBalance} tokenName={lpName} pid={pid} depositFeeBP={depositFeeBP} usdStaked={usdStaked}  />
+      <StakeAction stakedBalance={stakedBalance} tokenBalance={tokenBalance} tokenName={lpName} pid={pid} depositFeeBP={depositFeeBP} usdStaked={usdStaked} withdrawalFeeBP={withdrawalFeeBP} performanceFeeBP={performanceFeeBP}  />
       </>
       ) : (
       <Button mt="8px" fullWidth disabled={requestedApproval} onClick={handleApprove}>

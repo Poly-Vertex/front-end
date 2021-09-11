@@ -45,7 +45,7 @@ export const fetchVaultUserStakedBalances = async (account: string) => {
   const calls = vaultsConfig.map((vault) => {
     return {
       address: vaultChefAddress,
-      name: 'userInfo',
+      name: 'stakedWantTokens',
       params: [vault.pid, account],
     }
   })

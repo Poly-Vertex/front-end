@@ -8,7 +8,7 @@ import { QuoteToken } from '../../config/constants/types'
 
 const CHAIN_ID = process.env.REACT_APP_CHAIN_ID
 
-const fetchSingleFarm = async (_farmConfigIn) => {
+const fetchSingleFarm = async (_farmConfigIn, masterChefAddr) => {
   const lpAddress = _farmConfigIn.lpAddresses[CHAIN_ID]
   const calls = [
     // Balance of token in the LP contract
@@ -27,7 +27,7 @@ const fetchSingleFarm = async (_farmConfigIn) => {
     {
       address: _farmConfigIn.isTokenOnly ? _farmConfigIn.tokenAddresses[CHAIN_ID] : lpAddress,
       name: 'balanceOf',
-      params: [getMasterChefAddress()],
+      params: [masterChefAddr],
     },
     // Total supply of LP tokens
     {
@@ -93,16 +93,16 @@ const fetchSingleFarm = async (_farmConfigIn) => {
 
   const [info, totalAllocPoint, eggPerBlock] = await multicall(masterchefABI, [
     {
-      address: getMasterChefAddress(),
+      address: masterChefAddr,
       name: 'poolInfo',
       params: [_farmConfigIn.pid],
     },
     {
-      address: getMasterChefAddress(),
+      address: masterChefAddr,
       name: 'totalAllocPoint',
     },
     {
-      address: getMasterChefAddress(),
+      address: masterChefAddr,
       name: 'eggPerBlock',
     },
   ])
@@ -133,7 +133,7 @@ const fetchSingleFarm = async (_farmConfigIn) => {
 const fetchFarms = async () => {
   const data = await Promise.all(
     farmsConfig.map(async (farmConfig) => {
-      return fetchSingleFarm(farmConfig)
+      return fetchSingleFarm(farmConfig, getMasterChefAddress())
     }),
   )
   return data

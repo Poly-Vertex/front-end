@@ -36,5 +36,10 @@ const BinanceTag = () => (
     Binance
   </Tag>
 )
+const TextTag = ({text, variant}) => (
+  <Tag variant={variant} outline>
+    {text}
+  </Tag>
+)
 
-export { CoreTag, CommunityTag, BinanceTag, RiskTag, NoFeeTag, SpecialTag }
+export { CoreTag, CommunityTag, BinanceTag, RiskTag, NoFeeTag, SpecialTag, TextTag }

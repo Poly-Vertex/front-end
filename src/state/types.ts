@@ -34,14 +34,17 @@ export interface Pool extends PoolConfig {
 export interface Vault extends VaultConfig {
   tokenAmount?: BigNumber
   lpTotalInQuoteToken?: BigNumber
+  farmLPTotalInQuoteToken?: BigNumber
   tokenPriceVsQuote?: BigNumber
   depositFeeBP?: number
-    userData?: {
+  userData?: {
     allowance: BigNumber
     tokenBalance: BigNumber
     stakedBalance: BigNumber
     earnings: BigNumber
   },
+  withdrawalFeeBP?: number
+  performanceFeeBP?: number
   lpStakedTotal?: BigNumber
   endBlock: number
   isFinished?: boolean

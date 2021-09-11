@@ -26,38 +26,34 @@ import {
 import { QuoteToken, PoolCategory } from 'config/constants/types'
 import FlexLayout from 'components/layout/Flex'
 import Page from 'components/layout/Page'
-import VaultRow, { VaultWithStakedValue, LoadingRow } from './components/VaultRow/VaultRow'
-import VaultTabButtons from './components/VaultTabButtons'
-import Divider from '../Farms/components/Divider'
+import VaultRow, { VaultWithStakedValue, LoadingRow } from '../components/VaultRow/VaultRow'
+import VaultTabButtons from '../components/VaultTabButtons'
+import Divider from '../../Farms/components/Divider'
 
-const LockedFlex = styled(FlexLayout)`
-  /* max-width:1vw!important; */
-`
-
-const Vaults: React.FC = () => {
+const EndowmentVaults: React.FC = () => {
   const { path } = useRouteMatch()
   const TranslateString = useI18n()
   const { account, ethereum }: { account: string; ethereum: provider } = useWallet()
   const vaults = useVaults()
-  const block = useBlock()
   const bnbPriceUSD = usePriceBnbBusd()
   const cakePrice = usePriceCakeBusd()
   const bnbPrice = usePriceBnbBusd()
   const wethPrice = usePriceWethBusd()
   const btcPrice = usePriceBtcBusd()
+  const block = useBlock()
   const routePrice = usePriceRouteBusd()
 
   const dispatch = useDispatch()
-  const { slowRefresh } = useRefresh() // was fast
+  const { fastRefresh } = useRefresh()
   useEffect(() => {
     if (account) {
       dispatch(fetchVaultUserDataAsync(account))
     }
-  }, [account, dispatch, slowRefresh])
+  }, [account, dispatch, fastRefresh])
 
   const [stakedOnly, setStakedOnly] = useState(false)
 
-  const activeVaults = vaults
+  const activeVaults = vaults // TODO filtering
 
   const stakedOnlyVaults = activeVaults.filter(
     (vault) => vault.userData && new BigNumber(vault.userData.stakedBalance).isGreaterThan(0),
@@ -66,24 +62,21 @@ const Vaults: React.FC = () => {
   const vaultsList = useCallback(
     (vaultsToDisplay, removed: boolean) => {
       const vaultsToDisplayWithAPY: VaultWithStakedValue[] = vaultsToDisplay.map((vault) => {
-        if(vault === undefined){
-          return null;
+        if (vault.farm === undefined) {
+          return null
         }
-        if(vault.type!=="standard"){
-          return vault;
+        if (vault.type !== 'endowment') {
+          return null
         }
-        if(vault.rewardTokenPrice === undefined){
-          return null;
-        }
-        const vaultRewardPerBlock = new BigNumber(vault.rewardPerBlock || 1)
-        .times(new BigNumber(vault.poolWeight))
-        .div(new BigNumber(10).pow(vault.rewardTokenDecimals))
-        
-        const vaultRewardPerYear = vaultRewardPerBlock.times(BLOCKS_PER_YEAR)
-        let apr = vault.rewardTokenPrice.times(vaultRewardPerYear)
 
-        let totalFarmValue = new BigNumber(vault.farmLPTotalInQuoteToken || 0)
+        const cakeRewardPerBlock = new BigNumber(vault.farm.eggPerBlock || 1)
+          .times(new BigNumber(vault.farm.poolWeight))
+          .div(new BigNumber(10).pow(VERT_DECIMALS))
 
+        const cakeRewardPerYear = cakeRewardPerBlock.times(BLOCKS_PER_YEAR)
+        let apr = cakePrice.times(cakeRewardPerYear)
+
+        let totalFarmValue = new BigNumber(vault.farm.lpTotalInQuoteToken || 0)
         if (vault.quoteTokenSymbol === QuoteToken.BNB) {
           totalFarmValue = totalFarmValue.times(bnbPrice)
         }
@@ -101,27 +94,29 @@ const Vaults: React.FC = () => {
           apr = apr.div(totalFarmValue)
         }
 
-
-        const NUM_COMPOUNDS_PER_PERIOD = 1000;
-        const apy = new BigNumber(1).plus(apr.dividedBy(NUM_COMPOUNDS_PER_PERIOD)).pow(NUM_COMPOUNDS_PER_PERIOD).minus(1)
+        const NUM_COMPOUNDS_PER_PERIOD = 1000
+        const apy = new BigNumber(1)
+          .plus(apr.dividedBy(NUM_COMPOUNDS_PER_PERIOD))
+          .pow(NUM_COMPOUNDS_PER_PERIOD)
+          .minus(1)
         return { ...vault, apy, apr }
       })
 
-       return vaultsToDisplayWithAPY.map((vault) => {
+      return vaultsToDisplayWithAPY.map((vault) => {
         if (vault === null || vault === undefined) {
           return (<LoadingRow />)
         }
-          return vault.type === 'standard' ? (
+          return vault.type === 'endowment' ? (
             <VaultRow
-              key={vault.pid}
-              vault={vault}
-              removed={removed}
-              bnbPrice={bnbPrice}
-              cakePrice={cakePrice}
-              ethereum={ethereum}
-              account={account}
-              wethPrice={wethPrice}
-            />
+            key={vault.pid}
+            vault={vault}
+            removed={removed}
+            bnbPrice={bnbPrice}
+            cakePrice={cakePrice}
+            ethereum={ethereum}
+            account={account}
+            wethPrice={wethPrice}
+          />
           ) : null
       })
     },
@@ -133,52 +128,23 @@ const Vaults: React.FC = () => {
       <Hero>
         <div>
           <Heading as="h1" size="xxl" mb="16px">
-            {TranslateString(999, 'Vaults')}
+            {TranslateString(999, 'Endowment Vaults')}
           </Heading>
           <ul>
-            <li>{TranslateString(999, 'Auto-compounding.')}</li>
-            <li>{TranslateString(999, 'Grow your deposit over time.')}</li>
+            <li>{TranslateString(999, 'All harvests go to support the project.')}</li>
             <li>{TranslateString(999, 'Unstake at any time.')}</li>
-            <li>{TranslateString(999, 'Compounds frequently to maximize yield.')}</li>
-            <li>{TranslateString(999, 'X% performance fee on harvests.')}</li>
           </ul>
         </div>
         <img src="/images/vaults.png" alt="Vaults Icon" width={310} height={310} />
       </Hero>
       <VaultTabButtons stakedOnly={stakedOnly} setStakedOnly={setStakedOnly} />
       <Divider />
-      <LockedFlex>
+      <FlexLayout>
         <Route exact path={`${path}`}>
-          <>
-            {stakedOnly ? vaultsList(stakedOnlyVaults, false) : vaultsList(activeVaults, false)}
-            {/* {orderBy(openVaults, ['sortOrder']).map((vault) => (
-              <VaultRow
-                key={vault.pid}
-                vault={vault}
-                removed={removed}
-                bnbPrice={bnbPrice}
-                cakePrice={cakePrice}
-                ethereum={ethereum}
-                account={account}
-                wethPrice={wethPrice}
-              />
-            ))} */}
-          </>
+          <>{stakedOnly ? vaultsList(stakedOnlyVaults, false) : vaultsList(activeVaults, false)}</>
         </Route>
-        <Route path={`${path}/history`}>
-          {/* {orderBy(finishedVaults, ['sortOrder']).map((vault) => (
-            <VaultRow  
-            key={vault.pid}
-            vault={vault}
-            removed={removed}
-            bnbPrice={bnbPrice}
-            cakePrice={cakePrice}
-            ethereum={ethereum}
-            account={account}
-            wethPrice={wethPrice} />
-          ))} */}
-        </Route>
-      </LockedFlex>
+        <Route path={`${path}/history`} />
+      </FlexLayout>
     </Page>
   )
 }
@@ -213,4 +179,4 @@ const Hero = styled.div`
   }
 `
 
-export default Vaults
+export default EndowmentVaults

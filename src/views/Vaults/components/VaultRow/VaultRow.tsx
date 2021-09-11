@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react'
 import BigNumber from 'bignumber.js'
 import styled, { keyframes } from 'styled-components'
-import { Flex, Text, Skeleton, ChevronDownIcon, ChevronUpIcon } from '@pancakeswap-libs/uikit'
+import { Flex, Text, Skeleton, ChevronDownIcon, ChevronUpIcon, Heading } from '@pancakeswap-libs/uikit'
 // import { communityVaults } from 'config/constants'
 import { Vault } from 'state/types'
 import { provider } from 'web3-core'
@@ -11,11 +11,13 @@ import ExpandableSectionButton from 'components/ExpandableSectionButton'
 import { QuoteToken } from 'config/constants/types'
 import { apyModalRoi, calculateCakeEarnedPerThousandDollars } from 'utils/compoundApyHelpers'
 import { useVaultUser } from 'state/hooks'
+import Loading from 'views/Lottery/components/Loading'
 import DetailsSection from './DetailsSection'
 import CardHeading from './CardHeading'
 import CardActionsContainer from './CardActionsContainer'
 import ApyButton from './ApyButton'
 import { SciNumber } from './StakeAction'
+import Spinner from './LoadingSpinner'
 
 export interface VaultWithStakedValue extends Vault {
   apy?: BigNumber
@@ -72,13 +74,23 @@ const VCard = styled.div`
   box-shadow: 0px 2px 12px -8px rgba(25, 19, 38, 0.1), 0px 1px 1px rgba(25, 19, 38, 0.05);
   display: inline-block;
   width: 100%;
-  max-width: 100%;
   flex-direction: row;
   justify-content: space-between;
   padding: 20px;
   position: relative;
   text-align: center;
- 
+  ${({ theme }) => theme.mediaQueries.xs} {
+    max-width: 90vw !important;
+  }
+  ${({ theme }) => theme.mediaQueries.sm} {
+    max-width: 90vw !important;
+  }
+  ${({ theme }) => theme.mediaQueries.md} {
+    max-width: 100% !important;
+  }
+  ${({ theme }) => theme.mediaQueries.lg} {
+    max-width: 100% !important;
+  }
 `
 
 const Divider = styled.div`
@@ -95,21 +107,29 @@ const ExpandingWrapper = styled.div<{ expanded: boolean }>`
   transition: height 1s;
   transition-timing-function: ease-in-out;
 `
-const Row = styled.div<{ clickable?: boolean }>`
+const Row = styled.div<{ clickable?: boolean; adjustForSize?: boolean }>`
   display: flex;
   width: 100%;
-  max-width: 100%;
+  max-width: 100% !important;
   flex-direction: row;
   justify-content: space-between;
   position: relative;
   text-align: center;
   cursor: ${(props) => (props.clickable ? 'pointer' : 'default')};
-
   ${({ theme }) => theme.mediaQueries.xs} {
-    display: grid;
+    display: ${(props) => (props.adjustForSize ? 'grid' : 'flex')};
     grid-template-columns: repeat(2, 1fr);
   }
-
+  ${({ theme }) => theme.mediaQueries.sm} {
+    display: ${(props) => (props.adjustForSize ? 'grid' : 'flex')};
+    grid-template-columns: repeat(2, 1fr);
+  }
+  ${({ theme }) => theme.mediaQueries.md} {
+    display: flex;
+  }
+  ${({ theme }) => theme.mediaQueries.lg} {
+    display: flex;
+  }
 `
 const Label = styled.div`
   color: ${({ theme }) => theme.colors.textSubtle};
@@ -122,32 +142,85 @@ const Strike = styled.div`
   display: inline;
 `
 const APRInfo = styled.div`
-  align-self:center;
+  align-self: center;
   align-items: left;
   text-align: left;
   display: block;
-  justify-content:space-between;
-
+  justify-content: space-between;
+  margin: 1%;
+  ${({ theme }) => theme.mediaQueries.xs} {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    align-items: center;
+    text-align: center;
+  }
+  ${({ theme }) => theme.mediaQueries.sm} {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    align-items: center;
+    text-align: center;
+  }
+  ${({ theme }) => theme.mediaQueries.md} {
+    display: block;
+  }
+  ${({ theme }) => theme.mediaQueries.lg} {
+    display: block;
+  }
 `
 
 const ApyButtonVault = styled(ApyButton)`
+  padding: 0px;
+  margin: 0px;
 `
 const ApyButtonContainer = styled.div`
-  align-self: center;
-  align-content: center;
-  align-items: center;
+  padding: 0px;
+  margin: 0px;
   display: inline;
-  position:relative;
-  top:-15%;
-  left:0px;
-
-  `
+  vertical-align: sub;
+`
 
 const Bold = styled.div`
   font-weight: bold;
   display: inline;
-  overflow:hidden;
-  `
+  overflow: hidden;
+`
+const UpIcon = styled(ChevronUpIcon)`
+  ${({ theme }) => theme.mediaQueries.xs} {
+    position: absolute;
+    bottom: -10px;
+    right: 5%;
+  }
+  ${({ theme }) => theme.mediaQueries.sm} {
+    position: absolute;
+    bottom: -10px;
+    right: 5%;
+  }
+  ${({ theme }) => theme.mediaQueries.md} {
+    position: relative;
+  }
+  ${({ theme }) => theme.mediaQueries.lg} {
+    position: relative;
+  }
+`
+const DownIcon = styled(ChevronDownIcon)`
+  ${({ theme }) => theme.mediaQueries.xs} {
+    position: absolute;
+    bottom: -10px;
+    right: 5%;
+  }
+  ${({ theme }) => theme.mediaQueries.sm} {
+    position: absolute;
+    bottom: -10px;
+    right: 5%;
+  }
+  ${({ theme }) => theme.mediaQueries.md} {
+    position: relative;
+  }
+  ${({ theme }) => theme.mediaQueries.lg} {
+    position: relative;
+  }
+`
+
 interface VaultRowProps {
   vault: VaultWithStakedValue
   removed: boolean
@@ -157,6 +230,19 @@ interface VaultRowProps {
   account?: string
   btcPrice?: BigNumber
   wethPrice?: BigNumber
+}
+
+export const LoadingRow = () => {
+  return (
+    <VCard>
+      <Flex flexDirection="row">
+        <Spinner>
+          <img alt="..." src="images/logo.svg" />
+        </Spinner>
+        <Heading>&nbsp;&nbsp;&nbsp;Loading...</Heading>
+      </Flex>
+    </VCard>
+  )
 }
 
 const VaultRow: React.FC<VaultRowProps> = ({ vault, removed, cakePrice, bnbPrice, ethereum, account, wethPrice }) => {
@@ -201,11 +287,15 @@ const VaultRow: React.FC<VaultRowProps> = ({ vault, removed, cakePrice, bnbPrice
       maximumFractionDigits: 2,
     })
 
-  const oneThousandDollarsWorthOfCake = 1000 / cakePrice.toNumber()
-  const cakeEarnedPerThousand1D = calculateCakeEarnedPerThousandDollars({ numberOfDays: 1, farmApy: apy, cakePrice })
+  const oneThousandDollarsWorthOfReward = 1000 / vault.rewardTokenPrice
+  const cakeEarnedPerThousand1D = calculateCakeEarnedPerThousandDollars({
+    numberOfDays: 1,
+    farmApy: apy,
+    cakePrice: vault.rewardTokenPrice,
+  })
   const oneDayROI = apyModalRoi({
     amountEarned: cakeEarnedPerThousand1D,
-    amountInvested: oneThousandDollarsWorthOfCake,
+    amountInvested: oneThousandDollarsWorthOfReward,
   })
 
   const formats = [
@@ -289,58 +379,46 @@ const VaultRow: React.FC<VaultRowProps> = ({ vault, removed, cakePrice, bnbPrice
   return (
     <VCard>
       {vault.tokenSymbol === 'VERT' && <StyledCardAccent />}
-      <Row clickable onClick={() => setShowExpandableSection(!showExpandableSection)}>
+      <Row adjustForSize clickable onClick={() => setShowExpandableSection(!showExpandableSection)}>
         <CardHeading
           lpLabel={lpLabel}
           multiplier={vault.multiplier}
           risk={risk}
           depositFee={vault.depositFeeBP}
-          farmImage={vaultImage}
+          farmImage0={vault.tokenSymbol.toLowerCase()}
+          farmImage1={vault.quoteTokenSymbol.toLowerCase()}
           tokenSymbol={vault.tokenSymbol}
+          type={vault.type}
+          exchange={vault.exchange}
         />
         {!removed && (
           <APRInfo>
-            <Flex justifyContent="space-around" alignItems="left" flexDirection="column">
+            <Flex justifyContent="space-between" alignItems="left" flexDirection="column">
               <Label>{TranslateString(352, 'APR')}:</Label>
-              <Text>
-                {vault.apr ? (
-                    <Strike>{vaultAPR}%</Strike>
-                ) : (
-                  <Skeleton height={24} width={80} />
-                )}
-
-              </Text>
-
-             
-                <Label>{TranslateString(999, 'APY')}:</Label>
-              <Row>
-
+              <Text>{vault.apr ? <Strike>{vaultAPR}%</Strike> : <Skeleton height={24} width={80} />}</Text>
+              <Label>&nbsp;&nbsp;</Label>
+              <Label>{TranslateString(999, 'APY')}:</Label>
               <Text>
                 {vault.apy ? (
                   <>
-                    <Bold>
-                     {vaultAPY}%
-                   
-                    </Bold>
+                    <Bold>{vaultAPY}%</Bold>
                   </>
                 ) : (
                   <Skeleton height={24} width={80} />
-                  )}
+                )}
+                <ApyButtonContainer>
+                  <ApyButtonVault
+                    lpLabel={lpLabel}
+                    quoteTokenAddresses={quoteTokenAddresses}
+                    quoteTokenSymbol={quoteTokenSymbol}
+                    tokenAddresses={tokenAddresses}
+                    cakePrice={new BigNumber(vault.rewardTokenPrice)}
+                    apy={vault.apy}
+                    pid={vault.pid}
+                  />
+                </ApyButtonContainer>
               </Text>
-              <ApyButtonContainer>
-                      <ApyButtonVault
-                        lpLabel={lpLabel}
-                        quoteTokenAddresses={quoteTokenAddresses}
-                        quoteTokenSymbol={quoteTokenSymbol}
-                        tokenAddresses={tokenAddresses}
-                        cakePrice={cakePrice}
-                        apy={vault.apy}
-                        pid={vault.pid}
-                        />
-                    </ApyButtonContainer>
-                  </Row>
             </Flex>
-            
           </APRInfo>
         )}
         <Flex justifyContent="center" flexDirection="column">
@@ -361,7 +439,7 @@ const VaultRow: React.FC<VaultRowProps> = ({ vault, removed, cakePrice, bnbPrice
               ) : null}{' '}
             </SciNumber>{' '}
             <SciNumber>
-              {tokenBalance.gt(0) ? (
+              {tokenBalance.gt(0) && correctedDisplayUsd > 0 ? (
                 <Label>
                   ~$
                   {displayWalletUSD}
@@ -409,9 +487,9 @@ const VaultRow: React.FC<VaultRowProps> = ({ vault, removed, cakePrice, bnbPrice
           <Text bold>{totalValueFormated}</Text>
         </Flex>
 
-        {showExpandableSection ? <ChevronUpIcon /> : <ChevronDownIcon />}
+        {showExpandableSection ? <UpIcon /> : <DownIcon />}
       </Row>
-      <Divider />
+      {showExpandableSection ? <Divider /> : null}
       <Row>
         <ExpandingWrapper expanded={showExpandableSection}>
           <CardActionsContainer
@@ -422,6 +500,7 @@ const VaultRow: React.FC<VaultRowProps> = ({ vault, removed, cakePrice, bnbPrice
             allowance={allowance}
             tokenBalance={tokenBalance}
             stakedBalance={stakedBalance}
+            usdStaked={usdStaked}
           />
           <DetailsSection
             removed={removed}

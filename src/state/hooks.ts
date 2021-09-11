@@ -16,7 +16,6 @@ export const useFetchPublicData = () => {
   useEffect(() => {
     dispatch(fetchFarmsPublicDataAsync())
     dispatch(fetchVaultsPublicDataAsync())
-    // dispatch(fetchPoolsPublicDataAsync())
   }, [dispatch, slowRefresh])
 }
 
@@ -123,6 +122,7 @@ export const usePriceBnbBusd = (): BigNumber => {
   }
   return output;
 }
+
 
 export const usePriceCakeBusd = (): BigNumber => {
   const url = "https://api.coingecko.com/api/v3/simple/price?ids=polyvertex&vs_currencies=usd"

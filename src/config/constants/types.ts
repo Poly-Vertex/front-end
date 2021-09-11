@@ -90,11 +90,19 @@ export interface VaultConfig {
   tokenAddresses: Address
   quoteTokenSymbol: QuoteToken
   quoteTokenAddresses: Address
+  type: string
   multiplier?: string
   isTokenOnly?: boolean
   isCommunity?: boolean
   isFinished?: boolean
   risk: number
+  rewardPerBlock: number,
+  poolWeight,
+  farmDepositFee: number,
+  farmWithdrawalFee: number,
+  rewardToken : string,
+  rewardTokenDecimals?: number,
+  rewardTokenPrice?:number,
   dual?: {
     rewardPerBlock: number
     earnLabel: string
@@ -102,7 +110,7 @@ export interface VaultConfig {
   }
   endBlock: number,
   exchange: string,
-  farm?: FarmConfig
+  // farm?: FarmConfig
 }
 
 export type Nft = {

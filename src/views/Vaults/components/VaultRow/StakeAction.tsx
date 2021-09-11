@@ -1,10 +1,20 @@
 import React from 'react'
 import styled from 'styled-components'
 import BigNumber from 'bignumber.js'
-import { Button, Flex, Heading, IconButton, AddIcon, MinusIcon, useModal, Text, ToastContainer } from '@pancakeswap-libs/uikit'
+import {
+  Button,
+  Flex,
+  Heading,
+  IconButton,
+  AddIcon,
+  MinusIcon,
+  useModal,
+  Text,
+  ToastContainer,
+} from '@pancakeswap-libs/uikit'
 import useI18n from 'hooks/useI18n'
-import {useVaultStake} from 'hooks/useStake'
-import {useVaultUnstake} from 'hooks/useUnstake'
+import { useVaultStake } from 'hooks/useStake'
+import { useVaultUnstake } from 'hooks/useUnstake'
 import { getBalanceNumber, getCorrectedNumber } from 'utils/formatBalance'
 import DepositModal from '../DepositModal'
 import WithdrawModal from '../WithdrawModal'
@@ -16,6 +26,8 @@ interface FarmCardActionsProps {
   pid?: number
   depositFeeBP?: number
   usdStaked: BigNumber
+  withdrawalFeeBP?: number
+  performanceFeeBP?: number
 }
 
 const IconButtonWrapper = styled.div`
@@ -30,10 +42,26 @@ const Label = styled.div`
   align: left;
   display: inline;
 `
-const ActionButton = styled(Button)`
+const ActionButton = styled(Button)<{deposit?:boolean}>`
   margin: auto;
-  width: 200px;
-  padding: 10px;
+  padding: 5%;
+  max-width: 60%;
+  ${({ theme }) => theme.mediaQueries.xs} {
+    width: 150px;
+    font-size:80%;
+  }
+  ${({ theme }) => theme.mediaQueries.sm} {
+    width: 150px;
+    font-size:80%;
+  }
+  ${({ theme }) => theme.mediaQueries.md} {
+    width: 200px;
+    font-size:100%;
+  }
+  ${({ theme }) => theme.mediaQueries.lg} {
+    width: 200px;
+    font-size:100%;
+  }
 `
 export const SciNumber = styled.div`
   display: flex;
@@ -50,14 +78,17 @@ const StakeAction: React.FC<FarmCardActionsProps> = ({
   pid,
   depositFeeBP,
   usdStaked,
+  withdrawalFeeBP,
+  performanceFeeBP,
 }) => {
   const TranslateString = useI18n()
   const { onStake } = useVaultStake(pid)
   const { onUnstake } = useVaultUnstake(pid)
 
+  // Deposited Balance
   const rawStakedBalance = getBalanceNumber(stakedBalance, 18)
   const correctedStakeBalance = parseFloat(rawStakedBalance.toPrecision(4))
-  const displayBalance = getCorrectedNumber(correctedStakeBalance)
+  const displayDepositedBalance = getCorrectedNumber(correctedStakeBalance)
 
   // Deposited USD
   const rawDepositedDisplayUsd = new BigNumber(usdStaked).toNumber()
@@ -72,17 +103,16 @@ const StakeAction: React.FC<FarmCardActionsProps> = ({
   )
 
   return (
-    <Flex justifyContent="center" alignItems="center" justifyItems="center" > 
-     <ActionButton onClick={onPresentDeposit}>{TranslateString(999, 'Deposit')}</ActionButton>
-      {/* <ActionButton variant="primary" onClick={onPresentDeposit}>
-        <Text bold color="tertiary">
-          Deposit
-        </Text>
-      </ActionButton> */}
+    <Flex margin="auto" justifyContent="space-around" alignItems="center" justifyItems="center">
+      <Flex flexDirection="column">
+        <ActionButton deposit onClick={onPresentDeposit}>{TranslateString(999, 'Deposit')}</ActionButton>
+        <Label>&nbsp;</Label>
+        <Label>Fee: {depositFeeBP / 100}%</Label>
+      </Flex>
       <Flex justifyContent="center" alignItems="center" flexDirection="column">
         <Heading color={correctedStakeBalance === 0 ? 'textDisabled' : 'text'}>
           <SciNumber>
-            {displayBalance}
+            {displayDepositedBalance}
             {correctedStakeBalance < 1e-5 && correctedStakeBalance > 0 ? (
               <Label>
                 {'  '}e{correctedStakeBalance.toExponential(2).split('e')[1].toLocaleString()}
@@ -105,7 +135,11 @@ const StakeAction: React.FC<FarmCardActionsProps> = ({
           </SciNumber>
         </Heading>
       </Flex>
-      <ActionButton onClick={onPresentWithdraw}>{TranslateString(999, 'Withdraw')}</ActionButton>
+      <Flex flexDirection="column">
+        <ActionButton onClick={onPresentWithdraw}>{TranslateString(999, 'Withdraw')}</ActionButton>
+        <Label>&nbsp;</Label>
+        <Label>Fee: {withdrawalFeeBP / 100}%</Label>
+      </Flex>
     </Flex>
   )
 }
