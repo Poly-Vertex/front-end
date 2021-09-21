@@ -36,21 +36,27 @@ export interface Vault extends VaultConfig {
   lpTotalInQuoteToken?: BigNumber
   farmLPTotalInQuoteToken?: BigNumber
   tokenPriceVsQuote?: BigNumber
-  depositFeeBP?: number
+  vaultDepositFeeBP?: number
+  vaultWithdrawalFeeBP?: number
   userData?: {
     allowance: BigNumber
     tokenBalance: BigNumber
     stakedBalance: BigNumber
     earnings: BigNumber
   },
-  withdrawalFeeBP?: number
   performanceFeeBP?: number
   lpStakedTotal?: BigNumber
-  endBlock: number
   isFinished?: boolean
   tokenDecimals?: number,
   quoteTokenDecimals?: number,
-  lpTokenBalanceChef?: BigNumber
+  lpTokenBalanceChef?: BigNumber,
+  rewardTokenPrice?:number,
+  farmDepositFeeBP?: number,
+  farmWithdrawalFeeBP?: number,
+  rewardTokenDecimals?: number,
+  poolWeight? : number,
+  rewardPerBlock?: BigNumber,
+  burnRateBP?:number
 }
 
 // Slices states

@@ -69,7 +69,7 @@ const useVaultStake = (pid: number) => {
         console.info(txHash)
         toastSuccess("Success","Staking transaction confirmed")
       } catch (e) {
-        toastError("An error occurred.", `Transaction unsuccessful, please try again`);
+        toastError("An error occurred.", `Transaction unsuccessful or still pending, please try again`);
       }
     },
     [account, dispatch, vaultChefContract, pid, toastSuccess, toastError],

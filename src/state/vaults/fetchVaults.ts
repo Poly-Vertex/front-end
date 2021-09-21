@@ -1,10 +1,8 @@
 import BigNumber from 'bignumber.js'
 import erc20 from 'config/abi/erc20.json'
 import vaultChefABI from 'config/abi/vaultChef.json'
-import vaultStrategyABI from 'config/abi/vaultStrategy.json'
+import vaultStrategyABI from 'config/abi/baseStrategy.json'
 import strategyMasterchefABI from 'config/abi/strategyMasterchef.json'
-import { fetchSingleFarm } from 'state/farms/fetchFarms'
-import masterchefABI from 'config/abi/masterchef.json'
 import multicall from 'utils/multicall'
 import { getVaultChefAddress } from 'utils/addressHelpers'
 import vaultsConfig from 'config/constants/vaults'
@@ -12,16 +10,16 @@ import { QuoteToken, FarmConfig } from '../../config/constants/types'
 
 const CHAIN_ID = process.env.REACT_APP_CHAIN_ID
 
+const rewardPriceCache = {}
 
+const fetchRewardTokenPrice = async (rewardToken) =>{
+  const url = `https://api.coingecko.com/api/v3/simple/token_price/polygon-pos?contract_addresses=${rewardToken}&vs_currencies=usd`
+  const result = await fetch(url, null)
+  const data = await result.json()
+  const dataAddress = rewardToken.toLowerCase()
+  rewardPriceCache[rewardToken] = new BigNumber(data[dataAddress].usd)
+  return  new BigNumber(data[dataAddress].usd)
 
-const getPriceVaultReward = async (address): Promise<BigNumber> => {
-  const url = `https://api.coingecko.com/api/v3/simple/token_price/polygon-pos?contract_addresses=${address}&vs_currencies=usd`
-  return fetch(url, null)
-  .then(response => response.json())
-  .then(data => {
-    const dataAddress = address.toLowerCase()
-    return new BigNumber(data[dataAddress].usd);
-  });
 }
 
 const fetchVaults = async () => {
@@ -41,13 +39,50 @@ const fetchVaults = async () => {
       const token = info[0] // token
       const strategy = info[1] // strategy
       
-      const [lpTokenBalanceVC] = await multicall(vaultStrategyABI, [
+      const [lpTokenBalanceVC, performanceFee, withdrawalFeeFactor, withdrawalFeeFactorMax, depositFeeFactor, depositFeeFactorMax, buyBackBP] = await multicall(vaultStrategyABI, [
         {
           address: strategy,
           name: 'vaultSharesTotal',
           params: [],
         },
+        {
+          address: strategy,
+          name: 'controllerFee',
+          params: [],
+        },
+       
+        {
+          address: strategy,
+          name: 'withdrawFeeFactor',
+          params: [],
+        },
+        {
+          address: strategy,
+          name: 'withdrawFeeFactorMax',
+          params: [],
+        },
+        {
+          address: strategy,
+          name: 'depositFeeFactor',
+          params: [],
+        },
+        {
+          address: strategy,
+          name: 'depositFeeFactorMax',
+          params: [],
+        },
+        {
+          address: strategy,
+          name: 'buyBackRate',
+          params: [],
+        },
+
       ])
+
+      const vaultWithdrawalFee = (withdrawalFeeFactorMax - withdrawalFeeFactor)/withdrawalFeeFactorMax;
+      const vaultWithdrawalFeeBP = vaultWithdrawalFee * 10000; // decimal -> basis points
+      const vaultDepositFee = (depositFeeFactorMax - depositFeeFactor)/depositFeeFactorMax;
+      const vaultDepositFeeBP = vaultDepositFee * 10000; // decimal -> basis points
 
       // const lpAddress = vaultConfig.lpAddresses[CHAIN_ID] // unnecessary (use token instead)
       const lpAddress = token 
@@ -95,10 +130,14 @@ const fetchVaults = async () => {
       ] = await multicall(erc20, erc20Calls)
 
       // ONLY FOR MASTERCHEF STRATEGIES:
-      const [masterChefAddr] = await multicall(strategyMasterchefABI, [
+      const [masterChefAddr, masterchefPID] = await multicall(strategyMasterchefABI, [
         {
           address: strategy,
           name: 'masterchefAddress',
+        },
+        {
+          address: strategy,
+          name: 'pid',
         },
       ])
       const mcCalls = [
@@ -108,10 +147,104 @@ const fetchVaults = async () => {
           name: 'balanceOf',
           params: [masterChefAddr[0]],
         },
+        
       ]
       const [
         lpTokenBalanceMC
       ] = await multicall(erc20, mcCalls)
+
+
+      let farmDepositFeeBP;
+      let farmRewardPerBlock;
+      let poolWeight;
+      if(vaultConfig.farmUsesPoolInfo){
+        const [poolInfo, farmRewardPerBlockInfo, totalAllocPoint] =  await multicall([{
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "name": "poolInfo",
+          "outputs": [
+            {
+              "internalType": "contract IERC20",
+              "name": "lpToken",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": vaultConfig.farmPoolAllocName,
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "lastRewardBlock",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "accRewardPerShare",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint16",
+              "name": vaultConfig.farmFeeCallName,
+              "type": "uint16"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": vaultConfig.farmTotalAllocCallName,
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": vaultConfig.farmRewardPerBlockCallName,
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+      ],  
+        [{
+          address: masterChefAddr[0],
+          name: "poolInfo",
+          params: [parseInt(masterchefPID)],
+        },
+        {
+          address: masterChefAddr[0],
+          name: vaultConfig.farmRewardPerBlockCallName,
+          params: [],
+        },
+        {
+          address: masterChefAddr[0],
+          name: vaultConfig.farmTotalAllocCallName,
+          params: [],
+        },
+      ])
+      
+      farmDepositFeeBP = poolInfo[vaultConfig.farmFeeCallName];
+      farmRewardPerBlock = farmRewardPerBlockInfo;
+      poolWeight = poolInfo[vaultConfig.farmPoolAllocName]/totalAllocPoint;
+    }
 
 
       let tokenAmountVC;
@@ -173,44 +306,29 @@ const fetchVaults = async () => {
         lpStakedVCTotal = new BigNumber(lpTokenBalanceVC).div(new BigNumber(10).pow(tokenDecimals)) 
         lpStakedMCTotal = new BigNumber(lpTokenBalanceMC).div(new BigNumber(10).pow(tokenDecimals)) 
       }
-
-    
-
-      // if(masterChefAddr == null){
-      //   console.error("Could not get masterchef address");
-      // }
-
-      // let farmConfig : FarmConfig = {
-      //   pid: parseInt(masterchefPID),
-      //   lpSymbol: vaultConfig.lpSymbol,
-      //   lpAddresses: vaultConfig.lpAddresses,
-      //   tokenSymbol: vaultConfig.tokenSymbol,
-      //   tokenAddresses: vaultConfig.tokenAddresses,
-      //   quoteTokenSymbol: vaultConfig.quoteTokenSymbol,
-      //   quoteTokenAddresses: vaultConfig.quoteTokenAddresses,
-      //   isTokenOnly: vaultConfig.isTokenOnly,
-      //   isCommunity: vaultConfig.isCommunity,
-      //   risk: vaultConfig.risk,
-      //   dual: vaultConfig.dual,
-      //   exchange:vaultConfig.exchange
-      // }
-
-      // if(farmConfig.pid !== undefined)
-      //   farmConfig = await fetchSingleFarm(farmConfig, masterChefAddr[0]);
+      const rewardTokenPrice = rewardPriceCache[vaultConfig.rewardToken]!==null ? await fetchRewardTokenPrice(vaultConfig.rewardToken) : rewardPriceCache[vaultConfig.rewardToken];
       
-      const rewardTokenPrice = await getPriceVaultReward(vaultConfig.rewardToken)
-      return {
+
+      const vault = {
         ...vaultConfig,
+        rewardTokenPrice,
         tokenAmount: tokenAmountVC.toJSON(),
         lpTotalInQuoteToken: lpTotalInQuoteTokenVC.toJSON(),
         tokenPriceVsQuote: tokenPriceVsQuote!==undefined?tokenPriceVsQuote.toJSON() : new BigNumber(0).toJSON(),
         lpStakedTotal: lpStakedVCTotal.toJSON(),
-        lpTokenBalanceChef: lpTokenBalanceVC,
+        lpTokenBalanceChef: new BigNumber(lpTokenBalanceVC).toJSON(),
         farmLPTotalInQuoteToken: lpTotalInQuoteTokenMC.toJSON(),
         rewardTokenDecimals,
-        rewardTokenPrice,
-        // farm: farmConfig
-      }
+        performanceFeeBP: parseInt(performanceFee),
+        vaultWithdrawalFeeBP,
+        vaultDepositFeeBP,
+        farmDepositFeeBP,
+        rewardPerBlock: new BigNumber(farmRewardPerBlock).toJSON(),
+        poolWeight,
+        burnRateBP: parseInt(buyBackBP),
+        type: new BigNumber(buyBackBP).gt(0) ? "burn" : vaultConfig.type
+    };
+      return vault;
     }),
   )
   return data

@@ -12,9 +12,11 @@ interface WithdrawModalProps {
   onDismiss?: () => void
   tokenName?: string
   tokenDecimals?: number
+  vaultWithdrawalFeeBP?: number
+  farmWithdrawalFeeBP?: number
 }
 
-const WithdrawModal: React.FC<WithdrawModalProps> = ({ onConfirm, onDismiss, max, tokenName = '', tokenDecimals = 18}) => {
+const WithdrawModal: React.FC<WithdrawModalProps> = ({ onConfirm, onDismiss, max, tokenName = '', tokenDecimals = 18, vaultWithdrawalFeeBP=0, farmWithdrawalFeeBP=0}) => {
   const [val, setVal] = useState('')
   const [pendingTx, setPendingTx] = useState(false)
   const TranslateString = useI18n()
@@ -32,7 +34,6 @@ const WithdrawModal: React.FC<WithdrawModalProps> = ({ onConfirm, onDismiss, max
   const handleSelectMax = useCallback(() => {
     setVal(fullBalance)
   }, [fullBalance, setVal])
-
   return (
     <Modal title={`Withdraw ${tokenName}`} onDismiss={onDismiss}>
       <TokenInput
@@ -41,6 +42,7 @@ const WithdrawModal: React.FC<WithdrawModalProps> = ({ onConfirm, onDismiss, max
         value={val}
         max={fullBalance}
         symbol={tokenName}
+        depositFeeBP={vaultWithdrawalFeeBP + farmWithdrawalFeeBP}
       />
       <ModalActions>
         <Button variant="secondary" onClick={onDismiss}>

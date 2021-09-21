@@ -1,3 +1,5 @@
+import BigNumber from "bignumber.js"
+
 export type IfoStatus = 'coming_soon' | 'live' | 'finished'
 
 export interface Ifo {
@@ -94,23 +96,20 @@ export interface VaultConfig {
   multiplier?: string
   isTokenOnly?: boolean
   isCommunity?: boolean
-  isFinished?: boolean
   risk: number
-  rewardPerBlock: number,
-  poolWeight,
-  farmDepositFee: number,
-  farmWithdrawalFee: number,
+  farmUsesPoolInfo? : boolean,
   rewardToken : string,
-  rewardTokenDecimals?: number,
-  rewardTokenPrice?:number,
-  dual?: {
-    rewardPerBlock: number
-    earnLabel: string
-    endBlock: number
-  }
+  // dual?: {
+  //   rewardPerBlock: number
+  //   earnLabel: string
+  //   endBlock: number
+  // }
   endBlock: number,
   exchange: string,
-  // farm?: FarmConfig
+  farmFeeCallName?: string,
+  farmRewardPerBlockCallName?: string,
+  farmTotalAllocCallName?: string,
+  farmPoolAllocName?: string,
 }
 
 export type Nft = {

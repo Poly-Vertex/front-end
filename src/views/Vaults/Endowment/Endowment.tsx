@@ -44,12 +44,12 @@ const EndowmentVaults: React.FC = () => {
   const routePrice = usePriceRouteBusd()
 
   const dispatch = useDispatch()
-  const { fastRefresh } = useRefresh()
+  const { verySlowRefresh } = useRefresh()
   useEffect(() => {
     if (account) {
       dispatch(fetchVaultUserDataAsync(account))
     }
-  }, [account, dispatch, fastRefresh])
+  }, [account, dispatch, verySlowRefresh])
 
   const [stakedOnly, setStakedOnly] = useState(false)
 

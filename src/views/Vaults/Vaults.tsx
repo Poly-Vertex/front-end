@@ -34,6 +34,22 @@ const LockedFlex = styled(FlexLayout)`
   /* max-width:1vw!important; */
 `
 
+/* eslint-disable no-bitwise, eqeqeq, no-param-reassign */
+const fastPow = (n : number, exp : number) =>{
+  let prod = 1;
+  while (exp > 0){
+    if ((exp & 1) != 0)
+       prod *= n;
+    n*=n;
+    exp >>= 1; // black magic
+  }
+  return prod;
+}
+
+
+
+
+
 const Vaults: React.FC = () => {
   const { path } = useRouteMatch()
   const TranslateString = useI18n()
@@ -48,12 +64,12 @@ const Vaults: React.FC = () => {
   const routePrice = usePriceRouteBusd()
 
   const dispatch = useDispatch()
-  const { slowRefresh } = useRefresh() // was fast
+  const { fastRefresh } = useRefresh() // was fast
   useEffect(() => {
     if (account) {
       dispatch(fetchVaultUserDataAsync(account))
     }
-  }, [account, dispatch, slowRefresh])
+  }, [account, dispatch, fastRefresh])
 
   const [stakedOnly, setStakedOnly] = useState(false)
 
@@ -69,7 +85,7 @@ const Vaults: React.FC = () => {
         if(vault === undefined){
           return null;
         }
-        if(vault.type!=="standard"){
+        if(vault.type!=="standard" && vault.type!=="burn"){
           return vault;
         }
         if(vault.rewardTokenPrice === undefined){
@@ -101,17 +117,20 @@ const Vaults: React.FC = () => {
           apr = apr.div(totalFarmValue)
         }
 
-
+        const totalFeeDecimal = ((vault.performanceFeeBP||0) + (vault.farmDepositFeeBP||0) + (vault.farmWithdrawalFeeBP||0) + (vault.burnRateBP||0)) / 10000;
         const NUM_COMPOUNDS_PER_PERIOD = 1000;
-        const apy = new BigNumber(1).plus(apr.dividedBy(NUM_COMPOUNDS_PER_PERIOD)).pow(NUM_COMPOUNDS_PER_PERIOD).minus(1)
+        const apy = new BigNumber(
+           fastPow(1 + apr.div(NUM_COMPOUNDS_PER_PERIOD).toNumber() * (1-totalFeeDecimal), NUM_COMPOUNDS_PER_PERIOD) - 1 )
+        
         return { ...vault, apy, apr }
       })
-
+        let i = -1;
        return vaultsToDisplayWithAPY.map((vault) => {
+        i++;
         if (vault === null || vault === undefined) {
-          return (<LoadingRow />)
+          return (<LoadingRow key={`loading-${i}`}/>)
         }
-          return vault.type === 'standard' ? (
+          return vault.type === 'standard' || vault.type === 'burn'? (
             <VaultRow
               key={vault.pid}
               vault={vault}
@@ -124,6 +143,7 @@ const Vaults: React.FC = () => {
             />
           ) : null
       })
+
     },
     [bnbPrice, account, cakePrice, ethereum, wethPrice, routePrice],
   )
@@ -136,11 +156,11 @@ const Vaults: React.FC = () => {
             {TranslateString(999, 'Vaults')}
           </Heading>
           <ul>
-            <li>{TranslateString(999, 'Auto-compounding.')}</li>
-            <li>{TranslateString(999, 'Grow your deposit over time.')}</li>
-            <li>{TranslateString(999, 'Unstake at any time.')}</li>
-            <li>{TranslateString(999, 'Compounds frequently to maximize yield.')}</li>
-            <li>{TranslateString(999, 'X% performance fee on harvests.')}</li>
+            <li key="0">{TranslateString(999, 'Auto-compounding.')}</li>
+            <li key="1">{TranslateString(999, 'Grow your deposit over time.')}</li>
+            <li key="2">{TranslateString(999, 'Unstake at any time.')}</li>
+            <li key="3">{TranslateString(999, 'Compounds frequently to maximize yield.')}</li>
+            <li key="4">{TranslateString(999, 'X% performance fee on harvests.')}</li>
           </ul>
         </div>
         <img src="/images/vaults.png" alt="Vaults Icon" width={310} height={310} />

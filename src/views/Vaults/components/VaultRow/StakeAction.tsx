@@ -11,8 +11,10 @@ import {
   useModal,
   Text,
   ToastContainer,
+  Skeleton,
 } from '@pancakeswap-libs/uikit'
 import useI18n from 'hooks/useI18n'
+import Divider from 'views/Farms/components/Divider'
 import { useVaultStake } from 'hooks/useStake'
 import { useVaultUnstake } from 'hooks/useUnstake'
 import { getBalanceNumber, getCorrectedNumber } from 'utils/formatBalance'
@@ -24,10 +26,13 @@ interface FarmCardActionsProps {
   tokenBalance?: BigNumber
   tokenName?: string
   pid?: number
-  depositFeeBP?: number
   usdStaked: BigNumber
-  withdrawalFeeBP?: number
   performanceFeeBP?: number
+  vaultDepositFeeBP?: number
+  vaultWithdrawalFeeBP?: number
+  farmDepositFeeBP?: number
+  farmWithdrawalFeeBP?: number
+  burnRateBP?: number
 }
 
 const IconButtonWrapper = styled.div`
@@ -39,8 +44,23 @@ const IconButtonWrapper = styled.div`
 const Label = styled.div`
   color: ${({ theme }) => theme.colors.textSubtle};
   font-size: 12px;
-  align: left;
+  text-align: left;
   display: inline;
+  `
+const FeeLabel = styled(Label)`
+  margin-right:1vw;
+  white-space:pre;
+  width:50px;
+  text-align:right;
+  justify-content:space-around;
+  align-self:right;
+  align-items:right;
+  `
+const FeeContainer = styled(Flex)`
+  margin:auto;
+  `
+const FeeDivider = styled(Divider)`
+  margin-bottom:2%;
 `
 const ActionButton = styled(Button)<{deposit?:boolean}>`
   margin: auto;
@@ -76,10 +96,13 @@ const StakeAction: React.FC<FarmCardActionsProps> = ({
   tokenBalance,
   tokenName,
   pid,
-  depositFeeBP,
   usdStaked,
-  withdrawalFeeBP,
+  vaultDepositFeeBP,
+  vaultWithdrawalFeeBP,
+  farmDepositFeeBP,
+  farmWithdrawalFeeBP,
   performanceFeeBP,
+  burnRateBP,
 }) => {
   const TranslateString = useI18n()
   const { onStake } = useVaultStake(pid)
@@ -94,20 +117,27 @@ const StakeAction: React.FC<FarmCardActionsProps> = ({
   const rawDepositedDisplayUsd = new BigNumber(usdStaked).toNumber()
   const correctedWalletDisplayUsd = parseFloat(rawDepositedDisplayUsd.toPrecision(4))
   const displayStakedUSD = getCorrectedNumber(correctedWalletDisplayUsd)
-
   const [onPresentDeposit] = useModal(
-    <DepositModal max={tokenBalance} onConfirm={onStake} tokenName={tokenName} depositFeeBP={depositFeeBP} />,
+    <DepositModal max={tokenBalance} onConfirm={onStake} tokenName={tokenName} vaultDepositFeeBP={vaultDepositFeeBP} farmDepositFeeBP={farmDepositFeeBP} />,
   )
   const [onPresentWithdraw] = useModal(
-    <WithdrawModal max={stakedBalance} onConfirm={onUnstake} tokenName={tokenName} />,
+    <WithdrawModal max={stakedBalance} onConfirm={onUnstake} tokenName={tokenName} vaultWithdrawalFeeBP={vaultWithdrawalFeeBP} farmWithdrawalFeeBP={farmWithdrawalFeeBP} />,
   )
 
   return (
     <Flex margin="auto" justifyContent="space-around" alignItems="center" justifyItems="center">
       <Flex flexDirection="column">
         <ActionButton deposit onClick={onPresentDeposit}>{TranslateString(999, 'Deposit')}</ActionButton>
-        <Label>&nbsp;</Label>
-        <Label>Fee: {depositFeeBP / 100}%</Label>
+        <FeeContainer flexDirection="column">
+          <Label>&nbsp;</Label>
+          <FeeLabel>Farm fee:     {(farmDepositFeeBP||0) / 100}%</FeeLabel>
+          <FeeLabel>Vault fee:     {(vaultDepositFeeBP||0) / 100}%</FeeLabel>
+          <FeeDivider/>
+          <b><FeeLabel>Total fee:      {((vaultDepositFeeBP||0) + (farmDepositFeeBP||0) )/ 100}%</FeeLabel></b>
+        
+        </FeeContainer>
+
+
       </Flex>
       <Flex justifyContent="center" alignItems="center" flexDirection="column">
         <Heading color={correctedStakeBalance === 0 ? 'textDisabled' : 'text'}>
@@ -134,11 +164,24 @@ const StakeAction: React.FC<FarmCardActionsProps> = ({
             ) : null}
           </SciNumber>
         </Heading>
-      </Flex>
+        <Label>&nbsp;</Label>
+        <Label>&nbsp;</Label>
+      <Label>Performance fee: {(performanceFeeBP||0) / 100}%</Label>
+      {
+        burnRateBP>0?
+        <Label>Burned: {(performanceFeeBP||0) / 100}%</Label>
+        :null
+      }
+    </Flex>
       <Flex flexDirection="column">
         <ActionButton onClick={onPresentWithdraw}>{TranslateString(999, 'Withdraw')}</ActionButton>
-        <Label>&nbsp;</Label>
-        <Label>Fee: {withdrawalFeeBP / 100}%</Label>
+        <FeeContainer flexDirection="column">
+          <Label>&nbsp;</Label>
+          <FeeLabel>Farm fee:     {(farmWithdrawalFeeBP||0) / 100}%</FeeLabel>
+          <FeeLabel>Vault fee:     {(vaultWithdrawalFeeBP||0) / 100}%</FeeLabel>
+          <FeeDivider/>
+          <b><FeeLabel>Total fee:      {((vaultWithdrawalFeeBP||0) + (farmWithdrawalFeeBP||0) )/ 100}%</FeeLabel></b>
+        </FeeContainer>
       </Flex>
     </Flex>
   )

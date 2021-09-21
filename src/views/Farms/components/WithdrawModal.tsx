@@ -12,7 +12,10 @@ interface WithdrawModalProps {
   onConfirm: (amount: string, decimals: number) => void
   onDismiss?: () => void
   tokenName?: string
-  tokenDecimals?: number
+  tokenDecimals?: number,
+  vaultWithdrawalFeeBP?: number,
+  farmWithdrawalFeeBP?: number,
+
 }
 
 const WithdrawModal: React.FC<WithdrawModalProps> = ({ isTokenOnly, onConfirm, onDismiss, max, tokenName = '', tokenDecimals = 18}) => {

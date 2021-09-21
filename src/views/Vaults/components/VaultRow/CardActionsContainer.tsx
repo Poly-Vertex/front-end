@@ -34,7 +34,7 @@ interface VaultCardActionsProps {
 const CardActions: React.FC<VaultCardActionsProps> = ({ vault, ethereum, account, totalValue, allowance, tokenBalance, stakedBalance, usdStaked }) => {
   const TranslateString = useI18n()
   const [requestedApproval, setRequestedApproval] = useState(false)
-  const { pid, lpAddresses, tokenAddresses, isTokenOnly, depositFeeBP, withdrawalFeeBP, performanceFeeBP } = useVaultFromPid(vault.pid)
+  const { pid, lpAddresses, tokenAddresses, isTokenOnly, vaultDepositFeeBP, vaultWithdrawalFeeBP, farmDepositFeeBP, farmWithdrawalFeeBP, performanceFeeBP, burnRateBP } = useVaultFromPid(vault.pid)
   const lpAddress = lpAddresses[process.env.REACT_APP_CHAIN_ID]
   const tokenAddress = tokenAddresses[process.env.REACT_APP_CHAIN_ID];
   const lpName = vault.lpSymbol.toUpperCase()
@@ -73,7 +73,7 @@ const CardActions: React.FC<VaultCardActionsProps> = ({ vault, ethereum, account
       </Text>
      
     </Flex>
-      <StakeAction stakedBalance={stakedBalance} tokenBalance={tokenBalance} tokenName={lpName} pid={pid} depositFeeBP={depositFeeBP} usdStaked={usdStaked} withdrawalFeeBP={withdrawalFeeBP} performanceFeeBP={performanceFeeBP}  />
+      <StakeAction stakedBalance={stakedBalance} tokenBalance={tokenBalance} tokenName={lpName} pid={pid}  usdStaked={usdStaked} vaultDepositFeeBP={vaultDepositFeeBP} vaultWithdrawalFeeBP={vaultWithdrawalFeeBP} farmDepositFeeBP={farmDepositFeeBP} farmWithdrawalFeeBP={farmWithdrawalFeeBP} performanceFeeBP={performanceFeeBP}  burnRateBP={burnRateBP}/>
       </>
       ) : (
       <Button mt="8px" fullWidth disabled={requestedApproval} onClick={handleApprove}>

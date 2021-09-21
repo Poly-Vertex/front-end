@@ -26,7 +26,7 @@ const useUnstake = (pid: number) => {
       console.info(txHash)
       toastSuccess("Success","Unstaking transaction confirmed")
     } catch (e) {
-      toastError("An error occurred.", `Transaction unsuccessful, please try again`);
+      toastError("An error occurred.", `Transaction unsuccessful or still pending, please try again`);
     }
     },
     [account, dispatch, masterChefContract, pid, toastSuccess, toastError],

@@ -249,9 +249,6 @@ const VaultRow: React.FC<VaultRowProps> = ({ vault, removed, cakePrice, bnbPrice
   const TranslateString = useI18n()
   const [showExpandableSection, setShowExpandableSection] = useState(false)
   const { allowance, tokenBalance, stakedBalance } = useVaultUser(vault.pid)
-  const vaultImage = `${vault.tokenSymbol.toLowerCase()}-${vault.quoteTokenSymbol.toLowerCase()}`
-
-  const fullBalance = getBalanceNumber(tokenBalance, 18).toPrecision(9) // 18 because is LP
 
   const totalValue: BigNumber = useMemo(() => {
     if (!vault.lpTotalInQuoteToken) {
@@ -384,7 +381,8 @@ const VaultRow: React.FC<VaultRowProps> = ({ vault, removed, cakePrice, bnbPrice
           lpLabel={lpLabel}
           multiplier={vault.multiplier}
           risk={risk}
-          depositFee={vault.depositFeeBP}
+          vaultDepositFeeBP={vault.vaultDepositFeeBP}
+          vaultWithdrawalFeeBP={vault.vaultWithdrawalFeeBP}
           farmImage0={vault.tokenSymbol.toLowerCase()}
           farmImage1={vault.quoteTokenSymbol.toLowerCase()}
           tokenSymbol={vault.tokenSymbol}

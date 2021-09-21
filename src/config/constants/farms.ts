@@ -90,24 +90,7 @@ const farms: FarmConfig[] = [
     exchange:"QuickSwap"
 
   },
-  {
-    pid: 14,
-    risk: 3,
-    lpSymbol: 'PLATIN-USDC QLP',
-    lpAddresses: {
-      80001: '',
-      137: '0x60beff3e9d3b4e8409471ecc58e568eb153f1e00',
-    },
-    tokenSymbol: 'PLATIN',
-    tokenAddresses: {
-      80001: '0x782eb3304F8b9adD877F13a5cA321f72c4AA9804',
-      137: '0x782eb3304F8b9adD877F13a5cA321f72c4AA9804',
-    },
-    quoteTokenSymbol: QuoteToken.BUSD,
-    quoteTokenAddresses: contracts.busd,
-    exchange:"QuickSwap"
-
-  },
+  
   {
     pid: 2,
     risk: 3,

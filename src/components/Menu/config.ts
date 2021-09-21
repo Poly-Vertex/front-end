@@ -34,16 +34,16 @@ const config: MenuEntry[] = [
     label: 'Vaults',
     icon: 'VaultsIcon',
     href: '/vaults',
-    items:[
-      {
-        label: 'Standard',
-        href: '/vaults',
-      },
-      {
-        label: 'Endowment',
-        href: '/endowment',
-      },
-    ]
+    // items:[
+      // {
+      //   label: 'Standard',
+      //   href: '/vaults',
+      // },
+      // {
+      //   label: 'Endowment',
+      //   href: '/endowment',
+      // },
+    // ]
   },
   // {
   //   label: 'Lottery',
