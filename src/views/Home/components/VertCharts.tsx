@@ -121,7 +121,7 @@ const VertGauge = (props: any) => {
   const { theme } = useTheme()
   const totalSupply = (useTotalSupply())
 
-  const maxSupply = 3000000
+  const maxSupply = 500000
   const {isMobile} = props;
   const style = {
     width: isMobile?'100%':'75%',
