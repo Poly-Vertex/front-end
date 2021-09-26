@@ -14,6 +14,7 @@ export interface ExpandableSectionProps {
   quoteTokenAddresses?: Address
   quoteTokenSymbol?: string
   tokenAddresses: Address,
+  underlyingProject: string,
   pid: number
 }
 
@@ -48,6 +49,7 @@ const DetailsSection: React.FC<ExpandableSectionProps> = ({
   quoteTokenAddresses,
   quoteTokenSymbol,
   tokenAddresses,
+  underlyingProject,
   pid
 }) => {
   const TranslateString = useI18n()
@@ -66,11 +68,18 @@ const DetailsSection: React.FC<ExpandableSectionProps> = ({
           {lpLabel}
         </StyledLinkExternal>
       </Flex>
+       
+        { underlyingProject!==""?
+           <Flex justifyContent="center" flexDirection="row"><StyledLinkExternal href={underlyingProject}> 
+          Visit project
+        </StyledLinkExternal></Flex>
+        : null
+      }
 
       <Flex justifyContent="center">
-        <Link external href={bscScanAddress} bold={false}>
+        <StyledLinkExternal external href={bscScanAddress} bold={false}>
           {TranslateString(356, 'View on PolygonScan')}
-        </Link>
+        </StyledLinkExternal>
       </Flex>
     </Wrapper>
   )

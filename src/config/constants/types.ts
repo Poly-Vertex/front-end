@@ -110,6 +110,9 @@ export interface VaultConfig {
   farmRewardPerBlockCallName?: string,
   farmTotalAllocCallName?: string,
   farmPoolAllocName?: string,
+  strategy:string,
+  underlyingProject:string,
+  rewardUsesCoinGecko:boolean,
 }
 
 export type Nft = {

@@ -21,8 +21,8 @@ const Wrapper = styled(Flex)`
   svg {
     margin-right: 0.25rem;
   }
-  display: inline-block
-  max-width:100%
+  display: inline-block;
+  max-width:150px
 `
 
 const HeaderSection = styled(Flex)`
@@ -59,6 +59,10 @@ function imageExists(imageUrl){
   return http.status !== 404;
 }
 
+const LPTitle = styled(Heading)`
+    max-width:80%
+`
+
 const CardHeading: React.FC<ExpandableSectionProps> = ({
   lpLabel,
   multiplier,
@@ -88,9 +92,9 @@ const CardHeading: React.FC<ExpandableSectionProps> = ({
           <VaultImage src={image0} alt="" width={45} height={45} margin="4px"/>
           <VaultImage src={image1} alt="" width={45} height={45} margin="4px"/>
         </HeaderSection>
-        <Heading mb="7px" as="h2" size="sm">
+        <LPTitle mb="7px" as="h2" size="sm">
           {lpLabel}
-        </Heading>
+        </LPTitle>
         {/* {depositFee === 0 ? <NoFeeTag /> : null} */}
         {type === 'standard' ? null : <TextTag variant="primary" text={type.replace(type[0], type[0].toUpperCase())} />}
       </HeaderSection>

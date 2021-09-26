@@ -359,8 +359,8 @@ const VaultRow: React.FC<VaultRowProps> = ({ vault, removed, cakePrice, bnbPrice
 
   // Deposited USD
   const rawDepositedDisplayUsd = new BigNumber(usdStaked).toNumber()
-  const correctedWalletDisplayUsd = parseFloat(rawDepositedDisplayUsd.toPrecision(4))
-  const displayStakedUSD = getCorrectedNumber(correctedWalletDisplayUsd)
+  const correctedDepositedUsd = parseFloat(rawDepositedDisplayUsd.toPrecision(4))
+  const displayStakedUSD = getCorrectedNumber(correctedDepositedUsd)
 
   // Wallet Balance
   const rawWalletBalance = getBalanceNumber(tokenBalance, 18)
@@ -369,8 +369,8 @@ const VaultRow: React.FC<VaultRowProps> = ({ vault, removed, cakePrice, bnbPrice
 
   // Wallet USD
   const rawWalletDisplayUsd = new BigNumber(usdWallet).toNumber()
-  const correctedDisplayUsd = parseFloat(rawWalletDisplayUsd.toPrecision(4))
-  const displayWalletUSD = getCorrectedNumber(correctedDisplayUsd)
+  const correctedWalletUsd = parseFloat(rawWalletDisplayUsd.toPrecision(4))
+  const displayWalletUSD = getCorrectedNumber(correctedWalletUsd)
 
   const { quoteTokenAddresses, quoteTokenSymbol, tokenAddresses, risk, lpSymbol } = vault
   return (
@@ -437,13 +437,13 @@ const VaultRow: React.FC<VaultRowProps> = ({ vault, removed, cakePrice, bnbPrice
               ) : null}{' '}
             </SciNumber>{' '}
             <SciNumber>
-              {tokenBalance.gt(0) && correctedDisplayUsd > 0 ? (
+              {tokenBalance.gt(0) && correctedWalletUsd > 0 ? (
                 <Label>
                   ~$
                   {displayWalletUSD}
-                  {correctedWalletDisplayUsd < 1e-5 && correctedWalletDisplayUsd > 0 ? (
+                  {correctedWalletUsd < 1e-5 && correctedWalletUsd > 0 ? (
                     <Label>
-                      {'  '}e{correctedWalletDisplayUsd.toExponential(2).split('e')[1].toLocaleString()}
+                      {'  '}e{correctedWalletUsd.toExponential(2).split('e')[1].toLocaleString()}
                     </Label>
                   ) : null}{' '}
                   USD
@@ -469,9 +469,9 @@ const VaultRow: React.FC<VaultRowProps> = ({ vault, removed, cakePrice, bnbPrice
                 <Label>
                   ~$
                   {displayStakedUSD.toString()}
-                  {correctedDisplayUsd < 1e-5 && correctedDisplayUsd > 0 ? (
+                  {correctedDepositedUsd < 1e-5 && correctedDepositedUsd > 0 ? (
                     <Label>
-                      {'  '}e{correctedDisplayUsd.toExponential(2).split('e')[1].toLocaleString()}
+                      {'  '}e{correctedDepositedUsd.toExponential(2).split('e')[1].toLocaleString()}
                     </Label>
                   ) : null}{' '}
                   USD
@@ -508,6 +508,7 @@ const VaultRow: React.FC<VaultRowProps> = ({ vault, removed, cakePrice, bnbPrice
                 ? `https://polygonscan.com/token/${vault.tokenAddresses[process.env.REACT_APP_CHAIN_ID]}`
                 : `https://polygonscan.com/token/${vault.lpAddresses[process.env.REACT_APP_CHAIN_ID]}`
             }
+            underlyingProject={vault.underlyingProject}
             totalValueFormated={totalValueFormated}
             lpLabel={lpLabel}
             quoteTokenAddresses={quoteTokenAddresses}

@@ -1,9 +1,9 @@
 import React, { useEffect, useCallback, useState } from 'react'
 import { Route, useRouteMatch } from 'react-router-dom'
 import BigNumber from 'bignumber.js'
-import styled from 'styled-components'
+import styled, {keyframes} from 'styled-components'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
-import { Heading } from '@pancakeswap-libs/uikit'
+import { Heading, Text } from '@pancakeswap-libs/uikit'
 import { BLOCKS_PER_YEAR, VERT_DECIMALS } from 'config'
 import orderBy from 'lodash/orderBy'
 import { provider } from 'web3-core'
@@ -23,6 +23,7 @@ import {
   usePriceBtcBusd,
   usePriceRouteBusd,
 } from 'state/hooks'
+import Label from 'components/Label'
 import { QuoteToken, PoolCategory } from 'config/constants/types'
 import FlexLayout from 'components/layout/Flex'
 import Page from 'components/layout/Page'
@@ -32,6 +33,43 @@ import Divider from '../Farms/components/Divider'
 
 const LockedFlex = styled(FlexLayout)`
   /* max-width:1vw!important; */
+`
+const Note = styled(Text)`
+ font-size: 12px;
+`
+const animateLogo = keyframes`
+  0% {
+      transform: translate3d(0%, 3%, 0px) rotate(0deg) scale(100%);
+      animation-timing-function: ease-in;
+    }
+    50% {
+      transform: translate3d(0%, 3%, 0px) rotate(2deg) scale(101%);
+      animation-timing-function: ease-out;
+    }
+    100% {
+      transform: translate3d(0%, 3%, 0px) rotate(0deg) scale(100%);
+  }
+`
+const VaultLogoBackground = styled.img`
+    grid-row: 1;
+    grid-column: 1;
+    max-width:100%;
+    width:100%;
+    `
+const VaultLogoForeground = styled.img`
+    max-width:100%;
+    width:80%;
+    grid-row: 1;
+    grid-column: 1;
+    animation: 2s ${animateLogo} ease-out infinite;
+    margin-left:10%;
+    :hover{
+      width:82%;
+      margin-left:9%;
+    }
+`
+const LogoContainer = styled.div`
+  display: grid;
 `
 
 /* eslint-disable no-bitwise, eqeqeq, no-param-reassign */
@@ -160,12 +198,16 @@ const Vaults: React.FC = () => {
             <li key="1">{TranslateString(999, 'Grow your deposit over time.')}</li>
             <li key="2">{TranslateString(999, 'Unstake at any time.')}</li>
             <li key="3">{TranslateString(999, 'Compounds frequently to maximize yield.')}</li>
-            <li key="4">{TranslateString(999, 'X% performance fee on harvests.')}</li>
+            <li key="4">{TranslateString(999, '0.1% performance fee on harvests.')}</li>
           </ul>
         </div>
-        <img src="/images/vaults.png" alt="Vaults Icon" width={310} height={310} />
+        <LogoContainer>
+          <VaultLogoBackground src="/images/vaults/matic-no-background.svg" alt="Vaults Icon" width={360} height={360} />
+          <VaultLogoForeground src="/images/vaults/vert.svg" alt="Vaults Icon" width={310} height={310} />
+        </LogoContainer>
       </Hero>
       <VaultTabButtons stakedOnly={stakedOnly} setStakedOnly={setStakedOnly} />
+      <Note><i>Note that our partner projects may have additional fees not listed here. Always check the underlying project and DYOR.</i></Note>
       <Divider />
       <LockedFlex>
         <Route exact path={`${path}`}>
