@@ -113,6 +113,8 @@ export interface VaultConfig {
   strategy:string,
   underlyingProject:string,
   rewardUsesCoinGecko:boolean,
+  paused: boolean
+
 }
 
 export type Nft = {

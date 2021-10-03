@@ -1,9 +1,9 @@
 import React, { useEffect, useCallback, useState } from 'react'
 import { Route, useRouteMatch } from 'react-router-dom'
 import BigNumber from 'bignumber.js'
-import styled, {keyframes} from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
-import { Heading, Text } from '@pancakeswap-libs/uikit'
+import { Dropdown, Heading, Text, InfoIcon, Button, Flex, Link } from '@pancakeswap-libs/uikit'
 import { BLOCKS_PER_YEAR, VERT_DECIMALS } from 'config'
 import orderBy from 'lodash/orderBy'
 import { provider } from 'web3-core'
@@ -13,6 +13,7 @@ import useBlock from 'hooks/useBlock'
 import { fetchVaultUserDataAsync } from 'state/vaults'
 import { useDispatch } from 'react-redux'
 import useRefresh from 'hooks/useRefresh'
+import LabelButton from 'views/Ifos/components/IfoCard/LabelButton'
 import { getBalanceNumber } from 'utils/formatBalance'
 import {
   useFarms,
@@ -23,7 +24,7 @@ import {
   usePriceBtcBusd,
   usePriceRouteBusd,
 } from 'state/hooks'
-import Label from 'components/Label'
+
 import { QuoteToken, PoolCategory } from 'config/constants/types'
 import FlexLayout from 'components/layout/Flex'
 import Page from 'components/layout/Page'
@@ -35,7 +36,7 @@ const LockedFlex = styled(FlexLayout)`
   /* max-width:1vw!important; */
 `
 const Note = styled(Text)`
- font-size: 12px;
+  font-size: 12px;
 `
 const animateLogo = keyframes`
   0% {
@@ -51,42 +52,96 @@ const animateLogo = keyframes`
   }
 `
 const VaultLogoBackground = styled.img`
-    grid-row: 1;
-    grid-column: 1;
-    max-width:100%;
-    width:100%;
-    `
+  grid-row: 1;
+  grid-column: 1;
+  max-width: 100%;
+  width: 100%;
+`
 const VaultLogoForeground = styled.img`
-    max-width:100%;
-    width:80%;
-    grid-row: 1;
-    grid-column: 1;
-    animation: 2s ${animateLogo} ease-out infinite;
-    margin-left:10%;
-    :hover{
-      width:82%;
-      margin-left:9%;
-    }
+  max-width: 100%;
+  width: 80%;
+  grid-row: 1;
+  grid-column: 1;
+  animation: 2s ${animateLogo} ease-out infinite;
+  margin-left: 10%;
+  :hover {
+    width: 82%;
+    margin-left: 9%;
+  }
 `
 const LogoContainer = styled.div`
   display: grid;
 `
+const SortDropdown = styled(Dropdown)`
+  max-width: 33%;
+  margin: auto;
+  justify-content: center;
+  text-align: center;
+  display: block;
+  padding:5%!important;
+  `
+// const SortButton = styled(LabelButton)`
+//   max-width: 33%;
+//   display: inline-flex;
+//   margin: 10px;
+//   vertical-align: middle;
+//   padding:10px;
+//   white-space:pre;
+  
+// `
+
+const Label = styled.div`
+  color: ${({ theme }) => theme.colors.primary};
+  font-size: 16px;
+  text-align: left;
+  display: flex;
+  vertical-align:center;
+  margin:auto;
+  margin-right:10%;
+  padding-right:2%;
+`
+const SortButton = styled(Button)`
+  margin: auto;
+  vertical-align: middle;
+  white-space:pre;
+  
+`
+const ControlFlex = styled(Flex)`
+  max-width: 100%;
+  justify-content: center;
+  align-self: center;
+  align-items:center;
+  margin:auto;
+  padding:2%;
+  /* margin-bottom:1%; */
+  vertical-align:center;
+  flex-wrap: wrap;
+`
+const SortFlex = styled(Flex)`
+  margin-bottom: 32px;
+  margin-left:16px;
+  padding:2%;
+
+`
+const SortLink = styled.a`
+  color: ${({ theme }) => theme.colors.primary};
+
+  :hover {
+      text-decoration: underline;
+  }
+
+`
 
 /* eslint-disable no-bitwise, eqeqeq, no-param-reassign */
-const fastPow = (n : number, exp : number) =>{
-  let prod = 1;
-  while (exp > 0){
-    if ((exp & 1) != 0)
-       prod *= n;
-    n*=n;
-    exp >>= 1; // black magic
+const fastPow = (n: number, exp: number) => {
+  let prod = 1
+  while (exp > 0) {
+    if ((exp & 1) != 0) prod *= n
+    n *= n
+    exp >>= 1 // black magic
   }
-  return prod;
+  return prod
 }
-
-
-
-
 
 const Vaults: React.FC = () => {
   const { path } = useRouteMatch()
@@ -109,83 +164,118 @@ const Vaults: React.FC = () => {
     }
   }, [account, dispatch, fastRefresh])
 
-  const [stakedOnly, setStakedOnly] = useState(false)
+  const defaultState = {stakedOnly:false, sortOrder:"Default"}
+  const [state, setState] = useState(defaultState)
 
-  const activeVaults = vaults
+  // const url = window.location.href
+  // if (url.includes('&sort=')) {
+  //   sortOrder = url.substring(url.indexOf('&sort=') + 6, url.length)
+  // }
 
-  const stakedOnlyVaults = activeVaults.filter(
+  const activeVaults = vaults.filter(
+    (vault) => true,
+    // (vault) => vault.paused == undefined || vault.paused == false,
+  )
+  const finishedVaults = vaults.filter((vault) => vault.paused == true)
+
+  const stakedOnlyVaultsActive = activeVaults.filter(
     (vault) => vault.userData && new BigNumber(vault.userData.stakedBalance).isGreaterThan(0),
   )
-
+  const stakedOnlyVaultsFinished = finishedVaults.filter(
+    (vault) => vault.userData && new BigNumber(vault.userData.stakedBalance).isGreaterThan(0),
+  )
   const vaultsList = useCallback(
     (vaultsToDisplay, removed: boolean) => {
+     
       const vaultsToDisplayWithAPY: VaultWithStakedValue[] = vaultsToDisplay.map((vault) => {
-        if(vault === undefined){
-          return null;
+        if (vault === undefined) {
+          return null
         }
-        if(vault.type!=="standard" && vault.type!=="burn"){
-          return vault;
+        if (vault.type !== 'standard' && vault.type !== 'burn') {
+          return vault
         }
-        if(vault.rewardTokenPrice === undefined){
-          return null;
+        if (vault.rewardTokenPrice === undefined) {
+          return null
         }
         const vaultRewardPerBlock = new BigNumber(vault.rewardPerBlock || 1)
-        .times(new BigNumber(vault.poolWeight))
-        .div(new BigNumber(10).pow(vault.rewardTokenDecimals))
-        
+          .times(new BigNumber(vault.poolWeight))
+          .div(new BigNumber(10).pow(vault.rewardTokenDecimals))
+
         const vaultRewardPerYear = vaultRewardPerBlock.times(BLOCKS_PER_YEAR)
         let apr = vault.rewardTokenPrice.times(vaultRewardPerYear)
 
         let totalFarmValue = new BigNumber(vault.farmLPTotalInQuoteToken || 0)
+        let tvl = new BigNumber(vault.lpTotalInQuoteToken|| 0)
 
         if (vault.quoteTokenSymbol === QuoteToken.BNB) {
           totalFarmValue = totalFarmValue.times(bnbPrice)
+          tvl =  bnbPrice.times(tvl)
+
         }
         if (vault.quoteTokenSymbol === QuoteToken.CAKE) {
           totalFarmValue = totalFarmValue.times(cakePrice)
+          tvl =  cakePrice.times(tvl)
+
         }
         if (vault.quoteTokenSymbol === QuoteToken.WETH) {
           totalFarmValue = totalFarmValue.times(wethPrice)
+          tvl =  wethPrice.times(tvl)
+          
         }
         if (vault.quoteTokenSymbol === QuoteToken.ROUTE) {
           totalFarmValue = totalFarmValue.times(routePrice)
+          tvl =  routePrice.times(tvl)
         }
 
         if (totalFarmValue.comparedTo(0) > 0) {
           apr = apr.div(totalFarmValue)
         }
 
-        const totalFeeDecimal = ((vault.performanceFeeBP||0) + (vault.farmDepositFeeBP||0) + (vault.farmWithdrawalFeeBP||0) + (vault.burnRateBP||0)) / 10000;
-        const NUM_COMPOUNDS_PER_PERIOD = 1000;
+          
+        const totalFeeDecimal =
+          ((vault.performanceFeeBP || 0) +
+            (vault.farmDepositFeeBP || 0) +
+            (vault.farmWithdrawalFeeBP || 0) +
+            (vault.burnRateBP || 0)) /
+          10000
+        const NUM_COMPOUNDS_PER_PERIOD = 1000
         const apy = new BigNumber(
-           fastPow(1 + apr.div(NUM_COMPOUNDS_PER_PERIOD).toNumber() * (1-totalFeeDecimal), NUM_COMPOUNDS_PER_PERIOD) - 1 )
-        
-        return { ...vault, apy, apr }
+          fastPow(1 + apr.div(NUM_COMPOUNDS_PER_PERIOD).toNumber() * (1 - totalFeeDecimal), NUM_COMPOUNDS_PER_PERIOD) -
+            1,
+        )
+
+        return { ...vault, apy, apr, tvl }
       })
-        let i = -1;
-       return vaultsToDisplayWithAPY.map((vault) => {
-        i++;
+      let orderedVaults = vaultsToDisplayWithAPY
+      if (state.sortOrder == 'APY') {
+        orderedVaults = orderBy(vaultsToDisplayWithAPY, (vault) => vault!= undefined? vault.apy.toNumber() : 0, "desc")
+      }
+      if (state.sortOrder == 'TVL') {
+        orderedVaults = orderBy(vaultsToDisplayWithAPY, (vault) => vault!= undefined? vault.tvl.toNumber() : 0, "desc")
+      }
+
+      let i = -1
+      return orderedVaults.map((vault) => {
+        i++
         if (vault === null || vault === undefined) {
-          return (<LoadingRow key={`loading-${i}`}/>)
+          return <LoadingRow key={`loading-${i}`} />
         }
-          return vault.type === 'standard' || vault.type === 'burn'? (
-            <VaultRow
-              key={vault.pid}
-              vault={vault}
-              removed={removed}
-              bnbPrice={bnbPrice}
-              cakePrice={cakePrice}
-              ethereum={ethereum}
-              account={account}
-              wethPrice={wethPrice}
-            />
-          ) : null
+        return vault.type === 'standard' || vault.type === 'burn' ? (
+          <VaultRow
+            key={vault.pid}
+            vault={vault}
+            removed={removed}
+            bnbPrice={bnbPrice}
+            cakePrice={cakePrice}
+            ethereum={ethereum}
+            account={account}
+            wethPrice={wethPrice}
+          />
+        ) : null
       })
-
     },
-    [bnbPrice, account, cakePrice, ethereum, wethPrice, routePrice],
+    [bnbPrice, account, cakePrice, ethereum, wethPrice, routePrice, state],
   )
-
   return (
     <Page>
       <Hero>
@@ -197,48 +287,54 @@ const Vaults: React.FC = () => {
             <li key="0">{TranslateString(999, 'Auto-compounding.')}</li>
             <li key="1">{TranslateString(999, 'Grow your deposit over time.')}</li>
             <li key="2">{TranslateString(999, 'Unstake at any time.')}</li>
-            <li key="3">{TranslateString(999, 'Compounds frequently to maximize yield.')}</li>
-            <li key="4">{TranslateString(999, '0.1% performance fee on harvests.')}</li>
+            <li key="3">{TranslateString(999, 'Compound optimally to maximize yield.')}</li>
+            <li key="4">{TranslateString(999, '1% performance fee on harvests.')}</li>
           </ul>
         </div>
         <LogoContainer>
-          <VaultLogoBackground src="/images/vaults/matic-no-background.svg" alt="Vaults Icon" width={360} height={360} />
+          <VaultLogoBackground
+            src="/images/vaults/matic-no-background.svg"
+            alt="Vaults Icon"
+            width={360}
+            height={360}
+          />
           <VaultLogoForeground src="/images/vaults/vert.svg" alt="Vaults Icon" width={310} height={310} />
         </LogoContainer>
       </Hero>
-      <VaultTabButtons stakedOnly={stakedOnly} setStakedOnly={setStakedOnly} />
-      <Note><i>Note that our partner projects may have additional fees not listed here. Always check the underlying project and DYOR.</i></Note>
+      <ControlFlex flexDirection="row" justify-content="center">
+      <VaultTabButtons stakedOnly={state.stakedOnly} setStakedOnly={(so)=>setState({stakedOnly:so, sortOrder:state.sortOrder})} />
+      {/* <SortDropdown key={0} position="bottom" target={<Flex flex-direction="column" justifyContent="center"><Heading size="s">Sort Order:</Heading><SortButton>{sortOrder}</SortButton></Flex>}> */}
+      <SortFlex flex-direction="column">
+      <SortDropdown
+        key={0}
+        position="bottom"
+        target={
+          <Flex flex-direction="column" justifyContent="space-between">
+            <Label>Sort:</Label>
+            <SortButton variant="subtle">{state.sortOrder}</SortButton>
+          </Flex>
+        }
+        >
+          
+        <SortLink onClick={()=>setState({stakedOnly:state.stakedOnly, sortOrder:"Default"})}href="#">Default</SortLink>
+        <SortLink onClick={()=>setState({stakedOnly:state.stakedOnly, sortOrder:"APY"})}href="#">APY</SortLink>
+        <SortLink onClick={()=>setState({stakedOnly:state.stakedOnly, sortOrder:"TVL"})}href="#">TVL</SortLink>
+      </SortDropdown>
+          </SortFlex>
+        </ControlFlex>
+      <Note>
+        <i>
+          Note that our partner projects may have additional fees not listed here. Always check the underlying project
+          and DYOR.
+        </i>
+      </Note>
       <Divider />
       <LockedFlex>
         <Route exact path={`${path}`}>
-          <>
-            {stakedOnly ? vaultsList(stakedOnlyVaults, false) : vaultsList(activeVaults, false)}
-            {/* {orderBy(openVaults, ['sortOrder']).map((vault) => (
-              <VaultRow
-                key={vault.pid}
-                vault={vault}
-                removed={removed}
-                bnbPrice={bnbPrice}
-                cakePrice={cakePrice}
-                ethereum={ethereum}
-                account={account}
-                wethPrice={wethPrice}
-              />
-            ))} */}
-          </>
+          <>{state.stakedOnly ? vaultsList(stakedOnlyVaultsActive, false) : vaultsList(activeVaults, false)}</>
         </Route>
         <Route path={`${path}/history`}>
-          {/* {orderBy(finishedVaults, ['sortOrder']).map((vault) => (
-            <VaultRow  
-            key={vault.pid}
-            vault={vault}
-            removed={removed}
-            bnbPrice={bnbPrice}
-            cakePrice={cakePrice}
-            ethereum={ethereum}
-            account={account}
-            wethPrice={wethPrice} />
-          ))} */}
+          {state.stakedOnly ? vaultsList(stakedOnlyVaultsFinished, false) : vaultsList(finishedVaults, false)}
         </Route>
       </LockedFlex>
     </Page>

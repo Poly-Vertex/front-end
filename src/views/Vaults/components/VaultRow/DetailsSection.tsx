@@ -15,7 +15,8 @@ export interface ExpandableSectionProps {
   quoteTokenSymbol?: string
   tokenAddresses: Address,
   underlyingProject: string,
-  pid: number
+  pid: number,
+  exchange?: string
 }
 
 const Wrapper = styled.div`
@@ -50,37 +51,61 @@ const DetailsSection: React.FC<ExpandableSectionProps> = ({
   quoteTokenSymbol,
   tokenAddresses,
   underlyingProject,
-  pid
+  pid,
+  exchange
 }) => {
   const TranslateString = useI18n()
   const liquidityUrlPathParts = getLiquidityUrlPathParts({ quoteTokenAddresses, quoteTokenSymbol, tokenAddresses, pid })
+
+
+
+  let swapURLFirstPart = "https://quickswap.exchange/#/swap"
+  let addURLFirstPart = "https://quickswap.exchange/#/add"
+
+  switch (exchange) {
+    case "DFYN":
+      swapURLFirstPart = "https://exchange.dfyn.network/#/swap"
+      addURLFirstPart = "https://exchange.dfyn.network/#/add"
+      break;
+    case "SushiSwap":
+      swapURLFirstPart = "https://app.sushi.com/swap"
+      addURLFirstPart = "https://app.sushi.com/add"
+      break;
+    case "JetSwap":
+      swapURLFirstPart = "https://polygon-exchange.jetswap.finance/#/swap"
+      addURLFirstPart = "https://polygon-exchange.jetswap.finance/#/add"
+      break;
+    case "QuickSwap":
+    default:
+      break;
+  }
 
   return (
     <Wrapper>
       <Flex justifyContent="center" flexDirection="row">
         <WhiteSpaceText >{TranslateString(316, 'Deposit')}: </WhiteSpaceText>
-        <StyledLinkExternal href={
+        <StyledLinkExternal  href={
           isTokenOnly ?
-            `https://quickswap.exchange/#/swap/${tokenAddresses[process.env.REACT_APP_CHAIN_ID]}`
-            :
-          `https://quickswap.exchange/#/add/${liquidityUrlPathParts}`
+          `${swapURLFirstPart}/${tokenAddresses[process.env.REACT_APP_CHAIN_ID]}`
+          :
+        `${addURLFirstPart}/${liquidityUrlPathParts}`
         }>
           {lpLabel}
         </StyledLinkExternal>
       </Flex>
        
-        { underlyingProject!==""?
-           <Flex justifyContent="center" flexDirection="row"><StyledLinkExternal href={underlyingProject}> 
-          Visit project
-        </StyledLinkExternal></Flex>
-        : null
-      }
 
       <Flex justifyContent="center">
         <StyledLinkExternal external href={bscScanAddress} bold={false}>
           {TranslateString(356, 'View on PolygonScan')}
         </StyledLinkExternal>
       </Flex>
+        { underlyingProject!==""?
+           <Flex justifyContent="center" flexDirection="row"><StyledLinkExternal href={underlyingProject}> 
+          Visit project
+        </StyledLinkExternal></Flex>
+        : null
+      }
     </Wrapper>
   )
 }

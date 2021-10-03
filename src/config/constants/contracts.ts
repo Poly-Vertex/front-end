@@ -8,7 +8,7 @@ export default {
     80001: '0x9cCA28d98EC895c50C266b7f138dD6316aADB52A',
   },
   vaultChef: {
-    137: '0x37e4A9d80fFaBb0884A6462bA7FA1658Eb09e69c', // VaultCheft TEST
+    137: '0x434A59C7F85b25415ffA86D5B46cCa0A34d1A430', // VaultCheft CLOSED BETA
     80001: '',
   },
   wbnb: {

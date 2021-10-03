@@ -22,6 +22,7 @@ import Spinner from './LoadingSpinner'
 export interface VaultWithStakedValue extends Vault {
   apy?: BigNumber
   apr?: BigNumber
+  tvl?: BigNumber
 }
 
 const RainbowLight = keyframes`
@@ -39,17 +40,17 @@ const RainbowLight = keyframes`
 const StyledCardAccent = styled.div`
   background: linear-gradient(
     45deg,
-    rgba(255, 0, 0, 1) 0%,
-    rgba(255, 154, 0, 1) 10%,
-    rgba(208, 222, 33, 1) 20%,
-    rgba(79, 220, 74, 1) 30%,
-    rgba(63, 218, 216, 1) 40%,
-    rgba(47, 201, 226, 1) 50%,
-    rgba(28, 127, 238, 1) 60%,
-    rgba(95, 21, 242, 1) 70%,
-    rgba(186, 12, 248, 1) 80%,
-    rgba(251, 7, 217, 1) 90%,
-    rgba(255, 0, 0, 1) 100%
+    rgba(255, 0, 0,     .45) 0%,
+    rgba(255, 154, 0,   .45) 10%,
+    rgba(208, 222, 33,  .45) 20%,
+    rgba(79, 220, 74,   .45) 30%,
+    rgba(63, 218, 216,  .45) 40%,
+    rgba(47, 201, 226,  .45) 50%,
+    rgba(28, 127, 238,  .45) 60%,
+    rgba(95, 21, 242,   .45) 70%,
+    rgba(186, 12, 248,  .45) 80%,
+    rgba(251, 7, 217,   .45) 90%,
+    rgba(255, 0, 0,     .45) 100%
   );
   background-size: 300% 300%;
   animation: ${RainbowLight} 2s linear infinite;
@@ -67,11 +68,11 @@ const VCard = styled.div`
   align-self: baseline;
   background: linear-gradient(
     to top left,
-    ${(props) => props.theme.card.background.concat('C8')},
+    ${(props) => props.theme.card.background.concat('F8')},
     ${(props) => props.theme.card.background.concat('FF')}
   );
   border-radius: 8px;
-  box-shadow: 0px 2px 12px -8px rgba(25, 19, 38, 0.1), 0px 1px 1px rgba(25, 19, 38, 0.05);
+  box-shadow: 0px 2px 12px -8px rgba(25, 19, 38, 0.4), 0px 1px 1px rgba(25, 19, 38, 0.15);
   display: inline-block;
   width: 100%;
   flex-direction: row;
@@ -290,11 +291,12 @@ const VaultRow: React.FC<VaultRowProps> = ({ vault, removed, cakePrice, bnbPrice
     farmApy: apy,
     cakePrice: vault.rewardTokenPrice,
   })
-  const oneDayROI = apyModalRoi({
-    amountEarned: cakeEarnedPerThousand1D,
-    amountInvested: oneThousandDollarsWorthOfReward,
-  })
+  // const oneDayROI = apyModalRoi({
+  //   amountEarned: cakeEarnedPerThousand1D,
+  //   amountInvested: oneThousandDollarsWorthOfReward,
+  // })
 
+  const oneDayROI = (apr/365).toFixed(3);
   const formats = [
     { value: 1e3, symbol: 'K' },
     { value: 1e6, symbol: 'M' },
@@ -347,8 +349,9 @@ const VaultRow: React.FC<VaultRowProps> = ({ vault, removed, cakePrice, bnbPrice
   let usdWallet = new BigNumber(0)
 
   if (totalValue && vault.lpStakedTotal) {
+    // TODO these will be wrong if there are 0 tokens staked
     usdPer1LP = new BigNumber(totalValue).dividedBy(vault.lpTokenBalanceChef)
-    usdStaked = stakedBalance.times(usdPer1LP) // TODO This value is wrong
+    usdStaked = stakedBalance.times(usdPer1LP) 
     usdWallet = tokenBalance.times(usdPer1LP)
   }
 
@@ -375,7 +378,7 @@ const VaultRow: React.FC<VaultRowProps> = ({ vault, removed, cakePrice, bnbPrice
   const { quoteTokenAddresses, quoteTokenSymbol, tokenAddresses, risk, lpSymbol } = vault
   return (
     <VCard>
-      {vault.tokenSymbol === 'VERT' && <StyledCardAccent />}
+      {(vault.tokenSymbol === 'VERT' || vault.quoteTokenSymbol === 'CAKE')&& <StyledCardAccent />}
       <Row adjustForSize clickable onClick={() => setShowExpandableSection(!showExpandableSection)}>
         <CardHeading
           lpLabel={lpLabel}
@@ -515,6 +518,7 @@ const VaultRow: React.FC<VaultRowProps> = ({ vault, removed, cakePrice, bnbPrice
             quoteTokenSymbol={quoteTokenSymbol}
             tokenAddresses={tokenAddresses}
             pid={vault.pid}
+            exchange = {vault.exchange}
           />
         </ExpandingWrapper>
       </Row>

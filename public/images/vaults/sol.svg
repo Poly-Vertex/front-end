@@ -1,14 +1,1 @@
-<!DOCTYPE html>
-<html style="height:100%">
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-<title> 404 Not Found
-</title></head>
-<body style="color: #444; margin:0;font: normal 14px/20px Arial, Helvetica, sans-serif; height:100%; background-color: #fff;">
-<div style="height:auto; min-height:100%; ">     <div style="text-align: center; width:800px; margin-left: -400px; position:absolute; top: 30%; left:50%;">
-        <h1 style="margin:0; font-size:150px; line-height:150px; font-weight:bold;">404</h1>
-<h2 style="margin-top:20px;font-size: 30px;">Not Found
-</h2>
-<p>The resource requested could not be found on this server!</p>
-</div></div><div style="color:#f0f0f0; font-size:12px;margin:auto;padding:0px 30px 0px 30px;position:relative;clear:both;height:100px;margin-top:-101px;background-color:#474747;border-top: 1px solid rgba(0,0,0,0.15);box-shadow: 0 1px 0 rgba(255, 255, 255, 0.3) inset;">
-<br>Proudly powered by  <a style="color:#fff;" href="http://www.litespeedtech.com/error-page">LiteSpeed Web Server</a><p>Please be advised that LiteSpeed Technologies Inc. is not a web hosting company and, as such, has no control over content found on this site.</p></div></body></html>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 50 50"><defs><style>.cls-1{fill:none;}.cls-2{clip-path:url(#clip-path);}.cls-3{fill:url(#linear-gradient);}.cls-4{fill:url(#linear-gradient-2);}.cls-5{fill:url(#linear-gradient-3);}</style><clipPath id="clip-path"><circle class="cls-1" cx="-40" cy="25" r="25"/></clipPath><linearGradient id="linear-gradient" x1="37.47591" y1="896.11612" x2="20.56226" y2="928.51257" gradientTransform="translate(0 -886)" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#00ffa3"/><stop offset="1" stop-color="#dc1fff"/></linearGradient><linearGradient id="linear-gradient-2" x1="30.08099" y1="892.25536" x2="13.16733" y2="924.65181" xlink:href="#linear-gradient"/><linearGradient id="linear-gradient-3" x1="33.75476" y1="894.17337" x2="16.8411" y2="926.56983" xlink:href="#linear-gradient"/></defs><g id="BELUGA"><g class="cls-2"><image width="440" height="440" transform="translate(-81 -13) scale(0.18636)" xlink:href="../../../../../Downloads/image%2029.png"/></g></g><g id="SOLANA"><path id="Shape-6" d="M24.99543,50a25,25,0,1,1,.00915,0Z"/><path class="cls-3" d="M14.66314,31.31761a1.00195,1.00195,0,0,1,.70837-.29259H39.81039a.5005.5005,0,0,1,.35419.85467l-4.82772,4.82772A1.00195,1.00195,0,0,1,34.62849,37H10.1896a.50049.50049,0,0,1-.35418-.85467Z"/><path class="cls-4" d="M14.66314,13.29259A1.02959,1.02959,0,0,1,15.37151,13H39.8104a.50049.50049,0,0,1,.35418.85467l-4.82772,4.82772a1.00195,1.00195,0,0,1-.70837.29259H10.1896a.50049.50049,0,0,1-.35418-.85467Z"/><path class="cls-5" d="M35.33686,22.24735a1.00195,1.00195,0,0,0-.70837-.29259H10.1896a.50049.50049,0,0,0-.35418.85467l4.82772,4.82772a1.00195,1.00195,0,0,0,.70837.29259H39.81039a.5005.5005,0,0,0,.35419-.85467Z"/></g></svg>

@@ -9,6 +9,7 @@ import vaultsConfig from 'config/constants/vaults'
 import { QuoteToken, FarmConfig } from '../../config/constants/types'
 
 const CHAIN_ID = process.env.REACT_APP_CHAIN_ID
+const MAX_VAULTS_PER_BATCH = 6;
 
 const fetchRewardTokenPriceCoinGecko = async (rewardToken) => {
   const url = `https://api.coingecko.com/api/v3/simple/token_price/polygon-pos?contract_addresses=${rewardToken}&vs_currencies=usd`
@@ -144,9 +145,18 @@ const fetchMasterChefData = async (vaultConfig, strategy, lpAddress) => {
   return [lpTokenBalanceMC, farmDepositFeeBP, farmRewardPerBlock, poolWeight]
 }
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 const fetchVaults = async () => {
+  let count = 0;
   const data = await Promise.all(
     vaultsConfig.map(async (vaultConfig) => {
+      if(count % MAX_VAULTS_PER_BATCH === 0){
+        await sleep(1000);
+      }
+      count++
       const vaultChefAddr = getVaultChefAddress()
       if (vaultChefAddr == null) {
         console.error('Could not retrieve vaultchef address')
@@ -169,6 +179,7 @@ const fetchVaults = async () => {
         depositFeeFactor,
         depositFeeFactorMax,
         buyBackBP,
+        isPaused
       ] = await multicall(vaultStrategyABI, [
         {
           address: strategy,
@@ -206,7 +217,13 @@ const fetchVaults = async () => {
           name: 'buyBackRate',
           params: [],
         },
+        {
+          address: strategy,
+          name: 'paused',
+          params: [],
+        },
       ])
+
 
       const vaultWithdrawalFee = (withdrawalFeeFactorMax - withdrawalFeeFactor) / withdrawalFeeFactorMax
       const vaultWithdrawalFeeBP = vaultWithdrawalFee * 10000 // decimal -> basis points
@@ -365,6 +382,7 @@ const fetchVaults = async () => {
         poolWeight,
         burnRateBP: parseInt(buyBackBP),
         type: new BigNumber(buyBackBP).gt(0) ? 'burn' : vaultConfig.type,
+        paused: isPaused
       }
       return vault
     }),

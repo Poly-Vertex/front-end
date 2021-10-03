@@ -4,7 +4,7 @@ import { VaultConfig, QuoteToken } from './types'
 
 const vaults: VaultConfig[] = [
   {
-    pid: 6,
+    pid: 0,
     risk: 3,
     lpSymbol: 'VERT-USDC QLP',
     lpAddresses: {
@@ -30,10 +30,125 @@ const vaults: VaultConfig[] = [
     farmFeeCallName:"depositFeeBP",
     farmPoolAllocName:"allocPoint",
     underlyingProject:"",
-    rewardUsesCoinGecko: true
+    rewardUsesCoinGecko: true,
+    paused:false
   },
   {
-    pid: 11,
+    pid: 1,
+    risk: 3,
+    lpSymbol: 'VERT-MATIC QLP',
+    lpAddresses: {
+      80001: '',
+      137: '0xfCD877cb5C3ecBF51E329DF525213BCeEEF741Dd',
+    },
+    tokenSymbol: 'VERT',
+    tokenAddresses: {
+      80001: '',
+      137: contracts.cake[137],
+    },
+    isTokenOnly: false,
+    quoteTokenSymbol: QuoteToken.BNB,
+    quoteTokenAddresses: contracts.wbnb,
+    endBlock: 1000000000000,
+    exchange: 'QuickSwap',
+    rewardToken: "0x72572CCf5208b59f4BcC14e6653d8c31Cd1fC5a0",
+    type: 'standard',
+    strategy: 'masterchef',
+    farmUsesPoolInfo: true,
+    farmRewardPerBlockCallName: "eggPerBlock",
+    farmTotalAllocCallName: "totalAllocPoint",
+    farmFeeCallName:"depositFeeBP",
+    farmPoolAllocName:"allocPoint",
+    underlyingProject:"",
+    rewardUsesCoinGecko: true,
+    paused:false
+  },
+  // {
+  //   pid: 8,
+  //   risk: 3,
+  //   lpSymbol: 'ROUTE-VERT DLP',
+  //   lpAddresses: {
+  //     80001: '',
+  //     137: '0xd4689694e9928564647ad483c075f271419b2a5f',
+  //   },
+  //   tokenSymbol: 'ROUTE',
+  //   tokenAddresses: contracts.route,
+  //   isTokenOnly: false,
+  //   quoteTokenSymbol: QuoteToken.CAKE,
+  //   quoteTokenAddresses: contracts.cake,
+  //   endBlock: 1000000000000,
+  //   exchange: 'DFYN',
+  //   rewardToken: "0x72572CCf5208b59f4BcC14e6653d8c31Cd1fC5a0",
+  //   type: 'standard',
+  //   strategy: 'masterchef',
+  //   farmUsesPoolInfo: true,
+  //   farmRewardPerBlockCallName: "eggPerBlock",
+  //   farmTotalAllocCallName: "totalAllocPoint",
+  //   farmFeeCallName:"depositFeeBP",
+  //   farmPoolAllocName:"allocPoint",
+  //   underlyingProject:"",
+  //   rewardUsesCoinGecko: true,
+  //   paused:true
+  // },
+  {
+    pid: 9,
+    risk: 3,
+    lpSymbol: 'ROUTE-VERT DLP',
+    lpAddresses: {
+      80001: '',
+      137: '0xd4689694e9928564647ad483c075f271419b2a5f',
+    },
+    tokenSymbol: 'ROUTE',
+    tokenAddresses: contracts.route,
+    isTokenOnly: false,
+    quoteTokenSymbol: QuoteToken.CAKE,
+    quoteTokenAddresses: contracts.cake,
+    endBlock: 1000000000000,
+    exchange: 'DFYN',
+    rewardToken: "0x72572CCf5208b59f4BcC14e6653d8c31Cd1fC5a0",
+    type: 'standard',
+    strategy: 'masterchef',
+    farmUsesPoolInfo: true,
+    farmRewardPerBlockCallName: "eggPerBlock",
+    farmTotalAllocCallName: "totalAllocPoint",
+    farmFeeCallName:"depositFeeBP",
+    farmPoolAllocName:"allocPoint",
+    underlyingProject:"",
+    rewardUsesCoinGecko: true,
+    paused:false
+  },
+  {
+    pid: 3,
+    risk: 3,
+    lpSymbol: 'VERT-WETH QLP',
+    lpAddresses: {
+      80001: '',
+      137: '0xfef87340394bc37b8d54cde7c2b37e616d741b31',
+    },
+    tokenSymbol: 'VERT',
+    tokenAddresses: {
+      80001: '',
+      137: contracts.cake[137],
+    },
+    isTokenOnly: false,
+    quoteTokenSymbol: QuoteToken.WETH,
+    quoteTokenAddresses: contracts.weth,
+    endBlock: 1000000000000,
+    exchange: 'QuickSwap',
+    rewardToken: "0x72572CCf5208b59f4BcC14e6653d8c31Cd1fC5a0",
+    type: 'standard',
+    strategy: 'masterchef',
+    farmUsesPoolInfo: true,
+    farmRewardPerBlockCallName: "eggPerBlock",
+    farmTotalAllocCallName: "totalAllocPoint",
+    farmFeeCallName:"depositFeeBP",
+    farmPoolAllocName:"allocPoint",
+    underlyingProject:"",
+    rewardUsesCoinGecko: true,
+    paused:false
+  },
+  {
+    pid: 4,
     risk: 3,
     lpSymbol: 'MAI-USDC QLP',
     lpAddresses: {
@@ -49,7 +164,7 @@ const vaults: VaultConfig[] = [
     quoteTokenSymbol: QuoteToken.BUSD,
     quoteTokenAddresses: contracts.busd,
     endBlock: 1000000000000,
-    exchange: 'Quickswap',
+    exchange: 'QuickSwap',
     type: 'standard',
     strategy: 'masterchef',
     farmUsesPoolInfo: true,
@@ -59,10 +174,11 @@ const vaults: VaultConfig[] = [
     farmPoolAllocName:"allocPoint",
     rewardToken: "0x580a84c73811e1839f75d86d75d88cca0c241ff4",
     underlyingProject:"https://app.mai.finance/farm",
-    rewardUsesCoinGecko: true
+    rewardUsesCoinGecko: true,
+    paused:false
   },
   {
-    pid: 12,
+    pid: 5,
     risk: 3,
     lpSymbol: 'QI-WMATIC QLP',
     lpAddresses: {
@@ -78,7 +194,7 @@ const vaults: VaultConfig[] = [
     quoteTokenSymbol: QuoteToken.BNB,
     quoteTokenAddresses: contracts.wbnb,
     endBlock: 1000000000000,
-    exchange: 'Quickswap',
+    exchange: 'QuickSwap',
     type: 'standard',
     strategy: 'masterchef',
     farmUsesPoolInfo: true,
@@ -88,10 +204,11 @@ const vaults: VaultConfig[] = [
     farmPoolAllocName:"allocPoint",
     rewardToken: "0x580a84c73811e1839f75d86d75d88cca0c241ff4",
     rewardUsesCoinGecko: true,
-    underlyingProject:"https://app.mai.finance/farm"
+    underlyingProject:"https://app.mai.finance/farm",
+    paused:false
   },
   {
-    pid: 13,
+    pid: 6,
     risk: 3,
     lpSymbol: 'COLLAR-USDC pWINGS-LP',
     lpAddresses: {
@@ -107,7 +224,7 @@ const vaults: VaultConfig[] = [
     quoteTokenSymbol: QuoteToken.BUSD,
     quoteTokenAddresses: contracts.busd,
     endBlock: 1000000000000,
-    exchange: 'Jetswap',
+    exchange: 'JetSwap',
     type: 'standard',
     strategy: 'masterchef',
     farmUsesPoolInfo: true,
@@ -117,10 +234,11 @@ const vaults: VaultConfig[] = [
     farmPoolAllocName:"allocPoint",
     rewardToken: "0x8DF26a1BD9bD98e2eC506fc9d8009954716A05DC",
     underlyingProject:"https://polypup.finance/farms",
-    rewardUsesCoinGecko: false
+    rewardUsesCoinGecko: false,
+    paused:false
   },
   {
-    pid: 14,
+    pid: 7,
     risk: 3,
     lpSymbol: 'COLLAR-MATIC SLP',
     lpAddresses: {
@@ -136,7 +254,7 @@ const vaults: VaultConfig[] = [
     quoteTokenSymbol: QuoteToken.BNB,
     quoteTokenAddresses: contracts.wbnb,
     endBlock: 1000000000000,
-    exchange: 'Sushiswap',
+    exchange: 'SushiSwap',
     type: 'standard',
     strategy: 'masterchef',
     farmUsesPoolInfo: true,
@@ -146,7 +264,8 @@ const vaults: VaultConfig[] = [
     farmPoolAllocName:"allocPoint",
     rewardToken: "0x8DF26a1BD9bD98e2eC506fc9d8009954716A05DC",
     underlyingProject:"https://polypup.finance/farms",
-    rewardUsesCoinGecko: false
+    rewardUsesCoinGecko: false,
+    paused:false
   },
 ]
 

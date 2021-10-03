@@ -1,14 +1,1 @@
-<!DOCTYPE html>
-<html style="height:100%">
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-<title> 404 Not Found
-</title></head>
-<body style="color: #444; margin:0;font: normal 14px/20px Arial, Helvetica, sans-serif; height:100%; background-color: #fff;">
-<div style="height:auto; min-height:100%; ">     <div style="text-align: center; width:800px; margin-left: -400px; position:absolute; top: 30%; left:50%;">
-        <h1 style="margin:0; font-size:150px; line-height:150px; font-weight:bold;">404</h1>
-<h2 style="margin-top:20px;font-size: 30px;">Not Found
-</h2>
-<p>The resource requested could not be found on this server!</p>
-</div></div><div style="color:#f0f0f0; font-size:12px;margin:auto;padding:0px 30px 0px 30px;position:relative;clear:both;height:100px;margin-top:-101px;background-color:#474747;border-top: 1px solid rgba(0,0,0,0.15);box-shadow: 0 1px 0 rgba(255, 255, 255, 0.3) inset;">
-<br>Proudly powered by  <a style="color:#fff;" href="http://www.litespeedtech.com/error-page">LiteSpeed Web Server</a><p>Please be advised that LiteSpeed Technologies Inc. is not a web hosting company and, as such, has no control over content found on this site.</p></div></body></html>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><defs><style>.cls-1{fill:#fff;}.cls-2{fill:#5a5564;}.cls-3{fill:#f09242;}</style></defs><g id="WBTC"><path id="Shape-6" class="cls-1" d="M24.99543,50a25,25,0,1,1,.00915,0Z"/><path id="Shape" class="cls-2" d="M41.52852,9.7953l-1.43893,1.43893a20.37047,20.37047,0,0,1,0,27.49317l1.43893,1.43893a22.42814,22.42814,0,0,0,0-30.40461Z"/><path id="Shape-2" class="cls-2" d="M11.26781,9.92a20.37044,20.37044,0,0,1,27.49317,0l1.43893-1.43894a22.42814,22.42814,0,0,0-30.40461,0Z"/><path id="Shape-3" class="cls-2" d="M9.92,38.74179a20.37047,20.37047,0,0,1,0-27.47878L8.48108,9.82408a22.42813,22.42813,0,0,0,0,30.4046Z"/><path id="Shape-4" class="cls-2" d="M38.74179,40.0704a20.37047,20.37047,0,0,1-27.49317,0L9.80969,41.50933a22.42812,22.42812,0,0,0,30.40461,0Z"/><path id="Shape-5" class="cls-3" d="M34.08445,20.19877c-.28778-3.00257-2.87786-4.00982-6.15383-4.3168V11.74745H25.39811v4.05778H23.374V11.74745H20.86068v4.1633h-5.137v2.71s1.87061-.03357,1.84183,0a1.30943,1.30943,0,0,1,1.43893,1.11277V31.12985a.88736.88736,0,0,1-.307.61874.87774.87774,0,0,1-.65232.22063c.03358.02878-1.84183,0-1.84183,0l-.47964,3.02655h5.089v4.23046h2.53251V35.05812h2.0241V39.207h2.53731V35.02455c4.27842-.259,7.26181-1.31422,7.63593-5.31925.30217-3.2232-1.2135-4.66213-3.6357-5.2425A3.91509,3.91509,0,0,0,34.08445,20.19877Zm-3.54936,9.0077c0,3.14646-5.39119,2.78673-7.10832,2.78673v-5.583C25.1439,26.415,30.53509,25.92091,30.53509,29.20647ZM29.36,21.34032c0,2.87786-4.49905,2.52772-5.92839,2.52772V18.79341C24.86091,18.79341,29.36,18.34255,29.36,21.34032Z"/></g></svg>
