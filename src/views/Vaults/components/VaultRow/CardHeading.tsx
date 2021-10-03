@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { Tag, Flex, Heading, Image, Svg } from '@pancakeswap-libs/uikit'
 import { CommunityTag, CoreTag, NoFeeTag, RiskTag, TextTag } from 'components/Tags'
@@ -49,15 +49,6 @@ const VaultImage = styled(Image)`
     height:45 !important;
   }
 `
-function imageExists(imageUrl){
-
-  const http = new XMLHttpRequest();
-
-  http.open('HEAD', imageUrl, false);
-  http.send();
-
-  return http.status !== 404;
-}
 
 const LPTitle = styled(Heading)`
     max-width:80%
@@ -75,15 +66,38 @@ const CardHeading: React.FC<ExpandableSectionProps> = ({
   type,
   exchange,
 }) => {
+
+  
   let image0 = `/images/vaults/${farmImage0}.svg`
   let image1 = `/images/vaults/${farmImage1}.svg`
 
-  if(!imageExists(image0)){
-    image0 = `/images/vaults/${farmImage0}.png`
-  }
-  if(!imageExists(image1)){
-    image1 = `/images/vaults/${farmImage1}.png`
-  }
+  const [state, setState] = useState({image0, image1})
+
+
+    const http0 = new XMLHttpRequest();
+  
+    http0.open('HEAD', image0, false);
+    http0.send();
+    if(http0.status===404){
+      image0= `/images/vaults/${farmImage0}.png`;
+    }
+    const typ = http0.getResponseHeader("Content-Type");
+    if(! typ.includes("image")){
+      image0= `/images/vaults/${farmImage0}.png`;
+    }
+
+    const http1 = new XMLHttpRequest();
+  
+    http1.open('HEAD', image1, false);
+    http1.send();
+    if(http1.status===404){
+      image1=`/images/vaults/${farmImage1}.png`
+    }
+    const typ1 = http1.getResponseHeader("Content-Type");
+    if(! typ1.includes("image")){
+      image1=`/images/vaults/${farmImage1}.png`
+    }
+
 
   return (
     <Wrapper flexDirection="row" justifyContent="space-between" alignItems="center" mb="12px">
