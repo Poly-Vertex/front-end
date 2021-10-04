@@ -124,7 +124,7 @@ const VertStats = () => {
           </Row>
           <Row>
             <Text fontSize="14px">{TranslateString(999, 'Max Supply')}</Text>
-            <Text bold fontSize="14px">3 million VERT</Text>
+            <Text bold fontSize="14px">500,000 VERT</Text>
           </Row>
         </Column>
         <Column>
