@@ -76,21 +76,16 @@ const VCard = styled.div`
   display: inline-block;
   width: 100%;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-around;
   padding: 20px;
   position: relative;
   text-align: center;
-  ${({ theme }) => theme.mediaQueries.xs} {
-    max-width: 90vw !important;
-  }
-  ${({ theme }) => theme.mediaQueries.sm} {
-    max-width: 90vw !important;
-  }
-  ${({ theme }) => theme.mediaQueries.md} {
-    max-width: 100% !important;
-  }
-  ${({ theme }) => theme.mediaQueries.lg} {
-    max-width: 100% !important;
+  max-width: 90vw !important;
+  @media (max-width: 576px) {
+    max-width: 100vw !important;
+    margin-bottom:20px;
+    padding:8px
+    
   }
 `
 
@@ -105,11 +100,12 @@ const ExpandingWrapper = styled.div<{ expanded: boolean }>`
   height: ${(props) => (props.expanded ? '100%' : '0px')};
   width: 100%;
   overflow: hidden;
-  transition: height 1s;
+  transition: height 0s;
   transition-timing-function: ease-in-out;
 `
 const Row = styled.div<{ clickable?: boolean; adjustForSize?: boolean }>`
   display: flex;
+  flex-wrap: wrap;
   width: 100%;
   max-width: 100% !important;
   flex-direction: row;
@@ -117,25 +113,21 @@ const Row = styled.div<{ clickable?: boolean; adjustForSize?: boolean }>`
   position: relative;
   text-align: center;
   cursor: ${(props) => (props.clickable ? 'pointer' : 'default')};
-  ${({ theme }) => theme.mediaQueries.xs} {
+  
+  @media (max-width: 576px) {
     display: ${(props) => (props.adjustForSize ? 'grid' : 'flex')};
     grid-template-columns: repeat(2, 1fr);
+    margin:0;
+    padding:0;
+     /* margin:4%; */
+    
   }
-  ${({ theme }) => theme.mediaQueries.sm} {
-    display: ${(props) => (props.adjustForSize ? 'grid' : 'flex')};
-    grid-template-columns: repeat(2, 1fr);
-  }
-  ${({ theme }) => theme.mediaQueries.md} {
-    display: flex;
-  }
-  ${({ theme }) => theme.mediaQueries.lg} {
-    display: flex;
-  }
+  
 `
 const Label = styled.div`
   color: ${({ theme }) => theme.colors.textSubtle};
   font-size: 12px;
-  align: left;
+  text-align: left;
   display: inline;
 `
 const Strike = styled.div`
@@ -149,35 +141,107 @@ const APRInfo = styled.div`
   display: block;
   justify-content: space-between;
   margin: 1%;
-  ${({ theme }) => theme.mediaQueries.xs} {
-    display: grid;
-    grid-template-columns: repeat(1, 1fr);
-    align-items: center;
-    text-align: center;
+  
+  
+  @media (max-width: 576px) {
+    margin: 0;
+    padding:5%;
+    grid-row:7;
+    grid-column-start: 1;
+    grid-column-end: 3;
+    vertical-align:middle;
   }
-  ${({ theme }) => theme.mediaQueries.sm} {
-    display: grid;
-    grid-template-columns: repeat(1, 1fr);
-    align-items: center;
-    text-align: center;
-  }
-  ${({ theme }) => theme.mediaQueries.md} {
-    display: block;
-  }
-  ${({ theme }) => theme.mediaQueries.lg} {
-    display: block;
-  }
+
 `
 
+const APRFlex = styled(Flex)`
+  flex-direction: column;
+  @media (max-width: 576px) {
+    flex-direction:row;
+    vertical-align:middle;
+    margin:auto;
+    align-items:center;
+    justify-content:space-around;
+  }
+`
 const ApyButtonVault = styled(ApyButton)`
   padding: 0px;
   margin: 0px;
-`
-const ApyButtonContainer = styled.div`
+  `
+
+const ApyButtonContainerDesktop = styled.div`
   padding: 0px;
   margin: 0px;
   display: inline;
   vertical-align: sub;
+  @media (max-width: 576px) {
+    display:none;
+  }
+  
+  `
+  const APRLabel = styled(Label)`
+    vertical-align:sub;
+    @media (max-width: 576px) {
+      vertical-align:sub;
+      display:inline-block;
+      line-height:200%;
+    }
+  `
+const ApyButtonContainerMobile = styled.div`
+  @media (min-width: 576px) {
+    display: none;
+  }
+  @media (max-width: 576px) {
+    padding: 0px;
+    margin: 0px;
+    display: inline;
+    margin:0;
+    height:50%;
+
+  }
+ 
+  `
+  const TVLFlex = styled(Flex)`
+    flex-direction: column;
+    @media (max-width: 576px) {
+      flex-direction:row;
+      padding:5px;
+      padding-left:20%;
+      padding-right:20%;
+      margin:5px;
+      grid-column-start: 1;
+      grid-column-end: 2;
+      grid-row:5;
+      width:100%;
+      margin-left:50%;
+      justify-content:space-between;
+      
+    }
+  `
+
+const HeadingDivider = styled(Divider)`
+  display:none;
+  @media (max-width: 576px) {
+    display:block;
+    grid-column-start:1;
+    grid-column-end:3;
+    grid-row:2;
+    padding:0;
+    margin:0;
+    margin-bottom:10px;
+  }
+`
+const BalanceDivider = styled(HeadingDivider)`
+  @media (max-width: 576px) {
+    grid-row:4;
+    margin-top:10px;
+  }
+`
+const TVLDivider = styled(HeadingDivider)`
+  @media (max-width: 576px) {
+    grid-row:6;
+    margin-top:10px;
+  }
 `
 
 const Bold = styled.div`
@@ -186,40 +250,21 @@ const Bold = styled.div`
   overflow: hidden;
 `
 const UpIcon = styled(ChevronUpIcon)`
-  ${({ theme }) => theme.mediaQueries.xs} {
+
+  @media (max-width: 576px) {
     position: absolute;
-    bottom: -10px;
-    right: 5%;
+    bottom: 0px;
+    right: 3%;
   }
-  ${({ theme }) => theme.mediaQueries.sm} {
-    position: absolute;
-    bottom: -10px;
-    right: 5%;
-  }
-  ${({ theme }) => theme.mediaQueries.md} {
-    position: relative;
-  }
-  ${({ theme }) => theme.mediaQueries.lg} {
-    position: relative;
-  }
+
 `
 const DownIcon = styled(ChevronDownIcon)`
-  ${({ theme }) => theme.mediaQueries.xs} {
+ @media (max-width: 576px) {
     position: absolute;
-    bottom: -10px;
-    right: 5%;
+    bottom: 0px;
+    right: 3%;
   }
-  ${({ theme }) => theme.mediaQueries.sm} {
-    position: absolute;
-    bottom: -10px;
-    right: 5%;
-  }
-  ${({ theme }) => theme.mediaQueries.md} {
-    position: relative;
-  }
-  ${({ theme }) => theme.mediaQueries.lg} {
-    position: relative;
-  }
+  
 `
 
 interface VaultRowProps {
@@ -284,19 +329,28 @@ const VaultRow: React.FC<VaultRowProps> = ({ vault, removed, cakePrice, bnbPrice
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     })
+    
+    const totalFee =  (vault.performanceFeeBP + vault.farmDepositFeeBP + vault.burnRateBP) / 10000
+    const PROFIT_MARGIN = 4;
+    const TX_FEE = .004;
+    let timesCompoundedPerYear = 365 * (vault.tvl.toNumber() * (vault.apr.toNumber()/365) * totalFee) * (1-PROFIT_MARGIN/(PROFIT_MARGIN+1))/TX_FEE*bnbPrice.toNumber()
+    if (timesCompoundedPerYear<365*24){
+      timesCompoundedPerYear = 365*24
+    }
+    
+      const oneThousandDollarsWorthOfReward = 1000 / vault.rewardTokenPrice
+      const cakeEarnedPerThousand1D = calculateCakeEarnedPerThousandDollars({
+        numberOfDays: 1,
+        farmApy: apr,
+        cakePrice: vault.rewardTokenPrice,
+        timesCompounded: timesCompoundedPerYear
+      })
+      const oneDayROI = apyModalRoi({
+        amountEarned: cakeEarnedPerThousand1D,
+        amountInvested: oneThousandDollarsWorthOfReward,
+      })
 
-  const oneThousandDollarsWorthOfReward = 1000 / vault.rewardTokenPrice
-  const cakeEarnedPerThousand1D = calculateCakeEarnedPerThousandDollars({
-    numberOfDays: 1,
-    farmApy: apy,
-    cakePrice: vault.rewardTokenPrice,
-  })
-  // const oneDayROI = apyModalRoi({
-  //   amountEarned: cakeEarnedPerThousand1D,
-  //   amountInvested: oneThousandDollarsWorthOfReward,
-  // })
 
-  const oneDayROI = (apr/365).toFixed(3);
   const formats = [
     { value: 1e3, symbol: 'K' },
     { value: 1e6, symbol: 'M' },
@@ -392,13 +446,16 @@ const VaultRow: React.FC<VaultRowProps> = ({ vault, removed, cakePrice, bnbPrice
           type={vault.type}
           exchange={vault.exchange}
         />
+        <HeadingDivider/>
+        <BalanceDivider/>
+        <TVLDivider/>
         {!removed && (
           <APRInfo>
-            <Flex justifyContent="space-between" alignItems="left" flexDirection="column">
-              <Label>{TranslateString(352, 'APR')}:</Label>
+            <APRFlex justifyContent="space-between" alignItems="left">
+              <APRLabel>{TranslateString(352, 'APR')}:</APRLabel>
               <Text>{vault.apr ? <Strike>{vaultAPR}%</Strike> : <Skeleton height={24} width={80} />}</Text>
               <Label>&nbsp;&nbsp;</Label>
-              <Label>{TranslateString(999, 'APY')}:</Label>
+              <APRLabel>{TranslateString(999, 'APY')}:</APRLabel>
               <Text>
                 {vault.apy ? (
                   <>
@@ -406,20 +463,33 @@ const VaultRow: React.FC<VaultRowProps> = ({ vault, removed, cakePrice, bnbPrice
                   </>
                 ) : (
                   <Skeleton height={24} width={80} />
-                )}
-                <ApyButtonContainer>
+                  )}
+                <ApyButtonContainerDesktop>
                   <ApyButtonVault
                     lpLabel={lpLabel}
                     quoteTokenAddresses={quoteTokenAddresses}
                     quoteTokenSymbol={quoteTokenSymbol}
                     tokenAddresses={tokenAddresses}
                     cakePrice={new BigNumber(vault.rewardTokenPrice)}
-                    apy={vault.apy}
+                    apy={vault.apr}
                     pid={vault.pid}
-                  />
-                </ApyButtonContainer>
+                    timesCompoundedPerYear={timesCompoundedPerYear}
+                    />
+                </ApyButtonContainerDesktop>
               </Text>
-            </Flex>
+                <ApyButtonContainerMobile>
+                  <ApyButtonVault
+                    lpLabel={lpLabel}
+                    quoteTokenAddresses={quoteTokenAddresses}
+                    quoteTokenSymbol={quoteTokenSymbol}
+                    tokenAddresses={tokenAddresses}
+                    cakePrice={new BigNumber(vault.rewardTokenPrice)}
+                    apy={vault.apr}
+                    pid={vault.pid}
+                    timesCompoundedPerYear={timesCompoundedPerYear}
+                    />
+                </ApyButtonContainerMobile>
+            </APRFlex>
           </APRInfo>
         )}
         <Flex justifyContent="center" flexDirection="column">
@@ -483,10 +553,10 @@ const VaultRow: React.FC<VaultRowProps> = ({ vault, removed, cakePrice, bnbPrice
             </SciNumber>
           </Text>
         </Flex>
-        <Flex justifyContent="center" flexDirection="column">
+        <TVLFlex justifyContent="center" flexDirection="column">
           <Text>{TranslateString(999, 'TVL')}:</Text>
           <Text bold>{totalValueFormated}</Text>
-        </Flex>
+        </TVLFlex>
 
         {showExpandableSection ? <UpIcon /> : <DownIcon />}
       </Row>

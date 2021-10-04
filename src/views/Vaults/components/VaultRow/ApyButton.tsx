@@ -12,6 +12,7 @@ export interface ApyButtonProps {
   quoteTokenSymbol?: string
   tokenAddresses: Address
   pid: number
+  timesCompoundedPerYear: number
 }
 
 const ApyButton: React.FC<ApyButtonProps> = ({
@@ -21,7 +22,8 @@ const ApyButton: React.FC<ApyButtonProps> = ({
   tokenAddresses,
   cakePrice,
   apy,
-  pid
+  pid,
+  timesCompoundedPerYear
 }) => {
   const [onPresentApyModal] = useModal(
     <ApyCalculatorModal
@@ -32,11 +34,12 @@ const ApyButton: React.FC<ApyButtonProps> = ({
       cakePrice={cakePrice}
       apy={apy}
       pid={pid}
+      timesCompoundedPerYear={timesCompoundedPerYear}
     />,
   )
 
   return (
-    <IconButton onClick={onPresentApyModal} variant="text" size="sm" ml="4px">
+    <IconButton onClick={(event)=>{event.stopPropagation(); onPresentApyModal()}} variant="text" size="sm" ml="4px">
       <CalculateIcon />
     </IconButton>
   )

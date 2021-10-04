@@ -381,7 +381,6 @@ const fetchVaults = async () => {
         rewardPerBlock: new BigNumber(farmRewardPerBlock).toJSON(),
         poolWeight,
         burnRateBP: parseInt(buyBackBP),
-        type: new BigNumber(buyBackBP).gt(0) ? 'burn' : vaultConfig.type,
         paused: isPaused
       }
       return vault

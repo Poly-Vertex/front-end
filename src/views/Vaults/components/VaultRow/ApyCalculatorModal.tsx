@@ -16,6 +16,7 @@ interface ApyCalculatorModalProps {
   quoteTokenSymbol?: string
   tokenAddresses: Address,
   pid: number
+  timesCompoundedPerYear: number
 }
 
 const Grid = styled.div`
@@ -42,17 +43,18 @@ const ApyCalculatorModal: React.FC<ApyCalculatorModalProps> = ({
   tokenAddresses,
   cakePrice,
   apy,
-  pid
+  pid,
+  timesCompoundedPerYear
 }) => {
   const TranslateString = useI18n()
   const liquidityUrlPathParts = getLiquidityUrlPathParts({ quoteTokenAddresses, quoteTokenSymbol, tokenAddresses, pid })
   const farmApy = apy.times(new BigNumber(100)).toNumber()
   const oneThousandDollarsWorthOfCake = 1000 / cakePrice.toNumber()
-
-  const cakeEarnedPerThousand1D = calculateCakeEarnedPerThousandDollars({ numberOfDays: 1, farmApy, cakePrice })
-  const cakeEarnedPerThousand7D = calculateCakeEarnedPerThousandDollars({ numberOfDays: 7, farmApy, cakePrice })
-  const cakeEarnedPerThousand30D = calculateCakeEarnedPerThousandDollars({ numberOfDays: 30, farmApy, cakePrice })
-  const cakeEarnedPerThousand365D = calculateCakeEarnedPerThousandDollars({ numberOfDays: 365, farmApy, cakePrice })
+  
+  const cakeEarnedPerThousand1D = calculateCakeEarnedPerThousandDollars({ numberOfDays: 1, farmApy, cakePrice, timesCompounded:timesCompoundedPerYear })
+  const cakeEarnedPerThousand7D = calculateCakeEarnedPerThousandDollars({ numberOfDays: 7, farmApy, cakePrice , timesCompounded:timesCompoundedPerYear})
+  const cakeEarnedPerThousand30D = calculateCakeEarnedPerThousandDollars({ numberOfDays: 30, farmApy, cakePrice, timesCompounded:timesCompoundedPerYear })
+  const cakeEarnedPerThousand365D = calculateCakeEarnedPerThousandDollars({ numberOfDays: 365, farmApy, cakePrice , timesCompounded:timesCompoundedPerYear})
 
   return (
     <Modal title="ROI" onDismiss={onDismiss}>
@@ -111,7 +113,7 @@ const ApyCalculatorModal: React.FC<ApyCalculatorModalProps> = ({
       <Description fontSize="12px" color="textSubtle">
         {TranslateString(
           999,
-          'Calculated based on current rates. Compounding once daily. Rates are estimates provided for your convenience only, and by no means represent guaranteed returns.',
+          `Calculated based on current rates. Compounding ${(timesCompoundedPerYear / 365).toFixed(2)} times per day. Rates are estimates provided for your convenience only, and by no means represent guaranteed returns.`,
         )}
       </Description>
       <Flex justifyContent="center">

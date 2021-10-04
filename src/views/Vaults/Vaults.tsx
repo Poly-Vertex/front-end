@@ -10,6 +10,7 @@ import { provider } from 'web3-core'
 import partition from 'lodash/partition'
 import useI18n from 'hooks/useI18n'
 import useBlock from 'hooks/useBlock'
+import { apyModalRoi, calculateCakeEarnedPerThousandDollars } from 'utils/compoundApyHelpers'
 import { fetchVaultUserDataAsync } from 'state/vaults'
 import { useDispatch } from 'react-redux'
 import useRefresh from 'hooks/useRefresh'
@@ -33,7 +34,6 @@ import VaultTabButtons from './components/VaultTabButtons'
 import Divider from '../Farms/components/Divider'
 
 const LockedFlex = styled(FlexLayout)`
-  /* max-width:1vw!important; */
 `
 const Note = styled(Text)`
   font-size: 12px;
@@ -72,6 +72,9 @@ const VaultLogoForeground = styled.img`
 const LogoContainer = styled.div`
   display: grid;
 `
+const TitleSection = styled.div`
+  max-width:250px
+`
 const SortDropdown = styled(Dropdown)`
   max-width: 33%;
   margin: auto;
@@ -80,15 +83,6 @@ const SortDropdown = styled(Dropdown)`
   display: block;
   padding:5%!important;
   `
-// const SortButton = styled(LabelButton)`
-//   max-width: 33%;
-//   display: inline-flex;
-//   margin: 10px;
-//   vertical-align: middle;
-//   padding:10px;
-//   white-space:pre;
-  
-// `
 
 const Label = styled.div`
   color: ${({ theme }) => theme.colors.primary};
@@ -238,11 +232,33 @@ const Vaults: React.FC = () => {
             (vault.farmWithdrawalFeeBP || 0) +
             (vault.burnRateBP || 0)) /
           10000
-        const NUM_COMPOUNDS_PER_PERIOD = 1000
-        const apy = new BigNumber(
-          fastPow(1 + apr.div(NUM_COMPOUNDS_PER_PERIOD).toNumber() * (1 - totalFeeDecimal), NUM_COMPOUNDS_PER_PERIOD) -
-            1,
-        )
+
+        // const NUM_COMPOUNDS_PER_PERIOD = 1000
+        const PROFIT_MARGIN = 4;
+        const TX_FEE = .004;
+        let timesCompoundedPerYear = 365 * (tvl.toNumber() * (apr.toNumber()/365) * totalFeeDecimal) * (1-PROFIT_MARGIN/(PROFIT_MARGIN+1))/TX_FEE*bnbPrice.toNumber()
+        if (timesCompoundedPerYear<365*24){
+          timesCompoundedPerYear = 365*24
+  } 
+
+      // const apy = new BigNumber(
+      //   fastPow(1 + apr.div(timesCompoundedPerYear).toNumber() * (1 - totalFeeDecimal), timesCompoundedPerYear) -
+      //     1,
+      // )
+      const cakeEarnedPerThousand365 = calculateCakeEarnedPerThousandDollars({
+        numberOfDays: 365,
+        farmApy: apr*100,
+        cakePrice: vault.rewardTokenPrice,
+        timesCompounded: timesCompoundedPerYear
+      })
+      const oneThousandDollarsWorthOfReward = 1000 / vault.rewardTokenPrice
+    
+      const oneYearROI = apyModalRoi({
+        amountEarned: cakeEarnedPerThousand365,
+        amountInvested: oneThousandDollarsWorthOfReward,
+      })
+        
+      const apy = new BigNumber(oneYearROI).dividedBy(100);
 
         return { ...vault, apy, apr, tvl }
       })
@@ -279,7 +295,7 @@ const Vaults: React.FC = () => {
   return (
     <Page>
       <Hero>
-        <div>
+        <TitleSection>
           <Heading as="h1" size="xxl" mb="16px">
             {TranslateString(999, 'Vaults')}
           </Heading>
@@ -289,8 +305,9 @@ const Vaults: React.FC = () => {
             <li key="2">{TranslateString(999, 'Unstake at any time.')}</li>
             <li key="3">{TranslateString(999, 'Compound optimally to maximize yield.')}</li>
             <li key="4">{TranslateString(999, '1% performance fee on harvests.')}</li>
+            {/* <li key="5"><Link href="/vaults/endowment">{TranslateString(999, 'Check out our Endowment vaults')}</Link></li> */}
           </ul>
-        </div>
+        </TitleSection>
         <LogoContainer>
           <VaultLogoBackground
             src="/images/vaults/matic-no-background.svg"

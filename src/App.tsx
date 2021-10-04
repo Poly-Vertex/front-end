@@ -37,7 +37,7 @@ const NotFound = lazy(() => import('./views/NotFound'))
 
 let didAskToJoinTelegram = false;
 
-// This config is required for number formating
+// This config is required for number formatting
 BigNumber.config({
   EXPONENTIAL_AT: 1000,
   DECIMAL_PLACES: 80,

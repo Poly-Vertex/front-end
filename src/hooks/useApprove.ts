@@ -41,6 +41,7 @@ export const useVaultApprove = (lpContract: Contract) => {
       dispatch(fetchVaultUserDataAsync(account))
       return tx
     } catch (e) {
+      console.error(e)
       return false
     }
   }, [account, dispatch, lpContract, vaultChefContract])

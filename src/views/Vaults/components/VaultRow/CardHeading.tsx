@@ -38,15 +38,20 @@ const MultiplierTag = styled(Tag)`
 const VaultImage = styled(Image)`
   ${({ theme }) => theme.mediaQueries.xs} {
     height:32px !important;
+    width:32px !important;
   }
   ${({ theme }) => theme.mediaQueries.sm} {
     height:45px !important;
+    width:45px !important;
+    
   }
   ${({ theme }) => theme.mediaQueries.md} {
     height:45 !important;
+    width:45px !important;
   }
   ${({ theme }) => theme.mediaQueries.lg} {
     height:45 !important;
+    width:45px !important;
   }
 `
 

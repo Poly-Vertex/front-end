@@ -33,64 +33,17 @@ interface VaultCardActionsProps {
 
 const CardActions: React.FC<VaultCardActionsProps> = ({ vault, ethereum, account, totalValue, allowance, tokenBalance, stakedBalance, usdStaked }) => {
   const TranslateString = useI18n()
-  const [requestedApproval, setRequestedApproval] = useState(false)
-  const { pid, lpAddresses, tokenAddresses, isTokenOnly, vaultDepositFeeBP, vaultWithdrawalFeeBP, farmDepositFeeBP, farmWithdrawalFeeBP, performanceFeeBP, burnRateBP } = useVaultFromPid(vault.pid)
-  const lpAddress = lpAddresses[process.env.REACT_APP_CHAIN_ID]
-  const tokenAddress = tokenAddresses[process.env.REACT_APP_CHAIN_ID];
-  const lpName = vault.lpSymbol.toUpperCase()
-  
-  const isApproved = account && allowance && allowance.isGreaterThan(0)
-  const cakePrice = usePriceCakeBusd();
-  const lpContract = useMemo(() => {
-    if(isTokenOnly){
-      return getContract(ethereum as provider, tokenAddress);
-    }
-    return getContract(ethereum as provider, lpAddress);
-  }, [ethereum, lpAddress, tokenAddress, isTokenOnly])
+  // const { pid, lpAddresses, tokenAddresses, isTokenOnly, vaultDepositFeeBP, vaultWithdrawalFeeBP, farmDepositFeeBP, farmWithdrawalFeeBP, performanceFeeBP, burnRateBP } = useVaultFromPid(vault.pid)
 
-  const { onApprove } = useVaultApprove(lpContract)
 
-  const handleApprove = useCallback(async () => {
-    try {
-      setRequestedApproval(true)
-      await onApprove()
-      setRequestedApproval(false)
-    } catch (e) {
-      console.error(e)
-    }
-  }, [onApprove])
-  
    
   const renderApprovalOrStakeButton = () => {
-    return isApproved ? (
-      <>
-      <Flex flexDirection="column">
-      <Text bold textTransform="uppercase" color="secondary" fontSize="12px" pr="3px">
-        {lpName}
-      </Text>
-      <Text bold textTransform="uppercase" color="textSubtle" fontSize="12px">
-        {TranslateString(999, 'deposited')}
-      </Text>
-     
-    </Flex>
-      <StakeAction stakedBalance={stakedBalance} tokenBalance={tokenBalance} tokenName={lpName} pid={pid}  usdStaked={usdStaked} vaultDepositFeeBP={vaultDepositFeeBP} vaultWithdrawalFeeBP={vaultWithdrawalFeeBP} farmDepositFeeBP={farmDepositFeeBP} farmWithdrawalFeeBP={farmWithdrawalFeeBP} performanceFeeBP={performanceFeeBP}  burnRateBP={burnRateBP}/>
-      </>
-      ) : (
-      <Button mt="8px" fullWidth disabled={requestedApproval} onClick={handleApprove}>
-        {TranslateString(999, 'Approve Contract')}
-      </Button>
-    )
+      return <StakeAction ethereum={ethereum} vault={vault} account={account} allowance={allowance} stakedBalance={stakedBalance} tokenBalance={tokenBalance} usdStaked={usdStaked} unlocked={account!==null}/>
   }
 
   return (
     <Action>
-       {!account ? <UnlockButton mt="8px" fullWidth /> :(
-       <>
       {renderApprovalOrStakeButton()}
-      </>
-      )
-      }
-     
     </Action>
   )
 }
