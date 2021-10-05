@@ -589,6 +589,7 @@ const VaultRow: React.FC<VaultRowProps> = ({ vault, removed, cakePrice, bnbPrice
             tokenAddresses={tokenAddresses}
             pid={vault.pid}
             exchange = {vault.exchange}
+            partner = {vault.partner}
           />
         </ExpandingWrapper>
       </Row>

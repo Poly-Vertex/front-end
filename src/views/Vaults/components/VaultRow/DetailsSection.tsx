@@ -17,6 +17,8 @@ export interface ExpandableSectionProps {
   underlyingProject: string,
   pid: number,
   exchange?: string
+  partner?: string
+
 }
 
 const Wrapper = styled.div`
@@ -52,7 +54,8 @@ const DetailsSection: React.FC<ExpandableSectionProps> = ({
   tokenAddresses,
   underlyingProject,
   pid,
-  exchange
+  exchange,
+  partner
 }) => {
   const TranslateString = useI18n()
   const liquidityUrlPathParts = getLiquidityUrlPathParts({ quoteTokenAddresses, quoteTokenSymbol, tokenAddresses, pid })
@@ -74,6 +77,10 @@ const DetailsSection: React.FC<ExpandableSectionProps> = ({
     case "JetSwap":
       swapURLFirstPart = "https://polygon-exchange.jetswap.finance/#/swap"
       addURLFirstPart = "https://polygon-exchange.jetswap.finance/#/add"
+      break;
+    case "ApeSwap":
+      swapURLFirstPart = "https://app.apeswap.finance/swap"
+      addURLFirstPart = "https://app.apeswap.finance/add"
       break;
     case "QuickSwap":
     default:
@@ -106,6 +113,7 @@ const DetailsSection: React.FC<ExpandableSectionProps> = ({
         </StyledLinkExternal></Flex>
         : null
       }
+      <Text color="textSubtle"><i>{partner}</i></Text>
     </Wrapper>
   )
 }

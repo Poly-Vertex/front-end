@@ -180,7 +180,6 @@ const Vaults: React.FC = () => {
   )
   const vaultsList = useCallback(
     (vaultsToDisplay, removed: boolean) => {
-     
       const vaultsToDisplayWithAPY: VaultWithStakedValue[] = vaultsToDisplay.map((vault) => {
         if (vault === undefined) {
           return null

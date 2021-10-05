@@ -99,6 +99,7 @@ export interface VaultConfig {
   risk: number
   farmUsesPoolInfo? : boolean,
   rewardToken : string,
+  rewardTokenCoinGecko? : string,
   // dual?: {
   //   rewardPerBlock: number
   //   earnLabel: string
@@ -113,8 +114,9 @@ export interface VaultConfig {
   strategy:string,
   underlyingProject:string,
   rewardUsesCoinGecko:boolean,
-  paused: boolean
-
+  paused: boolean,
+  coinGeckoChain?: number,
+  partner?:string,
 }
 
 export type Nft = {

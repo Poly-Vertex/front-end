@@ -3,6 +3,7 @@ import contracts from './contracts'
 import { VaultConfig, QuoteToken } from './types'
 
 const vaults: VaultConfig[] = [
+  // LIVE:
   {
     pid: 0,
     risk: 3,
@@ -31,7 +32,8 @@ const vaults: VaultConfig[] = [
     farmPoolAllocName:"allocPoint",
     underlyingProject:"",
     rewardUsesCoinGecko: true,
-    paused:false
+    paused:false,
+    partner:"Vertex"
   },
   {
     pid: 1,
@@ -61,35 +63,9 @@ const vaults: VaultConfig[] = [
     farmPoolAllocName:"allocPoint",
     underlyingProject:"",
     rewardUsesCoinGecko: true,
-    paused:false
+    paused:false,
+    partner:"Vertex"
   },
-  // {
-  //   pid: 8,
-  //   risk: 3,
-  //   lpSymbol: 'ROUTE-VERT DLP',
-  //   lpAddresses: {
-  //     80001: '',
-  //     137: '0xd4689694e9928564647ad483c075f271419b2a5f',
-  //   },
-  //   tokenSymbol: 'ROUTE',
-  //   tokenAddresses: contracts.route,
-  //   isTokenOnly: false,
-  //   quoteTokenSymbol: QuoteToken.CAKE,
-  //   quoteTokenAddresses: contracts.cake,
-  //   endBlock: 1000000000000,
-  //   exchange: 'DFYN',
-  //   rewardToken: "0x72572CCf5208b59f4BcC14e6653d8c31Cd1fC5a0",
-  //   type: 'standard',
-  //   strategy: 'masterchef',
-  //   farmUsesPoolInfo: true,
-  //   farmRewardPerBlockCallName: "eggPerBlock",
-  //   farmTotalAllocCallName: "totalAllocPoint",
-  //   farmFeeCallName:"depositFeeBP",
-  //   farmPoolAllocName:"allocPoint",
-  //   underlyingProject:"",
-  //   rewardUsesCoinGecko: true,
-  //   paused:true
-  // },
   {
     pid: 9,
     risk: 3,
@@ -115,7 +91,8 @@ const vaults: VaultConfig[] = [
     farmPoolAllocName:"allocPoint",
     underlyingProject:"",
     rewardUsesCoinGecko: true,
-    paused:false
+    paused:false,
+    partner:"Vertex"
   },
   {
     pid: 3,
@@ -145,7 +122,8 @@ const vaults: VaultConfig[] = [
     farmPoolAllocName:"allocPoint",
     underlyingProject:"",
     rewardUsesCoinGecko: true,
-    paused:false
+    paused:false,
+    partner:"Vertex"
   },
   {
     pid: 4,
@@ -175,7 +153,9 @@ const vaults: VaultConfig[] = [
     rewardToken: "0x580a84c73811e1839f75d86d75d88cca0c241ff4",
     underlyingProject:"https://app.mai.finance/farm",
     rewardUsesCoinGecko: true,
-    paused:false
+    paused:false,
+    partner:"Mai Finance"
+
   },
   {
     pid: 5,
@@ -205,7 +185,8 @@ const vaults: VaultConfig[] = [
     rewardToken: "0x580a84c73811e1839f75d86d75d88cca0c241ff4",
     rewardUsesCoinGecko: true,
     underlyingProject:"https://app.mai.finance/farm",
-    paused:false
+    paused:false,
+    partner:"Mai Finance"
   },
   {
     pid: 6,
@@ -235,7 +216,9 @@ const vaults: VaultConfig[] = [
     rewardToken: "0x8DF26a1BD9bD98e2eC506fc9d8009954716A05DC",
     underlyingProject:"https://polypup.finance/farms",
     rewardUsesCoinGecko: false,
-    paused:false
+    paused:false,
+    partner:"PolyPup"
+
   },
   {
     pid: 7,
@@ -265,8 +248,111 @@ const vaults: VaultConfig[] = [
     rewardToken: "0x8DF26a1BD9bD98e2eC506fc9d8009954716A05DC",
     underlyingProject:"https://polypup.finance/farms",
     rewardUsesCoinGecko: false,
-    paused:false
+    paused:false,
+    partner:"PolyPup"
+
   },
+
+    {
+    pid: 10,
+    risk: 3,
+    lpSymbol: 'DAI-USDC ApeLP',
+    lpAddresses: {
+      80001: '',
+      137: '0x5b13b583d4317ab15186ed660a1e4c65c10da659',
+    },
+    tokenSymbol: 'DAI',
+    tokenAddresses: {
+      80001: '',
+      137: '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063', // DAI
+    },
+    isTokenOnly: false,
+    quoteTokenSymbol: QuoteToken.BUSD,
+    quoteTokenAddresses: contracts.busd,
+    endBlock: 1000000000000,
+    exchange: 'ApeSwap',
+    type: 'standard',
+    strategy: 'masterchef-apeswap',
+    farmUsesPoolInfo: true,
+    farmRewardPerBlockCallName: "bananaPerSecond",
+    farmTotalAllocCallName: "totalAllocPoint",
+    farmFeeCallName:"depositFeeBP",
+    farmPoolAllocName:"allocPoint",
+    rewardToken: "0x5d47baba0d66083c52009271faf3f50dcc01023c",
+    rewardTokenCoinGecko: "0x603c7f932ed1fc6575303d8fb018fdcbb0f39a95",
+    underlyingProject:"https://app.apeswap.finance/yield",
+    rewardUsesCoinGecko: true,
+    coinGeckoChain: 56,
+    paused:false,
+    partner:"ApeSwap"
+  },
+  
+  // TESTING:
+  // {
+  //   pid: 18,
+  //   risk: 3,
+  //   lpSymbol: 'DAI-USDC ApeLP',
+  //   lpAddresses: {
+  //     80001: '',
+  //     137: '0x5b13b583d4317ab15186ed660a1e4c65c10da659',
+  //   },
+  //   tokenSymbol: 'DAI',
+  //   tokenAddresses: {
+  //     80001: '',
+  //     137: '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063', // DAI
+  //   },
+  //   isTokenOnly: false,
+  //   quoteTokenSymbol: QuoteToken.BUSD,
+  //   quoteTokenAddresses: contracts.busd,
+  //   endBlock: 1000000000000,
+  //   exchange: 'ApeSwap',
+  //   type: 'standard',
+  //   strategy: 'masterchef-apeswap',
+  //   farmUsesPoolInfo: true,
+  //   farmRewardPerBlockCallName: "bananaPerSecond",
+  //   farmTotalAllocCallName: "totalAllocPoint",
+  //   farmFeeCallName:"depositFeeBP",
+  //   farmPoolAllocName:"allocPoint",
+  //   rewardToken: "0x5d47baba0d66083c52009271faf3f50dcc01023c",
+  //   rewardTokenCoinGecko: "0x603c7f932ed1fc6575303d8fb018fdcbb0f39a95",
+  //   underlyingProject:"https://app.apeswap.finance/yield",
+  //   rewardUsesCoinGecko: true,
+  //   coinGeckoChain: 56,
+  //   paused:false,
+  //   partner:"ApeSwap"
+  // },
+  
+  //   {
+  //   pid: 6,
+  //   risk: 3,
+  //   lpSymbol: 'VERT-USDC QLP',
+  //   lpAddresses: {
+  //     80001: '',
+  //     137: '0x668269d6E5D2c2dE31D132Ac218044211643622B',
+  //   },
+  //   tokenSymbol: 'VERT',
+  //   tokenAddresses: {
+  //     80001: '',
+  //     137: contracts.cake[137],
+  //   },
+  //   isTokenOnly: false,
+  //   quoteTokenSymbol: QuoteToken.BUSD,
+  //   quoteTokenAddresses: contracts.busd,
+  //   endBlock: 1000000000000,
+  //   exchange: 'QuickSwap',
+  //   rewardToken: "0x72572CCf5208b59f4BcC14e6653d8c31Cd1fC5a0",
+  //   type: 'standard',
+  //   strategy: 'masterchef',
+  //   farmUsesPoolInfo: true,
+  //   farmRewardPerBlockCallName: "eggPerBlock",
+  //   farmTotalAllocCallName: "totalAllocPoint",
+  //   farmFeeCallName:"depositFeeBP",
+  //   farmPoolAllocName:"allocPoint",
+  //   underlyingProject:"",
+  //   rewardUsesCoinGecko: true,
+  //   paused:false
+  // },
+
 ]
 
 export default vaults

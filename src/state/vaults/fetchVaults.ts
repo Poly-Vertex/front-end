@@ -3,53 +3,44 @@ import erc20 from 'config/abi/erc20.json'
 import vaultChefABI from 'config/abi/vaultChef.json'
 import vaultStrategyABI from 'config/abi/baseStrategy.json'
 import strategyMasterchefABI from 'config/abi/strategyMasterchef.json'
+import { POLYGON_BLOCK_TIME } from 'config'
 import multicall from 'utils/multicall'
 import { getVaultChefAddress } from 'utils/addressHelpers'
 import vaultsConfig from 'config/constants/vaults'
-import { QuoteToken, FarmConfig } from '../../config/constants/types'
+import { QuoteToken, FarmConfig, VaultConfig } from '../../config/constants/types'
 
 const CHAIN_ID = process.env.REACT_APP_CHAIN_ID
-const MAX_VAULTS_PER_BATCH = 6;
+const MAX_VAULTS_PER_BATCH = 6
 
-const fetchRewardTokenPriceCoinGecko = async (rewardToken) => {
-  const url = `https://api.coingecko.com/api/v3/simple/token_price/polygon-pos?contract_addresses=${rewardToken}&vs_currencies=usd`
+const fetchRewardTokenPriceCoinGecko = async (rewardToken, chainID) => {
+  let chain = ""
+  switch (chainID) {
+    case 137:
+      chain = "polygon-pos"
+      break;
+    case 56:
+      chain = "binance-smart-chain"
+      break;
+    default:
+      break;
+  }
+  const url = `https://api.coingecko.com/api/v3/simple/token_price/${chain}?contract_addresses=${rewardToken}&vs_currencies=usd`
   const result = await fetch(url, null)
   const data = await result.json()
-  const dataAddress = rewardToken.toLowerCase()
-  console.log(url)
+  const dataAddress = rewardToken.toString().toLowerCase()
   if (result.status === 200 && data[dataAddress] !== undefined) {
     return new BigNumber(data[dataAddress].usd)
-  } 
+  }
 
   return new BigNumber(0)
 }
 
-const fetchMasterChefData = async (vaultConfig, strategy, lpAddress) => {
-  const [masterChefAddr, masterchefPID] = await multicall(strategyMasterchefABI, [
-    {
-      address: strategy,
-      name: 'masterchefAddress',
-    },
-    {
-      address: strategy,
-      name: 'pid',
-    },
-  ])
-  const mcCalls = [
-    // Balance of LP tokens in the master chef contract
-    {
-      address: vaultConfig.isTokenOnly ? vaultConfig.tokenAddresses[CHAIN_ID] : lpAddress,
-      name: 'balanceOf',
-      params: [masterChefAddr[0]],
-    },
-  ]
-  const [lpTokenBalanceMC] = await multicall(erc20, mcCalls)
-
-  let farmDepositFeeBP
-  let farmRewardPerBlock
-  let poolWeight
-
-  if (vaultConfig.farmUsesPoolInfo) {
+const masterchefCalls = async (vaultConfig: VaultConfig, masterchefAddr: string, pid: number) => {
+  let farmDepositFeeBP;
+  let farmRewardPerBlock;
+  let poolWeight;
+  
+  if (vaultConfig.strategy === 'masterchef') {
     const [poolInfo, farmRewardPerBlockInfo, totalAllocPoint] = await multicall(
       [
         {
@@ -120,17 +111,17 @@ const fetchMasterChefData = async (vaultConfig, strategy, lpAddress) => {
       ],
       [
         {
-          address: masterChefAddr[0],
+          address: masterchefAddr,
           name: 'poolInfo',
-          params: [parseInt(masterchefPID)],
+          params: [pid],
         },
         {
-          address: masterChefAddr[0],
+          address: masterchefAddr,
           name: vaultConfig.farmRewardPerBlockCallName,
           params: [],
         },
         {
-          address: masterChefAddr[0],
+          address: masterchefAddr,
           name: vaultConfig.farmTotalAllocCallName,
           params: [],
         },
@@ -142,19 +133,232 @@ const fetchMasterChefData = async (vaultConfig, strategy, lpAddress) => {
     poolWeight = poolInfo[vaultConfig.farmPoolAllocName] / totalAllocPoint
   }
 
+  if ((vaultConfig.strategy === 'masterchef-apeswap')) {
+    const [poolInfo, farmRewardPerBlockInfo, totalAllocPoint] = await multicall(
+      [
+        {
+          inputs: [
+            {
+              internalType: 'uint256',
+              name: '',
+              type: 'uint256',
+            },
+          ],
+          name: 'poolInfo',
+          outputs: [
+            {
+              internalType: 'uint128',
+              name: 'accBananaPerShare',
+              type: 'uint128',
+            },
+            {
+              internalType: 'uint64',
+              name: 'lastRewardTime',
+              type: 'uint64',
+            },
+            {
+              internalType: 'uint64',
+              name: vaultConfig.farmPoolAllocName,
+              type: 'uint64',
+            },
+          ],
+          stateMutability: 'view',
+          type: 'function',
+        },
+        {
+          inputs: [],
+          name: vaultConfig.farmTotalAllocCallName,
+          outputs: [
+            {
+              internalType: 'uint256',
+              name: '',
+              type: 'uint256',
+            },
+          ],
+          stateMutability: 'view',
+          type: 'function',
+        },
+        {
+          inputs: [],
+          name: vaultConfig.farmRewardPerBlockCallName,
+          outputs: [
+            {
+              internalType: 'uint256',
+              name: '',
+              type: 'uint256',
+            },
+          ],
+          stateMutability: 'view',
+          type: 'function',
+        },
+      ],
+      [
+        {
+          address: masterchefAddr,
+          name: 'poolInfo',
+          params: [pid],
+        },
+        {
+          address: masterchefAddr,
+          name: vaultConfig.farmRewardPerBlockCallName,
+          params: [],
+        },
+        {
+          address: masterchefAddr,
+          name: vaultConfig.farmTotalAllocCallName,
+          params: [],
+        },
+      ],
+    )
+    
+
+    const [rewarder] = await multicall( 
+      [{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"rewarder","outputs":[{"internalType":"contract IRewarder","name":"","type":"address"}],"stateMutability":"view","type":"function"}],
+      [{
+        address: masterchefAddr,
+        name: 'rewarder',
+        params: [pid],
+      }]
+      )
+      const [rewarderPoolInfo, rewarderRewardPerBlockInfo,  rewarderRewardToken] = await multicall(
+        [
+          {
+            inputs: [
+              {
+                internalType: 'uint256',
+                name: '',
+                type: 'uint256',
+              },
+            ],
+            name: 'poolInfo',
+            outputs: [
+              {
+                internalType: 'uint128',
+                name: 'accBananaPerShare',
+                type: 'uint128',
+              },
+              {
+                internalType: 'uint64',
+                name: 'lastRewardTime',
+                type: 'uint64',
+              },
+              {
+                internalType: 'uint64',
+                name: vaultConfig.farmPoolAllocName,
+                type: 'uint64',
+              },
+            ],
+            stateMutability: 'view',
+            type: 'function',
+          },
+                    {
+            inputs: [],
+            name: 'rewardPerSecond',
+            outputs: [
+              {
+                internalType: 'uint256',
+                name: '',
+                type: 'uint256',
+              },
+            ],
+            stateMutability: 'view',
+            type: 'function',
+          },
+          {
+            inputs: [],
+            name: 'rewardToken',
+            outputs: [
+              {
+                internalType: 'address',
+                name: '',
+                type: 'address',
+              },
+            ],
+            stateMutability: 'view',
+            type: 'function',
+          },
+        ],
+        [
+          {
+            address: rewarder[0],
+            name: 'poolInfo',
+            params: [pid],
+          },
+          {
+            address: rewarder[0],
+            name: 'rewardPerSecond',
+            params: [],
+          },
+                   {
+            address: rewarder[0],
+            name: 'rewardToken',
+            params: [],
+          },
+        ],
+      )
+      
+
+    const bananaUSD = await fetchRewardTokenPriceCoinGecko(vaultConfig.rewardTokenCoinGecko || vaultConfig.rewardToken, vaultConfig.coinGeckoChain || parseInt(CHAIN_ID))
+    const rewarderUSD = await fetchRewardTokenPriceCoinGecko(rewarderRewardToken, parseInt(CHAIN_ID))
+
+    const bananaPerReward = new BigNumber(bananaUSD).dividedBy(rewarderUSD);
+    let extraRewardBanana = new BigNumber(rewarderRewardPerBlockInfo)
+    extraRewardBanana = extraRewardBanana.multipliedBy(bananaPerReward)
+      
+    farmDepositFeeBP = 0
+    farmRewardPerBlock = new BigNumber(farmRewardPerBlockInfo).multipliedBy(POLYGON_BLOCK_TIME) 
+    farmRewardPerBlock= farmRewardPerBlock.plus(extraRewardBanana);
+    poolWeight = poolInfo[vaultConfig.farmPoolAllocName] / totalAllocPoint
+
+  }
+
+  return [farmDepositFeeBP, farmRewardPerBlock, poolWeight]
+}
+
+const fetchMasterChefData = async (vaultConfig, strategy, lpAddress) => {
+  const [masterChefAddr, masterchefPID] = await multicall(strategyMasterchefABI, [
+    {
+      address: strategy,
+      name: 'masterchefAddress',
+    },
+    {
+      address: strategy,
+      name: 'pid',
+    },
+  ])
+  const balanceCall = [
+    // Balance of LP tokens in the master chef contract
+    {
+      address: vaultConfig.isTokenOnly ? vaultConfig.tokenAddresses[CHAIN_ID] : lpAddress,
+      name: 'balanceOf',
+      params: [masterChefAddr[0]],
+    },
+  ]
+  const [lpTokenBalanceMC] = await multicall(erc20, balanceCall)
+
+ 
+
+  const [farmDepositFeeBP, farmRewardPerBlock, poolWeight] = await masterchefCalls(
+    vaultConfig,
+    masterChefAddr[0],
+    parseInt(masterchefPID),
+  )
+  
+  
+
   return [lpTokenBalanceMC, farmDepositFeeBP, farmRewardPerBlock, poolWeight]
 }
 
 function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
 const fetchVaults = async () => {
-  let count = 0;
+  let count = 0
   const data = await Promise.all(
     vaultsConfig.map(async (vaultConfig) => {
-      if(count % MAX_VAULTS_PER_BATCH === 0){
-        await sleep(1000);
+      if (count % MAX_VAULTS_PER_BATCH === 0) {
+        await sleep(1000)
       }
       count++
       const vaultChefAddr = getVaultChefAddress()
@@ -179,7 +383,7 @@ const fetchVaults = async () => {
         depositFeeFactor,
         depositFeeFactorMax,
         buyBackBP,
-        isPaused
+        isPaused,
       ] = await multicall(vaultStrategyABI, [
         {
           address: strategy,
@@ -223,7 +427,6 @@ const fetchVaults = async () => {
           params: [],
         },
       ])
-
 
       const vaultWithdrawalFee = (withdrawalFeeFactorMax - withdrawalFeeFactor) / withdrawalFeeFactorMax
       const vaultWithdrawalFeeBP = vaultWithdrawalFee * 10000 // decimal -> basis points
@@ -281,14 +484,14 @@ const fetchVaults = async () => {
       let poolWeight
 
       // Get data for MasterChef strategies:
-      if (vaultConfig.strategy === 'masterchef') {
+      if (vaultConfig.strategy.includes('masterchef')) {
         [lpTokenBalanceMC, farmDepositFeeBP, farmRewardPerBlock, poolWeight] = await fetchMasterChefData(
           vaultConfig,
           strategy,
           lpAddress,
         )
       }
-
+     
       let tokenAmountVC
       let tokenAmountMC
       let lpTotalInQuoteTokenVC
@@ -300,18 +503,18 @@ const fetchVaults = async () => {
       if (vaultConfig.isTokenOnly) {
         tokenAmountVC = new BigNumber(lpTokenBalanceVC).div(new BigNumber(10).pow(tokenDecimals))
         tokenAmountMC = new BigNumber(lpTokenBalanceMC).div(new BigNumber(10).pow(tokenDecimals))
-        
+
         if (vaultConfig.tokenSymbol === QuoteToken.BUSD && vaultConfig.quoteTokenSymbol === QuoteToken.BUSD) {
           tokenPriceVsQuote = new BigNumber(1)
         } else {
           tokenPriceVsQuote = new BigNumber(quoteTokenBalanceLP)
-          .div(new BigNumber(10).pow(quoteTokenDecimals))
-          .div(new BigNumber(tokenBalanceLP).div(new BigNumber(10).pow(tokenDecimals)))
+            .div(new BigNumber(10).pow(quoteTokenDecimals))
+            .div(new BigNumber(tokenBalanceLP).div(new BigNumber(10).pow(tokenDecimals)))
         }
-        
+
         lpTotalInQuoteTokenVC = tokenAmountVC.times(tokenPriceVsQuote)
         lpTotalInQuoteTokenMC = tokenAmountMC.times(tokenPriceVsQuote)
-        
+
         lpStakedVCTotal = tokenAmountVC
         lpStakedMCTotal = tokenAmountMC
       } else {
@@ -323,10 +526,9 @@ const fetchVaults = async () => {
           tokenPriceVsQuote = new BigNumber(1)
         } else {
           tokenPriceVsQuote = new BigNumber(quoteTokenBalanceLP)
-          .div(new BigNumber(10).pow(quoteTokenDecimals))
-          .div(new BigNumber(tokenBalanceLP).div(new BigNumber(10).pow(tokenDecimals)))
+            .div(new BigNumber(10).pow(quoteTokenDecimals))
+            .div(new BigNumber(tokenBalanceLP).div(new BigNumber(10).pow(tokenDecimals)))
         }
-       
 
         // Total value in staking (vault) in quote token value
         lpTotalInQuoteTokenVC = new BigNumber(quoteTokenBalanceLP)
@@ -356,14 +558,13 @@ const fetchVaults = async () => {
         lpStakedMCTotal = new BigNumber(lpTokenBalanceMC).div(new BigNumber(10).pow(tokenDecimals))
       }
 
+      let rewardTokenPrice = new BigNumber(0)
+      if (vaultConfig.rewardUsesCoinGecko) {
+        rewardTokenPrice = await fetchRewardTokenPriceCoinGecko(vaultConfig.rewardTokenCoinGecko || vaultConfig.rewardToken, vaultConfig.coinGeckoChain || parseInt(CHAIN_ID))
+      } else if(vaultConfig.tokenAddresses[CHAIN_ID] === vaultConfig.rewardToken) {
+        rewardTokenPrice = tokenPriceVsQuote
+      }
 
-      let rewardTokenPrice = new BigNumber(0);
-      if(vaultConfig.rewardUsesCoinGecko){
-        rewardTokenPrice =  await fetchRewardTokenPriceCoinGecko(vaultConfig.rewardToken)
-      }
-      else{
-        rewardTokenPrice =  tokenPriceVsQuote;
-      }
       const vault = {
         ...vaultConfig,
         rewardTokenPrice,
@@ -381,7 +582,7 @@ const fetchVaults = async () => {
         rewardPerBlock: new BigNumber(farmRewardPerBlock).toJSON(),
         poolWeight,
         burnRateBP: parseInt(buyBackBP),
-        paused: isPaused
+        paused: isPaused,
       }
       return vault
     }),
