@@ -199,6 +199,40 @@ const farms: FarmConfig[] = [
     quoteTokenAddresses: contracts.busd,
   },
   {
+    pid: 16,
+    risk: 1,
+    isTokenOnly: true,
+    lpSymbol: 'AVAX',
+    lpAddresses: {
+      80001: '',
+      137: '0xeb477ae74774b697b5d515ef8ca09e24fee413b5', // AVAX-WMATIC
+    },
+    tokenSymbol: 'AVAX',
+    tokenAddresses: {
+      80001: '',
+      137: '0x2c89bbc92bd86f8075d1decc58c7f4e0107f286b', // AVAX
+    },
+    quoteTokenSymbol: QuoteToken.BNB,
+    quoteTokenAddresses: contracts.wbnb,
+  },
+  {
+    pid: 17,
+    risk: 1,
+    isTokenOnly: true,
+    lpSymbol: 'LINK',
+    lpAddresses: {
+      80001: '',
+      137: '0x3c986748414a812e455dcd5418246b8fded5c369', // LINK-WMATIC
+    },
+    tokenSymbol: 'LINK',
+    tokenAddresses: {
+      80001: '',
+      137: '0x53e0bca35ec356bd5dddfebbd1fc0fd03fabad39', // LINK
+    },
+    quoteTokenSymbol: QuoteToken.BNB,
+    quoteTokenAddresses: contracts.wbnb,
+  },
+  {
     pid: 5,
     risk: 1,
     isTokenOnly: true,
