@@ -9,7 +9,7 @@ import {
   updateUserBalance,
   updateUserPendingReward,
 } from 'state/actions'
-import { unstake, sousUnstake, sousEmegencyUnstake } from 'utils/callHelpers'
+import { unstake, sousUnstake, sousEmegencyUnstake, vaultUnstake, vaultUnstakeAll } from 'utils/callHelpers'
 import { useMasterchef, useSousChef, useVaultChef } from './useContract'
 
 const useUnstake = (pid: number) => {
@@ -75,7 +75,7 @@ const useVaultUnstake = (pid: number) => {
   const handleUnstake = useCallback(
     async (amount: string, decimals: number) => {
       try {
-      const txHash = await unstake(vaultChefContract, pid, amount, account, decimals)
+      const txHash = await vaultUnstake(vaultChefContract, pid, amount, account, decimals)
       dispatch(fetchFarmUserDataAsync(account))
       console.info(txHash)
       toastSuccess("Success","Unstaking transaction confirmed")
@@ -89,5 +89,28 @@ const useVaultUnstake = (pid: number) => {
   return { onUnstake: handleUnstake }
 }
 
+const useVaultUnstakeAll = (pid: number) => {
+  const dispatch = useDispatch()
+  const { account } = useWallet()
+  const vaultChefContract = useVaultChef()
+  const { toastError, toastSuccess } = useToast()
 
-export {useUnstake as default, useVaultUnstake}
+  const handleUnstakeAll = useCallback(
+    async () => {
+      try {
+      const txHash = await vaultUnstakeAll(vaultChefContract, pid, account)
+      dispatch(fetchFarmUserDataAsync(account))
+      console.info(txHash)
+      toastSuccess("Success","Unstaking transaction confirmed")
+    } catch (e) {
+      toastError("An error occurred.", `Transaction unsuccessful, please try again`);
+    }
+    },
+    [account, dispatch, vaultChefContract, pid, toastSuccess, toastError],
+  )
+
+  return { onUnstakeAll: handleUnstakeAll }
+}
+
+
+export {useUnstake as default, useVaultUnstake, useVaultUnstakeAll}

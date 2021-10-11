@@ -9,7 +9,8 @@ export default {
   },
   vaultChef: {
     // 137: '0x37e4A9d80fFaBb0884A6462bA7FA1658Eb09e69c', // VaultChef TESTING
-    137: '0x434A59C7F85b25415ffA86D5B46cCa0A34d1A430', // VaultChef CLOSED BETA
+    // 137: '0x434A59C7F85b25415ffA86D5B46cCa0A34d1A430', // VaultChef CLOSED BETA
+    137: '0xFA9aA5d14319ac678E2B3fa65FBBbc4b27690D37', // VaultChef CLOSED BETA 2
     80001: '',
   },
   wbnb: {

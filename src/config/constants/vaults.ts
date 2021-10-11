@@ -5,7 +5,7 @@ import { VaultConfig, QuoteToken } from './types'
 const vaults: VaultConfig[] = [
   // LIVE:
   {
-    pid: 0,
+    pid: 1,
     risk: 3,
     lpSymbol: 'VERT-USDC QLP',
     lpAddresses: {
@@ -36,7 +36,7 @@ const vaults: VaultConfig[] = [
     partner:"Vertex"
   },
   {
-    pid: 1,
+    pid: 2,
     risk: 3,
     lpSymbol: 'VERT-MATIC QLP',
     lpAddresses: {
@@ -67,7 +67,7 @@ const vaults: VaultConfig[] = [
     partner:"Vertex"
   },
   {
-    pid: 9,
+    pid: 3,
     risk: 3,
     lpSymbol: 'ROUTE-VERT DLP',
     lpAddresses: {
@@ -95,7 +95,7 @@ const vaults: VaultConfig[] = [
     partner:"Vertex"
   },
   {
-    pid: 3,
+    pid: 4,
     risk: 3,
     lpSymbol: 'VERT-WETH QLP',
     lpAddresses: {
@@ -126,7 +126,7 @@ const vaults: VaultConfig[] = [
     partner:"Vertex"
   },
   {
-    pid: 4,
+    pid: 5,
     risk: 3,
     lpSymbol: 'MAI-USDC QLP',
     lpAddresses: {
@@ -155,10 +155,9 @@ const vaults: VaultConfig[] = [
     rewardUsesCoinGecko: true,
     paused:false,
     partner:"Mai Finance"
-
   },
   {
-    pid: 5,
+    pid: 6,
     risk: 3,
     lpSymbol: 'QI-WMATIC QLP',
     lpAddresses: {
@@ -189,7 +188,7 @@ const vaults: VaultConfig[] = [
     partner:"Mai Finance"
   },
   {
-    pid: 6,
+    pid: 7,
     risk: 3,
     lpSymbol: 'COLLAR-USDC pWINGS-LP',
     lpAddresses: {
@@ -218,10 +217,9 @@ const vaults: VaultConfig[] = [
     rewardUsesCoinGecko: false,
     paused:false,
     partner:"PolyPup"
-
   },
   {
-    pid: 7,
+    pid: 8,
     risk: 3,
     lpSymbol: 'COLLAR-MATIC SLP',
     lpAddresses: {
@@ -250,11 +248,10 @@ const vaults: VaultConfig[] = [
     rewardUsesCoinGecko: false,
     paused:false,
     partner:"PolyPup"
-
   },
 
     {
-    pid: 10,
+    pid: 9,
     risk: 3,
     lpSymbol: 'DAI-USDC ApeLP',
     lpAddresses: {
@@ -286,7 +283,107 @@ const vaults: VaultConfig[] = [
     paused:false,
     partner:"ApeSwap"
   },
-  
+  {
+    pid: 11,
+    risk: 3,
+    lpSymbol: 'WMATIC-USDC QLP',
+    lpAddresses: {
+      80001: '',
+      137: '0x6e7a5FAFcec6BB1e78bAE2A1F0B612012BF14827',
+    },
+    tokenSymbol: 'WMATIC',
+    tokenAddresses: {
+      80001: '',
+      137: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
+    },
+    isTokenOnly: false,
+    quoteTokenSymbol: QuoteToken.BUSD,
+    quoteTokenAddresses: contracts.busd,
+    endBlock: 1000000000000,
+    exchange: 'QuickSwap',
+    rewardToken: "0x72572CCf5208b59f4BcC14e6653d8c31Cd1fC5a0",
+    type: 'standard',
+    strategy: 'masterchef',
+    farmUsesPoolInfo: true,
+    farmRewardPerBlockCallName: "eggPerBlock",
+    farmTotalAllocCallName: "totalAllocPoint",
+    farmFeeCallName:"depositFeeBP",
+    farmPoolAllocName:"allocPoint",
+    underlyingProject:"",
+    rewardUsesCoinGecko: true,
+    paused:false,
+    partner:"Vertex"
+  },
+
+ {
+    pid: 12,
+    risk: 3,
+    lpSymbol: 'WETH-USDC QLP',
+    lpAddresses: {
+      80001: '',
+      137: '0x853ee4b2a13f8a742d64c8f088be7ba2131f670d',
+    },
+    tokenSymbol: 'WETH',
+    tokenAddresses: {
+      80001: '',
+      137: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
+    },
+    isTokenOnly: false,
+    quoteTokenSymbol: QuoteToken.BUSD,
+    quoteTokenAddresses: contracts.busd,
+    endBlock: 1000000000000,
+    exchange: 'QuickSwap',
+    rewardToken: "0x72572CCf5208b59f4BcC14e6653d8c31Cd1fC5a0",
+    type: 'standard',
+    strategy: 'masterchef',
+    farmUsesPoolInfo: true,
+    farmRewardPerBlockCallName: "eggPerBlock",
+    farmTotalAllocCallName: "totalAllocPoint",
+    farmFeeCallName:"depositFeeBP",
+    farmPoolAllocName:"allocPoint",
+    underlyingProject:"",
+    rewardUsesCoinGecko: true,
+    paused:false,
+    partner:"Vertex"
+  },
+
+  {
+    pid: 13,
+    risk: 3,
+    lpSymbol: 'WBTC-USDC QLP',
+    lpAddresses: {
+      80001: '',
+      137: '0xf6a637525402643b0654a54bead2cb9a83c8b498',
+    },
+    tokenSymbol: 'WBTC',
+    tokenAddresses: {
+      80001: '',
+      137: contracts.wbtc[137],
+    },
+    isTokenOnly: false,
+    quoteTokenSymbol: QuoteToken.BUSD,
+    quoteTokenAddresses: contracts.busd,
+    endBlock: 1000000000000,
+    exchange: 'QuickSwap',
+    rewardToken: "0x72572CCf5208b59f4BcC14e6653d8c31Cd1fC5a0",
+    type: 'standard',
+    strategy: 'masterchef',
+    farmUsesPoolInfo: true,
+    farmRewardPerBlockCallName: "eggPerBlock",
+    farmTotalAllocCallName: "totalAllocPoint",
+    farmFeeCallName:"depositFeeBP",
+    farmPoolAllocName:"allocPoint",
+    underlyingProject:"",
+    rewardUsesCoinGecko: true,
+    paused:false,
+    partner:"Vertex"
+  },
+ 
+
+
+
+
+
   // TESTING:
   // {
   //   pid: 18,
@@ -351,6 +448,101 @@ const vaults: VaultConfig[] = [
   //   underlyingProject:"",
   //   rewardUsesCoinGecko: true,
   //   paused:false
+  // },
+  // {
+  //   pid: 24,
+  //   risk: 3,
+  //   lpSymbol: 'WMATIC-USDC QLP',
+  //   lpAddresses: {
+  //     80001: '',
+  //     137: '0x6e7a5FAFcec6BB1e78bAE2A1F0B612012BF14827',
+  //   },
+  //   tokenSymbol: 'WMATIC',
+  //   tokenAddresses: {
+  //     80001: '',
+  //     137: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
+  //   },
+  //   isTokenOnly: false,
+  //   quoteTokenSymbol: QuoteToken.BUSD,
+  //   quoteTokenAddresses: contracts.busd,
+  //   endBlock: 1000000000000,
+  //   exchange: 'QuickSwap',
+  //   rewardToken: "0x72572CCf5208b59f4BcC14e6653d8c31Cd1fC5a0",
+  //   type: 'standard',
+  //   strategy: 'masterchef',
+  //   farmUsesPoolInfo: true,
+  //   farmRewardPerBlockCallName: "eggPerBlock",
+  //   farmTotalAllocCallName: "totalAllocPoint",
+  //   farmFeeCallName:"depositFeeBP",
+  //   farmPoolAllocName:"allocPoint",
+  //   underlyingProject:"",
+  //   rewardUsesCoinGecko: true,
+  //   paused:false,
+  //   partner:"Vertex"
+  // },
+
+  // {
+  //   pid: 27,
+  //   risk: 3,
+  //   lpSymbol: 'WBTC-USDC QLP',
+  //   lpAddresses: {
+  //     80001: '',
+  //     137: '0xf6a637525402643b0654a54bead2cb9a83c8b498',
+  //   },
+  //   tokenSymbol: 'WBTC',
+  //   tokenAddresses: {
+  //     80001: '',
+  //     137: contracts.wbtc[137],
+  //   },
+  //   isTokenOnly: false,
+  //   quoteTokenSymbol: QuoteToken.BUSD,
+  //   quoteTokenAddresses: contracts.busd,
+  //   endBlock: 1000000000000,
+  //   exchange: 'QuickSwap',
+  //   rewardToken: "0x72572CCf5208b59f4BcC14e6653d8c31Cd1fC5a0",
+  //   type: 'standard',
+  //   strategy: 'masterchef',
+  //   farmUsesPoolInfo: true,
+  //   farmRewardPerBlockCallName: "eggPerBlock",
+  //   farmTotalAllocCallName: "totalAllocPoint",
+  //   farmFeeCallName:"depositFeeBP",
+  //   farmPoolAllocName:"allocPoint",
+  //   underlyingProject:"",
+  //   rewardUsesCoinGecko: true,
+  //   paused:false,
+  //   partner:"Vertex"
+  // },
+
+  // {
+  //   pid: 25,
+  //   risk: 3,
+  //   lpSymbol: 'WETH-USDC QLP',
+  //   lpAddresses: {
+  //     80001: '',
+  //     137: '0x853ee4b2a13f8a742d64c8f088be7ba2131f670d',
+  //   },
+  //   tokenSymbol: 'WETH',
+  //   tokenAddresses: {
+  //     80001: '',
+  //     137: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
+  //   },
+  //   isTokenOnly: false,
+  //   quoteTokenSymbol: QuoteToken.BUSD,
+  //   quoteTokenAddresses: contracts.busd,
+  //   endBlock: 1000000000000,
+  //   exchange: 'QuickSwap',
+  //   rewardToken: "0x72572CCf5208b59f4BcC14e6653d8c31Cd1fC5a0",
+  //   type: 'standard',
+  //   strategy: 'masterchef',
+  //   farmUsesPoolInfo: true,
+  //   farmRewardPerBlockCallName: "eggPerBlock",
+  //   farmTotalAllocCallName: "totalAllocPoint",
+  //   farmFeeCallName:"depositFeeBP",
+  //   farmPoolAllocName:"allocPoint",
+  //   underlyingProject:"",
+  //   rewardUsesCoinGecko: true,
+  //   paused:false,
+  //   partner:"Vertex"
   // },
 
 ]

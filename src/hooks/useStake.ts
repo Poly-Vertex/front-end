@@ -64,7 +64,7 @@ const useVaultStake = (pid: number) => {
   const handleStake = useCallback(
     async (amount: string, decimals: number) => {
       try {
-        const txHash = await stake(vaultChefContract, pid, amount, account, decimals)
+        const txHash = await vaultStake(vaultChefContract, pid, amount, account, decimals)
         dispatch(fetchFarmUserDataAsync(account))
         console.info(txHash)
         toastSuccess("Success","Staking transaction confirmed")

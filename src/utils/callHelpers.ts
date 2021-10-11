@@ -50,6 +50,23 @@ export const unstake = async (masterChefContract, pid, amount, account, decimals
       return tx.transactionHash
     })
 }
+export const vaultUnstake = async (vaultChefContract, pid, amount, account, decimals = 18) => {
+  return vaultChefContract.methods
+    .withdraw(pid, new BigNumber(amount).times(new BigNumber(10).pow(decimals)).toString())
+    .send({ from: account })
+    .on('transactionHash', (tx) => {
+      return tx.transactionHash
+    })
+}
+
+export const vaultUnstakeAll = async (vaultChefContract, pid, account) => {
+  return vaultChefContract.methods
+    .withdrawAll(pid)
+    .send({ from: account })
+    .on('transactionHash', (tx) => {
+      return tx.transactionHash
+    })
+}
 
 export const sousUnstake = async (sousChefContract, amount, account) => {
   // shit code: hard fix for old CTK and BLK

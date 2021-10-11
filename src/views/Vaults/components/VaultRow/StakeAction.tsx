@@ -18,7 +18,7 @@ import Divider from 'views/Farms/components/Divider'
 import { provider } from 'web3-core'
 import { getContract } from 'utils/erc20'
 import { useVaultStake } from 'hooks/useStake'
-import { useVaultUnstake } from 'hooks/useUnstake'
+import { useVaultUnstake, useVaultUnstakeAll } from 'hooks/useUnstake'
 import { useVaultFromPid, useVaultUser, usePriceCakeBusd } from 'state/hooks'
 import { getBalanceNumber, getCorrectedNumber } from 'utils/formatBalance'
 import UnlockButton from 'components/UnlockButton'
@@ -162,6 +162,7 @@ const StakeAction: React.FC<FarmCardActionsProps> = ({
   } = useVaultFromPid(vault.pid)
   const { onStake } = useVaultStake(pid)
   const { onUnstake } = useVaultUnstake(pid)
+  const { onUnstakeAll } = useVaultUnstakeAll(pid)
 
   const lpName = vault.lpSymbol.toUpperCase()
 
@@ -212,6 +213,7 @@ const StakeAction: React.FC<FarmCardActionsProps> = ({
     <WithdrawModal
       max={stakedBalance}
       onConfirm={onUnstake}
+      onConfirmAll={onUnstakeAll}
       tokenName={tokenName}
       vaultWithdrawalFeeBP={vaultWithdrawalFeeBP}
       farmWithdrawalFeeBP={farmWithdrawalFeeBP}
