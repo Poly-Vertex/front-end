@@ -504,7 +504,7 @@ const fetchVaults = async () => {
         tokenAmountVC = new BigNumber(lpTokenBalanceVC).div(new BigNumber(10).pow(tokenDecimals))
         tokenAmountMC = new BigNumber(lpTokenBalanceMC).div(new BigNumber(10).pow(tokenDecimals))
 
-        if (vaultConfig.tokenSymbol === QuoteToken.BUSD && vaultConfig.quoteTokenSymbol === QuoteToken.BUSD) {
+        if (vaultConfig.tokenSymbol === QuoteToken.USDC && vaultConfig.quoteTokenSymbol === QuoteToken.USDC) {
           tokenPriceVsQuote = new BigNumber(1)
         } else {
           tokenPriceVsQuote = new BigNumber(quoteTokenBalanceLP)
@@ -522,7 +522,7 @@ const fetchVaults = async () => {
         const lpTokenRatioVC = new BigNumber(lpTokenBalanceVC).div(new BigNumber(lpTotalSupply))
         const lpTokenRatioMC = new BigNumber(lpTokenBalanceMC).div(new BigNumber(lpTotalSupply))
 
-        if (vaultConfig.tokenSymbol === QuoteToken.BUSD && vaultConfig.quoteTokenSymbol === QuoteToken.BUSD) {
+        if (vaultConfig.tokenSymbol === QuoteToken.USDC && vaultConfig.quoteTokenSymbol === QuoteToken.USDC) {
           tokenPriceVsQuote = new BigNumber(1)
         } else {
           tokenPriceVsQuote = new BigNumber(quoteTokenBalanceLP)

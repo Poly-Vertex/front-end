@@ -30,21 +30,21 @@ const Farm: React.FC = () => {
 
   const priceToBnb = (tokenName: string, tokenPrice: BigNumber, quoteToken: QuoteToken): BigNumber => {
     const tokenPriceBN = new BigNumber(tokenPrice)
-    if (tokenName === 'BNB') {
+    if (tokenName === 'MATIC') {
       return new BigNumber(1)
     }
-    if (tokenPrice && quoteToken === QuoteToken.BUSD) {
+    if (tokenPrice && quoteToken === QuoteToken.USDC) {
       return tokenPriceBN.div(bnbPriceUSD)
     }
     return tokenPriceBN
   }
 
   const poolsWithApy = pools.map((pool) => {
-    const isBnbPool = pool.poolCategory === PoolCategory.BINANCE
+    const isBnbPool = false
     const rewardTokenFarm = farms.find((f) => f.tokenSymbol === pool.tokenName)
     const stakingTokenFarm = farms.find((s) => s.tokenSymbol === pool.stakingTokenName)
 
-    // /!\ Assume that the farm quote price is BNB
+    // /!\ Assume that the farm quote price is MATIC
     const stakingTokenPriceInBNB = isBnbPool ? new BigNumber(1) : new BigNumber(stakingTokenFarm?.tokenPriceVsQuote)
     const rewardTokenPriceInBNB = priceToBnb(
       pool.tokenName,
@@ -73,7 +73,7 @@ const Farm: React.FC = () => {
             {TranslateString(282, 'SYRUP Pool')}
           </Heading>
           <ul>
-            <li>{TranslateString(580, 'Stake CAKE to earn new tokens.')}</li>
+            <li>{TranslateString(580, 'Stake VERT to earn new tokens.')}</li>
             <li>{TranslateString(404, 'You can unstake at any time.')}</li>
             <li>{TranslateString(406, 'Rewards are calculated per block.')}</li>
           </ul>

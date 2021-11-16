@@ -1,6 +1,6 @@
 import poolsConfig from 'config/constants/pools'
 import sousChefABI from 'config/abi/sousChef.json'
-import cakeABI from 'config/abi/cake.json'
+import cakeABI from 'config/abi/vert.json'
 import wbnbABI from 'config/abi/weth.json'
 import { QuoteToken } from 'config/constants/types'
 import multicall from 'utils/multicall'
@@ -39,8 +39,8 @@ export const fetchPoolsBlockLimits = async () => {
 }
 
 export const fetchPoolsTotalStatking = async () => {
-  const nonBnbPools = poolsConfig.filter((p) => p.stakingTokenName !== QuoteToken.BNB)
-  const bnbPool = poolsConfig.filter((p) => p.stakingTokenName === QuoteToken.BNB)
+  const nonBnbPools = poolsConfig.filter((p) => p.stakingTokenName !== QuoteToken.MATIC)
+  const bnbPool = poolsConfig.filter((p) => p.stakingTokenName === QuoteToken.MATIC)
 
   const callsNonBnbPools = nonBnbPools.map((poolConfig) => {
     return {

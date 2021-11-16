@@ -15,7 +15,7 @@ import HomePageCountdown from '../HomePageCountdown'
 
 const Hero = styled.div`
   align-items: center;
-  background-image: url('/images/egg/3.png');
+  background-image: url('/images/vert/3.png');
   background-repeat: no-repeat;
   background-position: top center;
   display: flex;
@@ -27,7 +27,7 @@ const Hero = styled.div`
   text-align: center;
 
   ${({ theme }) => theme.mediaQueries.lg} {
-    background-image: url('/images/egg/3.png'), url('/images/egg/3b.png');
+    background-image: url('/images/vert/3.png'), url('/images/vert/3b.png');
     background-position: left center, right center;
     height: 165px;
     padding-top: 0;

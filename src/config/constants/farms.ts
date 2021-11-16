@@ -12,11 +12,11 @@ const farms: FarmConfig[] = [
     },
     tokenSymbol: 'VERT',
     tokenAddresses: {
-      80001: contracts.cake[80001],
-      137: contracts.cake[137],
+      80001: contracts.vert[80001],
+      137: contracts.vert[137],
     },
-    quoteTokenSymbol: QuoteToken.BUSD,
-    quoteTokenAddresses: contracts.busd,
+    quoteTokenSymbol: QuoteToken.USDC,
+    quoteTokenAddresses: contracts.usdc,
     exchange:"QuickSwap"
 
   },
@@ -48,8 +48,8 @@ const farms: FarmConfig[] = [
     },
     tokenSymbol: 'VERT',
     tokenAddresses: {
-      80001: contracts.cake[80001],
-      137: contracts.cake[137],
+      80001: contracts.vert[80001],
+      137: contracts.vert[137],
     },
     quoteTokenSymbol: QuoteToken.ROUTE,
     quoteTokenAddresses: contracts.route,
@@ -66,11 +66,11 @@ const farms: FarmConfig[] = [
     },
     tokenSymbol: 'VERT',
     tokenAddresses: {
-      80001: contracts.cake[80001],
-      137: contracts.cake[137],
+      80001: contracts.vert[80001],
+      137: contracts.vert[137],
     },
-    quoteTokenSymbol: QuoteToken.BNB,
-    quoteTokenAddresses: contracts.wbnb,
+    quoteTokenSymbol: QuoteToken.MATIC,
+    quoteTokenAddresses: contracts.wmatic,
   },
   {
     pid: 4,
@@ -83,7 +83,7 @@ const farms: FarmConfig[] = [
     tokenSymbol: 'VERT',
     tokenAddresses: {
       80001: '',
-      137: contracts.cake[137], // vert
+      137: contracts.vert[137], // vert
     },
     quoteTokenSymbol: QuoteToken.WETH,
     quoteTokenAddresses: contracts.weth,
@@ -103,8 +103,8 @@ const farms: FarmConfig[] = [
   //     80001: '0x782eb3304F8b9adD877F13a5cA321f72c4AA9804',
   //     137: '0x782eb3304F8b9adD877F13a5cA321f72c4AA9804',
   //   },
-  //   quoteTokenSymbol: QuoteToken.BUSD,
-  //   quoteTokenAddresses: contracts.busd,
+  //   quoteTokenSymbol: QuoteToken.USDC,
+  //   quoteTokenAddresses: contracts.usdc,
   //   exchange:"QuickSwap"
 
   // },
@@ -121,8 +121,8 @@ const farms: FarmConfig[] = [
       80001: '',
       137: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
     },
-    quoteTokenSymbol: QuoteToken.BUSD,
-    quoteTokenAddresses: contracts.busd,
+    quoteTokenSymbol: QuoteToken.USDC,
+    quoteTokenAddresses: contracts.usdc,
     exchange:"QuickSwap"
 
   },
@@ -139,8 +139,8 @@ const farms: FarmConfig[] = [
       80001: '',
       137: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
     },
-    quoteTokenSymbol: QuoteToken.BUSD,
-    quoteTokenAddresses: contracts.busd,
+    quoteTokenSymbol: QuoteToken.USDC,
+    quoteTokenAddresses: contracts.usdc,
     exchange:"QuickSwap"
 
   },
@@ -157,8 +157,8 @@ const farms: FarmConfig[] = [
       80001: '',
       137: contracts.wbtc[137],
     },
-    quoteTokenSymbol: QuoteToken.BUSD,
-    quoteTokenAddresses: contracts.busd,
+    quoteTokenSymbol: QuoteToken.USDC,
+    quoteTokenAddresses: contracts.usdc,
     exchange:"QuickSwap"
 
   },
@@ -176,10 +176,10 @@ const farms: FarmConfig[] = [
     tokenSymbol: 'VERT',
     tokenAddresses: {
       80001: '',
-      137: contracts.cake[137],
+      137: contracts.vert[137],
     },
-    quoteTokenSymbol: QuoteToken.CAKE,
-    quoteTokenAddresses: contracts.cake,
+    quoteTokenSymbol: QuoteToken.VERT,
+    quoteTokenAddresses: contracts.vert,
   },
   {
     pid: 13, 
@@ -195,8 +195,8 @@ const farms: FarmConfig[] = [
       80001: '',
       137: '0x13748d548D95D78a3c83fe3F32604B4796CFfa23', // KOGE
     },
-    quoteTokenSymbol: QuoteToken.BUSD, 
-    quoteTokenAddresses: contracts.busd,
+    quoteTokenSymbol: QuoteToken.USDC, 
+    quoteTokenAddresses: contracts.usdc,
   },
   {
     pid: 16,
@@ -212,8 +212,8 @@ const farms: FarmConfig[] = [
       80001: '',
       137: '0x2c89bbc92bd86f8075d1decc58c7f4e0107f286b', // AVAX
     },
-    quoteTokenSymbol: QuoteToken.BNB,
-    quoteTokenAddresses: contracts.wbnb,
+    quoteTokenSymbol: QuoteToken.MATIC,
+    quoteTokenAddresses: contracts.wmatic,
   },
   {
     pid: 17,
@@ -229,8 +229,8 @@ const farms: FarmConfig[] = [
       80001: '',
       137: '0x53e0bca35ec356bd5dddfebbd1fc0fd03fabad39', // LINK
     },
-    quoteTokenSymbol: QuoteToken.BNB,
-    quoteTokenAddresses: contracts.wbnb,
+    quoteTokenSymbol: QuoteToken.MATIC,
+    quoteTokenAddresses: contracts.wmatic,
   },
   {
     pid: 5,
@@ -246,8 +246,8 @@ const farms: FarmConfig[] = [
       80001: '',
       137: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174', // USDC
     },
-    quoteTokenSymbol: QuoteToken.BUSD,
-    quoteTokenAddresses: contracts.busd,
+    quoteTokenSymbol: QuoteToken.USDC,
+    quoteTokenAddresses: contracts.usdc,
   },
 
   {
@@ -262,10 +262,10 @@ const farms: FarmConfig[] = [
     tokenSymbol: 'WMATIC',
     tokenAddresses: {
       80001: '',
-      137: contracts.wbnb[137],
+      137: contracts.wmatic[137],
     },
-    quoteTokenSymbol: QuoteToken.BNB,
-    quoteTokenAddresses: contracts.wbnb,
+    quoteTokenSymbol: QuoteToken.MATIC,
+    quoteTokenAddresses: contracts.wmatic,
   },
   {
     pid: 7,
@@ -298,8 +298,8 @@ const farms: FarmConfig[] = [
       80001: '',
       137: '0x1bfd67037b42cf73acf2047067bd4f2c47d9bfd6',
     },
-    quoteTokenSymbol: QuoteToken.BUSD,
-    quoteTokenAddresses: contracts.busd,
+    quoteTokenSymbol: QuoteToken.USDC,
+    quoteTokenAddresses: contracts.usdc,
   },
   {
     pid: 11,
@@ -327,15 +327,15 @@ const farms: FarmConfig[] = [
   // //   lpSymbol: 'ETH',
   // //   lpAddresses: {
   // //     80001: '',
-  // //     137: '', // ETH-BUSD LP
+  // //     137: '', // ETH-USDC LP
   // //   },
   // //   tokenSymbol: 'ETH',
   // //   tokenAddresses: {
   // //     80001: '',
   // //     137: '',
   // //   },
-  // //   quoteTokenSymbol: QuoteToken.BUSD,
-  // //   quoteTokenAddresses: contracts.busd,
+  // //   quoteTokenSymbol: QuoteToken.USDC,
+  // //   quoteTokenAddresses: contracts.usdc,
   // // },
   // // {
   // //   pid: ,
@@ -344,15 +344,15 @@ const farms: FarmConfig[] = [
   // //   lpSymbol: 'DAI',
   // //   lpAddresses: {
   // //     80001: '',
-  // //     137: '0x3ab77e40340ab084c3e23be8e5a6f7afed9d41dc', // DAI-BUSD LP
+  // //     137: '0x3ab77e40340ab084c3e23be8e5a6f7afed9d41dc', // DAI-USDC LP
   // //   },
   // //   tokenSymbol: 'DAI',
   // //   tokenAddresses: {
   // //     80001: '',
   // //     137: '0x1af3f329e8be154074d8769d1ffa4ee058b1dbc3',
   // //   },
-  // //   quoteTokenSymbol: QuoteToken.BUSD,
-  // //   quoteTokenAddresses: contracts.busd,
+  // //   quoteTokenSymbol: QuoteToken.USDC,
+  // //   quoteTokenAddresses: contracts.usdc,
   // // },
   // // {
   // //   pid: ,
@@ -361,15 +361,15 @@ const farms: FarmConfig[] = [
   // //   lpSymbol: 'USDC',
   // //   lpAddresses: {
   // //     80001: '',
-  // //     137: '0x680dd100e4b394bda26a59dd5c119a391e747d18', // USDC-BUSD LP
+  // //     137: '0x680dd100e4b394bda26a59dd5c119a391e747d18', // USDC-USDC LP
   // //   },
   // //   tokenSymbol: 'USDC',
   // //   tokenAddresses: {
   // //     80001: '',
   // //     137: '0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d',
   // //   },
-  // //   quoteTokenSymbol: QuoteToken.BUSD,
-  // //   quoteTokenAddresses: contracts.busd,
+  // //   quoteTokenSymbol: QuoteToken.USDC,
+  // //   quoteTokenAddresses: contracts.usdc,
   // // },
   
  

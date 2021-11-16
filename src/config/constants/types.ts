@@ -1,5 +1,3 @@
-import BigNumber from "bignumber.js"
-
 export type IfoStatus = 'coming_soon' | 'live' | 'finished'
 
 export interface Ifo {
@@ -22,15 +20,14 @@ export interface Ifo {
 }
 
 export enum QuoteToken {
-  'BNB' = 'BNB',
-  'CAKE' = 'CAKE',
+  'MATIC' = 'MATIC',
+  'VERT' = 'VERT',
   'SYRUP' = 'SYRUP',
-  'BUSD' = 'BUSD',
+  'USDC' = 'USDC',
   'TWT' = 'TWT',
   'UST' = 'UST',
   'USDT' = 'USDT',
   'WETH' = 'WETH',
-  'VERT' = 'VERT',
   'BTC' = 'BTC',
   'ROUTE' = 'ROUTE',
   'DFYN' = 'DFYN',
@@ -39,7 +36,6 @@ export enum QuoteToken {
 export enum PoolCategory {
   'COMMUNITY' = 'Community',
   'CORE' = 'Core',
-  'BINANCE' = 'Binance', // Pools using native BNB behave differently than pools using a token
 }
 
 export interface Address {

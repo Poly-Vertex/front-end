@@ -48,12 +48,12 @@ const Ifo = () => {
           <Title as="h2">{TranslateString(592, 'How to take part')}</Title>
           <Heading mb="16px">{TranslateString(594, 'Before Sale')}:</Heading>
           <List>
-            <li>{TranslateString(596, 'Buy CAKE and BNB tokens')}</li>
-            <li>{TranslateString(598, 'Get CAKE-BNB LP tokens by adding CAKE and BNB liquidity')}</li>
+            <li>{TranslateString(596, 'Buy VERT and MATIC tokens')}</li>
+            <li>{TranslateString(598, 'Get VERT-MATIC LP tokens by adding VERT and MATIC liquidity')}</li>
           </List>
           <Flex mb="16px">
             <LinkExternal href="https://exchange.pancakeswap.finance/#/swap" mr="16px">
-              {TranslateString(999, 'Buy cake')}
+              {TranslateString(999, 'Buy vert')}
             </LinkExternal>
             <LinkExternal href="https://exchange.pancakeswap.finance/#/add/ETH/0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82">
               {TranslateString(999, 'Get LP tokens')}
@@ -61,7 +61,7 @@ const Ifo = () => {
           </Flex>
           <Heading mb="16px">{TranslateString(600, 'During Sale')}:</Heading>
           <List>
-            <li>{TranslateString(602, 'While the sale is live, commit your CAKE-LP tokens to buy the IFO tokens')}</li>
+            <li>{TranslateString(602, 'While the sale is live, commit your VERT-LP tokens to buy the IFO tokens')}</li>
           </List>
           <Heading mb="16px">{TranslateString(604, 'After Sale')}:</Heading>
           <List>

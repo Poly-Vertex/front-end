@@ -200,12 +200,12 @@ const Vaults: React.FC = () => {
         let totalFarmValue = new BigNumber(vault.farmLPTotalInQuoteToken || 0)
         let tvl = new BigNumber(vault.lpTotalInQuoteToken|| 0)
 
-        if (vault.quoteTokenSymbol === QuoteToken.BNB) {
+        if (vault.quoteTokenSymbol === QuoteToken.MATIC) {
           totalFarmValue = totalFarmValue.times(bnbPrice)
           tvl =  bnbPrice.times(tvl)
 
         }
-        if (vault.quoteTokenSymbol === QuoteToken.CAKE) {
+        if (vault.quoteTokenSymbol === QuoteToken.VERT) {
           totalFarmValue = totalFarmValue.times(cakePrice)
           tvl =  cakePrice.times(tvl)
 

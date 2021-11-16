@@ -77,10 +77,10 @@ const EndowmentVaults: React.FC = () => {
         let apr = cakePrice.times(cakeRewardPerYear)
 
         let totalFarmValue = new BigNumber(vault.farm.lpTotalInQuoteToken || 0)
-        if (vault.quoteTokenSymbol === QuoteToken.BNB) {
+        if (vault.quoteTokenSymbol === QuoteToken.MATIC) {
           totalFarmValue = totalFarmValue.times(bnbPrice)
         }
-        if (vault.quoteTokenSymbol === QuoteToken.CAKE) {
+        if (vault.quoteTokenSymbol === QuoteToken.VERT) {
           totalFarmValue = totalFarmValue.times(cakePrice)
         }
         if (vault.quoteTokenSymbol === QuoteToken.WETH) {

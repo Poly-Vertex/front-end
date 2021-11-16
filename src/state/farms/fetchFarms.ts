@@ -57,7 +57,7 @@ const fetchSingleFarm = async (_farmConfigIn, masterChefAddr) => {
   if (_farmConfigIn.isTokenOnly) {
     tokenAmount = new BigNumber(lpTokenBalanceMC).div(new BigNumber(10).pow(tokenDecimals))
 
-    if (_farmConfigIn.tokenSymbol === QuoteToken.BUSD && _farmConfigIn.quoteTokenSymbol === QuoteToken.BUSD) {
+    if (_farmConfigIn.tokenSymbol === QuoteToken.USDC && _farmConfigIn.quoteTokenSymbol === QuoteToken.USDC) {
       tokenPriceVsQuote = new BigNumber(1)
     } else {
       tokenPriceVsQuote = new BigNumber(quoteTokenBalanceLP)

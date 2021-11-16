@@ -175,9 +175,9 @@ export const useTotalValue = (): {farms:BigNumber, vaults:BigNumber} => {
     const farm = farms[i]
     if (farm.lpTotalInQuoteToken) {
       let val;
-      if (farm.quoteTokenSymbol === QuoteToken.BNB) {
+      if (farm.quoteTokenSymbol === QuoteToken.MATIC) {
         val = (bnbPrice.times(farm.lpTotalInQuoteToken));
-      }else if (farm.quoteTokenSymbol === QuoteToken.CAKE) {
+      }else if (farm.quoteTokenSymbol === QuoteToken.VERT) {
         val = (cakePrice.times(farm.lpTotalInQuoteToken));
       }else if (farm.quoteTokenSymbol === QuoteToken.BTC) {
         val = (btcPrice.times(farm.lpTotalInQuoteToken));
@@ -194,9 +194,9 @@ export const useTotalValue = (): {farms:BigNumber, vaults:BigNumber} => {
     const vault = vaults[i]
     if (vault.lpTotalInQuoteToken) {
       let val;
-      if (vault.quoteTokenSymbol === QuoteToken.BNB) {
+      if (vault.quoteTokenSymbol === QuoteToken.MATIC) {
         val = (bnbPrice.times(vault.lpTotalInQuoteToken));
-      }else if (vault.quoteTokenSymbol === QuoteToken.CAKE) {
+      }else if (vault.quoteTokenSymbol === QuoteToken.VERT) {
         val = (cakePrice.times(vault.lpTotalInQuoteToken));
       }else if (vault.quoteTokenSymbol === QuoteToken.BTC) {
         val = (btcPrice.times(vault.lpTotalInQuoteToken));

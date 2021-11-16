@@ -76,10 +76,10 @@ const Farms: React.FC<FarmsProps> = (farmsProps) => {
         
         let totalValue = new BigNumber(farm.lpTotalInQuoteToken || 0)
 
-        if (farm.quoteTokenSymbol === QuoteToken.BNB) {
+        if (farm.quoteTokenSymbol === QuoteToken.MATIC) {
           totalValue = totalValue.times(bnbPrice)
         }
-        if (farm.quoteTokenSymbol === QuoteToken.CAKE) {
+        if (farm.quoteTokenSymbol === QuoteToken.VERT) {
           totalValue = totalValue.times(cakePrice)
         }
         if (farm.quoteTokenSymbol === QuoteToken.WETH) {

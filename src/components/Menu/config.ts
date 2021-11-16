@@ -124,7 +124,7 @@ const config: MenuEntry[] = [
       // },
       {
         icon: 'CommunityIcon',
-        label: 'Support PolyVertex',
+        label: 'Support Vertex',
         href: 'https://docs.polyvertex.finance/support-vertex',
       },
 ]

@@ -1,5 +1,5 @@
 export default {
-  cake: { // VERTEX
+  vert: { // VERTEX
     137: '0x72572CCf5208b59f4BcC14e6653d8c31Cd1fC5a0', // VERT LIVE
     80001: '0x72572CCf5208b59f4BcC14e6653d8c31Cd1fC5a0', 
   },
@@ -13,7 +13,7 @@ export default {
     137: '0xFA9aA5d14319ac678E2B3fa65FBBbc4b27690D37', // VaultChef CLOSED BETA 2
     80001: '',
   },
-  wbnb: {
+  wmatic: {
     137: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270', // WMATIC
     80001: '',
   },
@@ -29,7 +29,7 @@ export default {
     137: '0x11ce4B23bD875D7F5C6a31084f55fDe1e9A87507',
     80001: '0x08411ADd0b5AA8ee47563b146743C13b3556c9Cc',
   },
-  busd: {
+  usdc: {
     137: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174', // USDC
     80001: '',
   },

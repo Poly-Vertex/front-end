@@ -301,10 +301,10 @@ const VaultRow: React.FC<VaultRowProps> = ({ vault, removed, cakePrice, bnbPrice
       return null
     }
 
-    if (vault.quoteTokenSymbol === QuoteToken.BNB) {
+    if (vault.quoteTokenSymbol === QuoteToken.MATIC) {
       return bnbPrice.times(vault.lpTotalInQuoteToken)
     }
-    if (vault.quoteTokenSymbol === QuoteToken.CAKE) {
+    if (vault.quoteTokenSymbol === QuoteToken.VERT) {
       return cakePrice.times(vault.lpTotalInQuoteToken)
     }
     if (vault.quoteTokenSymbol === QuoteToken.WETH) {
@@ -432,7 +432,7 @@ const VaultRow: React.FC<VaultRowProps> = ({ vault, removed, cakePrice, bnbPrice
   const { quoteTokenAddresses, quoteTokenSymbol, tokenAddresses, risk, lpSymbol } = vault
   return (
     <VCard>
-      {(vault.tokenSymbol === 'VERT' || vault.quoteTokenSymbol === 'CAKE')&& <StyledCardAccent />}
+      {(vault.tokenSymbol === 'VERT' || vault.quoteTokenSymbol === 'VERT')&& <StyledCardAccent />}
       <Row adjustForSize clickable onClick={() => setShowExpandableSection(!showExpandableSection)}>
         <CardHeading
           lpLabel={lpLabel}
